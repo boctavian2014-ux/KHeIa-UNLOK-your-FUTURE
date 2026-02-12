@@ -1,0 +1,35 @@
+# Env & secrets – NU comite niciodată .env
+.env
+.env.local
+.env.*.local
+supabase/.env
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build
+dist/
+build/
+.expo/
+*.tsbuildinfo
+
+# Logs & cache
+*.log
+npm-debug.log*
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+coverage/
+.nyc_output/

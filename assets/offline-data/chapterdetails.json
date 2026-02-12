@@ -1,0 +1,345 @@
+[
+  {
+    "id": "detail-chap-en-ro-comunicare",
+    "chapter_id": "chap-en-ro-comunicare",
+    "overview": "Concepte de bază despre comunicare și texte nonliterare.",
+    "sections": ["Noțiuni cheie", "Exemple și aplicații"],
+    "keypoints": ["Tipuri de texte", "Structură și scop", "Elemente de limbaj"]
+  },
+  {
+    "id": "detail-chap-en-ro-text-literar",
+    "chapter_id": "chap-en-ro-text-literar",
+    "overview": "Elemente de analiză pentru textul literar narativ, liric și dramatic.",
+    "sections": ["Specii literare", "Mijloace artistice"],
+    "keypoints": ["Tema și mesajul", "Personaje și instanțe", "Figuri de stil"]
+  },
+  {
+    "id": "detail-chap-en-ro-gramatica-pdv",
+    "chapter_id": "chap-en-ro-gramatica-pdv",
+    "overview": "Părțile de vorbire și valorile lor gramaticale.",
+    "sections": ["Părți de vorbire", "Valori gramaticale"],
+    "keypoints": ["Definiții", "Identificare în text", "Acorduri corecte"]
+  },
+  {
+    "id": "detail-chap-en-ro-gramatica-propozitie",
+    "chapter_id": "chap-en-ro-gramatica-propozitie",
+    "overview": "Structura propoziției și a frazei, reguli de punctuație.",
+    "sections": ["Propoziția", "Fraza și punctuația"],
+    "keypoints": ["Funcții sintactice", "Conectori", "Punctuație corectă"]
+  },
+  {
+    "id": "detail-chap-en-mate-aritmetica",
+    "chapter_id": "chap-en-mate-aritmetica",
+    "overview": "Operații cu numere, fracții și transformări uzuale.",
+    "sections": ["Numere și operații", "Fracții și transformări"],
+    "keypoints": ["Formule esențiale", "Simplificări", "Erori frecvente"]
+  },
+  {
+    "id": "detail-chap-en-mate-ecuatii",
+    "chapter_id": "chap-en-mate-ecuatii",
+    "overview": "Procente, proporții și ecuații de gradul I.",
+    "sections": ["Procente și proporții", "Ecuații"],
+    "keypoints": ["Metode de rezolvare", "Probleme tipice", "Verificarea rezultatului"]
+  },
+  {
+    "id": "detail-chap-en-mate-geo-plana",
+    "chapter_id": "chap-en-mate-geo-plana",
+    "overview": "Noțiuni de geometrie plană și proprietăți ale figurilor.",
+    "sections": ["Triunghi și patrulater", "Cerc și unghiuri"],
+    "keypoints": ["Teoreme de bază", "Formule de arie", "Aplicare în probleme"]
+  },
+  {
+    "id": "detail-chap-en-mate-geo-spatiu",
+    "chapter_id": "chap-en-mate-geo-spatiu",
+    "overview": "Geometrie în spațiu și elemente de probabilități.",
+    "sections": ["Corpurile geometrice", "Probabilități"],
+    "keypoints": ["Volume și arii", "Evenimente simple", "Calcule de probabilitate"]
+  },
+  {
+    "id": "detail-chap-bac-ro-genuri",
+    "chapter_id": "chap-bac-ro-genuri",
+    "overview": "Genuri literare și speciile lor principale.",
+    "sections": ["Genuri", "Specii"],
+    "keypoints": ["Trăsături definitorii", "Exemple canonice", "Termeni cheie"]
+  },
+  {
+    "id": "detail-chap-bac-ro-curente",
+    "chapter_id": "chap-bac-ro-curente",
+    "overview": "Curente literare și caracteristicile lor.",
+    "sections": ["Curente", "Autori reprezentativi"],
+    "keypoints": ["Idei centrale", "Context istoric", "Stiluri literare"]
+  },
+  {
+    "id": "detail-chap-bac-ro-proza-poezie",
+    "chapter_id": "chap-bac-ro-proza-poezie",
+    "overview": "Elemente de analiză pentru proză, poezie și dramatic.",
+    "sections": ["Proză și dramatic", "Poezie"],
+    "keypoints": ["Structură narativă", "Lirism", "Conflict dramatic"]
+  },
+  {
+    "id": "detail-chap-bac-ro-argumentare",
+    "chapter_id": "chap-bac-ro-argumentare",
+    "overview": "Text argumentativ și structura eseului.",
+    "sections": ["Argumentare", "Eseu literar"],
+    "keypoints": ["Teză și argumente", "Coerență", "Concluzie"]
+  },
+  {
+    "id": "detail-chap-bac-mate-functii",
+    "chapter_id": "chap-bac-mate-functii",
+    "overview": "Funcții, grafice și proprietăți.",
+    "sections": ["Tipuri de funcții", "Grafice"],
+    "keypoints": ["Domeniu și imagine", "Monotonie", "Intersecții"]
+  },
+  {
+    "id": "detail-chap-bac-mate-derivate",
+    "chapter_id": "chap-bac-mate-derivate",
+    "overview": "Limite și derivate, interpretări geometrice.",
+    "sections": ["Limite", "Derivate"],
+    "keypoints": ["Continuitate", "Panta tangentei", "Aplicații"]
+  },
+  {
+    "id": "detail-chap-bac-mate-integrale",
+    "chapter_id": "chap-bac-mate-integrale",
+    "overview": "Integrale și aplicații în calculul ariilor.",
+    "sections": ["Integrale nedefinite", "Integrale definite"],
+    "keypoints": ["Primitive", "Teorema fundamentală", "Arii"]
+  },
+  {
+    "id": "detail-chap-bac-mate-matrici",
+    "chapter_id": "chap-bac-mate-matrici",
+    "overview": "Matrice, determinanți și șiruri.",
+    "sections": ["Matrice", "Șiruri"],
+    "keypoints": ["Determinant", "Recursii", "Aplicare în probleme"]
+  },
+  {
+    "id": "detail-chap-bac-ist-moderna",
+    "chapter_id": "chap-bac-ist-moderna",
+    "overview": "România modernă: reforme și unificare.",
+    "sections": ["Evenimente cheie", "Actori politici"],
+    "keypoints": ["Cauze și efecte", "Cronologie", "Documente"]
+  },
+  {
+    "id": "detail-chap-bac-ist-secol-xx",
+    "chapter_id": "chap-bac-ist-secol-xx",
+    "overview": "România în secolul XX: conflicte și regimuri.",
+    "sections": ["Marea Unire", "Perioada comunistă"],
+    "keypoints": ["Date importante", "Regimuri politice", "Schimbări sociale"]
+  },
+  {
+    "id": "detail-chap-bac-ist-relatii",
+    "chapter_id": "chap-bac-ist-relatii",
+    "overview": "Relații internaționale și constituții.",
+    "sections": ["Relații internaționale", "Constituții"],
+    "keypoints": ["Tratat și alianțe", "Principii constituționale", "Impact regional"]
+  },
+  {
+    "id": "detail-chap-bac-fizica-mecanica",
+    "chapter_id": "chap-bac-fizica-mecanica",
+    "overview": "Mecanică: mișcări, forțe și energie.",
+    "sections": ["Mișcare", "Forțe"],
+    "keypoints": ["Legea a II-a", "Energie mecanică", "Unități de măsură"]
+  },
+  {
+    "id": "detail-chap-bac-fizica-termo",
+    "chapter_id": "chap-bac-fizica-termo",
+    "overview": "Termodinamică: temperatură, căldură și lucru.",
+    "sections": ["Mărimi termice", "Legi ale termodinamicii"],
+    "keypoints": ["Conservarea energiei", "Procese termice", "Transformări"]
+  },
+  {
+    "id": "detail-chap-bac-fizica-electricitate",
+    "chapter_id": "chap-bac-fizica-electricitate",
+    "overview": "Electricitate, magnetism și optică.",
+    "sections": ["Circuit electric", "Fenomen optic"],
+    "keypoints": ["Legea lui Ohm", "Câmp magnetic", "Refracție"]
+  },
+  {
+    "id": "detail-chap-bac-chimie-structura",
+    "chapter_id": "chap-bac-chimie-structura",
+    "overview": "Structura atomului și tipuri de legături chimice.",
+    "sections": ["Model atomic", "Legături chimice"],
+    "keypoints": ["Număr atomic", "Legături ionice/covalente", "Periodicitate"]
+  },
+  {
+    "id": "detail-chap-bac-chimie-reactii",
+    "chapter_id": "chap-bac-chimie-reactii",
+    "overview": "Reacții chimice, echilibru și viteză.",
+    "sections": ["Tipuri de reacții", "Echilibru chimic"],
+    "keypoints": ["Legea acțiunii maselor", "Factorii vitezei", "Echilibru dinamic"]
+  },
+  {
+    "id": "detail-chap-bac-chimie-solutii",
+    "chapter_id": "chap-bac-chimie-solutii",
+    "overview": "Soluții, pH și noțiuni de chimie organică.",
+    "sections": ["Soluții și pH", "Organic de bază"],
+    "keypoints": ["Concentrații", "Aciditate", "Grupe funcționale"]
+  },
+  {
+    "id": "detail-chap-bac-bio-celula",
+    "chapter_id": "chap-bac-bio-celula",
+    "overview": "Celula și ereditatea: structură și mecanisme.",
+    "sections": ["Structura celulei", "Genetică"],
+    "keypoints": ["Organite", "ADN și gene", "Diviziune celulară"]
+  },
+  {
+    "id": "detail-chap-bac-bio-anatomie",
+    "chapter_id": "chap-bac-bio-anatomie",
+    "overview": "Anatomie și fiziologie umană.",
+    "sections": ["Sisteme ale corpului", "Funcții vitale"],
+    "keypoints": ["Sistem nervos", "Sistem circulator", "Homeostazie"]
+  },
+  {
+    "id": "detail-chap-bac-bio-ecologie",
+    "chapter_id": "chap-bac-bio-ecologie",
+    "overview": "Ecologie și evoluție: relații și adaptare.",
+    "sections": ["Ecosisteme", "Evoluție"],
+    "keypoints": ["Lanțuri trofice", "Selecție naturală", "Biodiversitate"]
+  },
+  {
+    "id": "detail-chap-bac-info-algoritmi",
+    "chapter_id": "chap-bac-info-algoritmi",
+    "overview": "Algoritmi și structuri de date de bază.",
+    "sections": ["Algoritmi", "Structuri"],
+    "keypoints": ["Parcurgeri", "Vectori și liste", "Corectitudine"]
+  },
+  {
+    "id": "detail-chap-bac-info-recursivitate",
+    "chapter_id": "chap-bac-info-recursivitate",
+    "overview": "Recursivitate și backtracking.",
+    "sections": ["Recursivitate", "Backtracking"],
+    "keypoints": ["Caz de bază", "Arbore de căutare", "Eficiență"]
+  },
+  {
+    "id": "detail-chap-bac-info-grafuri",
+    "chapter_id": "chap-bac-info-grafuri",
+    "overview": "Grafuri și noțiuni de complexitate.",
+    "sections": ["Reprezentări", "Algoritmi pe grafuri"],
+    "keypoints": ["Parcurgere BFS/DFS", "Complexitate", "Probleme clasice"]
+  },
+  {
+    "id": "detail-chap-bac-geo-relief",
+    "chapter_id": "chap-bac-geo-relief",
+    "overview": "Relief și climă: repartiție și forme.",
+    "sections": ["Unități de relief", "Tipuri de climă"],
+    "keypoints": ["Carpați și câmpii", "Factori climatici", "Hărți tematice"]
+  },
+  {
+    "id": "detail-chap-bac-geo-hidrografie",
+    "chapter_id": "chap-bac-geo-hidrografie",
+    "overview": "Hidrografie: rețele și resurse de apă.",
+    "sections": ["Râuri și lacuri", "Resurse de apă"],
+    "keypoints": ["Bazin hidrografic", "Dunărea", "Utilizări"]
+  },
+  {
+    "id": "detail-chap-bac-geo-populatie",
+    "chapter_id": "chap-bac-geo-populatie",
+    "overview": "Populație, resurse și activități economice.",
+    "sections": ["Populație", "Resurse și economie"],
+    "keypoints": ["Densitate", "Migrație", "Resurse naturale"]
+  },
+  {
+    "id": "detail-chap-bac-logica-notiuni",
+    "chapter_id": "chap-bac-logica-notiuni",
+    "overview": "Noțiuni de logică și propoziții.",
+    "sections": ["Propoziții", "Conectori logici"],
+    "keypoints": ["Valoare de adevăr", "Negare", "Conjuncție"]
+  },
+  {
+    "id": "detail-chap-bac-logica-rationamente",
+    "chapter_id": "chap-bac-logica-rationamente",
+    "overview": "Raționamente deductive și inductive.",
+    "sections": ["Deducție", "Inducție"],
+    "keypoints": ["Silogism", "Validitate", "Eroare logică"]
+  },
+  {
+    "id": "detail-chap-bac-logica-argumentare",
+    "chapter_id": "chap-bac-logica-argumentare",
+    "overview": "Argumentare și comunicare eficientă.",
+    "sections": ["Argument", "Comunicare"],
+    "keypoints": ["Teză", "Contraargument", "Coerență"]
+  },
+  {
+    "id": "detail-chap-bac-psi-cognitive",
+    "chapter_id": "chap-bac-psi-cognitive",
+    "overview": "Procese cognitive: percepție, memorie, gândire.",
+    "sections": ["Percepție", "Memorie"],
+    "keypoints": ["Atenție", "Memorie de scurtă durată", "Gândire"]
+  },
+  {
+    "id": "detail-chap-bac-psi-afective",
+    "chapter_id": "chap-bac-psi-afective",
+    "overview": "Procese afective și motivaționale.",
+    "sections": ["Emoții", "Motivație"],
+    "keypoints": ["Stări afective", "Nevoi", "Motivații"]
+  },
+  {
+    "id": "detail-chap-bac-psi-personalitate",
+    "chapter_id": "chap-bac-psi-personalitate",
+    "overview": "Personalitate și dezvoltare pe etape.",
+    "sections": ["Temperament", "Dezvoltare"],
+    "keypoints": ["Trăsături", "Identitate", "Etape"]
+  },
+  {
+    "id": "detail-chap-bac-eco-piata",
+    "chapter_id": "chap-bac-eco-piata",
+    "overview": "Piață, cerere și ofertă.",
+    "sections": ["Cerere", "Ofertă"],
+    "keypoints": ["Elasticitate", "Echilibru", "Preț"]
+  },
+  {
+    "id": "detail-chap-bac-eco-costuri",
+    "chapter_id": "chap-bac-eco-costuri",
+    "overview": "Producție, costuri și profit.",
+    "sections": ["Costuri", "Profit"],
+    "keypoints": ["Cost fix/variabil", "Productivitate", "Profitabilitate"]
+  },
+  {
+    "id": "detail-chap-bac-eco-bani",
+    "chapter_id": "chap-bac-eco-bani",
+    "overview": "Bani, inflație și politici economice.",
+    "sections": ["Monedă", "Politici economice"],
+    "keypoints": ["Inflație", "Dobândă", "Politica fiscală"]
+  },
+  {
+    "id": "detail-chap-bac-socio-socializare",
+    "chapter_id": "chap-bac-socio-socializare",
+    "overview": "Socializare și cultură.",
+    "sections": ["Agenți ai socializării", "Cultură"],
+    "keypoints": ["Norme și valori", "Roluri sociale", "Identitate"]
+  },
+  {
+    "id": "detail-chap-bac-socio-structuri",
+    "chapter_id": "chap-bac-socio-structuri",
+    "overview": "Structuri și instituții sociale.",
+    "sections": ["Instituții", "Grupuri sociale"],
+    "keypoints": ["Familie", "Educație", "Stat"]
+  },
+  {
+    "id": "detail-chap-bac-socio-stratificare",
+    "chapter_id": "chap-bac-socio-stratificare",
+    "overview": "Stratificare și mobilitate socială.",
+    "sections": ["Clase sociale", "Mobilitate"],
+    "keypoints": ["Ierarhii", "Mobilitate verticală", "Inegalități"]
+  },
+  {
+    "id": "detail-chap-bac-filo-cunoastere",
+    "chapter_id": "chap-bac-filo-cunoastere",
+    "overview": "Cunoaștere, adevăr și argumentare filosofică.",
+    "sections": ["Epistemologie", "Adevăr"],
+    "keypoints": ["Surse ale cunoașterii", "Justificare", "Scepticism"]
+  },
+  {
+    "id": "detail-chap-bac-filo-etica",
+    "chapter_id": "chap-bac-filo-etica",
+    "overview": "Etică și valori morale.",
+    "sections": ["Norme morale", "Dileme etice"],
+    "keypoints": ["Responsabilitate", "Bine și rău", "Conștiință"]
+  },
+  {
+    "id": "detail-chap-bac-filo-existenta",
+    "chapter_id": "chap-bac-filo-existenta",
+    "overview": "Existență și curente filosofice.",
+    "sections": ["Ontologie", "Curente"],
+    "keypoints": ["Ființă", "Libertate", "Autori reprezentativi"]
+  }
+]

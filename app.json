@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "KhEIa",
+    "slug": "kheia",
+    "scheme": "kheia",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "userInterfaceStyle": "automatic",
+    "plugins": ["expo-router"],
+    "jsEngine": "hermes"
+  }
+}

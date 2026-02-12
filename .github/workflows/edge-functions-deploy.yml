@@ -1,0 +1,14 @@
+name: Edge Functions Deploy
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "supabase/functions/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Deploy with Supabase CLI"

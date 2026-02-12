@@ -1,0 +1,2 @@
+-- Seed is done via: npm run seed
+-- That runs scripts/seed-supabase.ts with data from assets/offline-data/

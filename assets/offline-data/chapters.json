@@ -1,0 +1,443 @@
+[
+  {
+    "id": "chap-en-ro-comunicare",
+    "subject_id": "subj-en-romana",
+    "title": "Comunicarea și textul nonliterar",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-ro-text-literar",
+    "subject_id": "subj-en-romana",
+    "title": "Text literar (narativ, liric, dramatic)",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-ro-gramatica-pdv",
+    "subject_id": "subj-en-romana",
+    "title": "Gramatică: părți de vorbire",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-ro-gramatica-propozitie",
+    "subject_id": "subj-en-romana",
+    "title": "Gramatică: propoziția și fraza",
+    "order": 4,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-mate-aritmetica",
+    "subject_id": "subj-en-matematica",
+    "title": "Aritmetică și fracții",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-mate-ecuatii",
+    "subject_id": "subj-en-matematica",
+    "title": "Procente, proporții și ecuații",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-mate-geo-plana",
+    "subject_id": "subj-en-matematica",
+    "title": "Geometrie plană",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-en-mate-geo-spatiu",
+    "subject_id": "subj-en-matematica",
+    "title": "Geometrie în spațiu și probabilități",
+    "order": 4,
+    "published": true,
+    "exam_tags": ["EN"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ro-genuri",
+    "subject_id": "subj-bac-romana",
+    "title": "Genuri și specii literare",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "real", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ro-curente",
+    "subject_id": "subj-bac-romana",
+    "title": "Curente literare",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "real", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ro-proza-poezie",
+    "subject_id": "subj-bac-romana",
+    "title": "Proză, poezie și dramatic",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "real", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ro-argumentare",
+    "subject_id": "subj-bac-romana",
+    "title": "Text argumentativ și eseu",
+    "order": 4,
+    "published": true,
+    "exam_tags": ["BAC", "real", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-mate-functii",
+    "subject_id": "subj-bac-matematica-real",
+    "title": "Funcții și grafice",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-mate-derivate",
+    "subject_id": "subj-bac-matematica-real",
+    "title": "Limite și derivate",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-mate-integrale",
+    "subject_id": "subj-bac-matematica-real",
+    "title": "Integrale",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-mate-matrici",
+    "subject_id": "subj-bac-matematica-real",
+    "title": "Matrice, determinanți și șiruri",
+    "order": 4,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ist-moderna",
+    "subject_id": "subj-bac-istorie-uman",
+    "title": "România modernă",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ist-secol-xx",
+    "subject_id": "subj-bac-istorie-uman",
+    "title": "România în secolul XX",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-ist-relatii",
+    "subject_id": "subj-bac-istorie-uman",
+    "title": "Relații internaționale și constituții",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-fizica-mecanica",
+    "subject_id": "subj-bac-fizica-real",
+    "title": "Mecanică",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-fizica-termo",
+    "subject_id": "subj-bac-fizica-real",
+    "title": "Termodinamică",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-fizica-electricitate",
+    "subject_id": "subj-bac-fizica-real",
+    "title": "Electricitate, magnetism și optică",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-chimie-structura",
+    "subject_id": "subj-bac-chimie-real",
+    "title": "Structura atomului și legături chimice",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-chimie-reactii",
+    "subject_id": "subj-bac-chimie-real",
+    "title": "Reacții chimice și echilibru",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-chimie-solutii",
+    "subject_id": "subj-bac-chimie-real",
+    "title": "Soluții și chimie organică",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-bio-celula",
+    "subject_id": "subj-bac-biologie-real",
+    "title": "Celula și genetică",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-bio-anatomie",
+    "subject_id": "subj-bac-biologie-real",
+    "title": "Anatomie și fiziologie umană",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-bio-ecologie",
+    "subject_id": "subj-bac-biologie-real",
+    "title": "Ecologie și evoluție",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-info-algoritmi",
+    "subject_id": "subj-bac-informatica-real",
+    "title": "Algoritmi și structuri de date",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-info-recursivitate",
+    "subject_id": "subj-bac-informatica-real",
+    "title": "Recursivitate și backtracking",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-info-grafuri",
+    "subject_id": "subj-bac-informatica-real",
+    "title": "Grafuri și complexitate",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "real"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-geo-relief",
+    "subject_id": "subj-bac-geografie-uman",
+    "title": "Relief și climă",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-geo-hidrografie",
+    "subject_id": "subj-bac-geografie-uman",
+    "title": "Hidrografie",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-geo-populatie",
+    "subject_id": "subj-bac-geografie-uman",
+    "title": "Populație, resurse și economie",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-logica-notiuni",
+    "subject_id": "subj-bac-logica-uman",
+    "title": "Noțiuni și propoziții logice",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-logica-rationamente",
+    "subject_id": "subj-bac-logica-uman",
+    "title": "Raționamente",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-logica-argumentare",
+    "subject_id": "subj-bac-logica-uman",
+    "title": "Argumentare și comunicare",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-psi-cognitive",
+    "subject_id": "subj-bac-psihologie-uman",
+    "title": "Procese cognitive",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-psi-afective",
+    "subject_id": "subj-bac-psihologie-uman",
+    "title": "Procese afective și motivație",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-psi-personalitate",
+    "subject_id": "subj-bac-psihologie-uman",
+    "title": "Personalitate și dezvoltare",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-eco-piata",
+    "subject_id": "subj-bac-economie-uman",
+    "title": "Piață, cerere și ofertă",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-eco-costuri",
+    "subject_id": "subj-bac-economie-uman",
+    "title": "Producție, costuri și profit",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-eco-bani",
+    "subject_id": "subj-bac-economie-uman",
+    "title": "Bani, inflație și politici economice",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-socio-socializare",
+    "subject_id": "subj-bac-sociologie-uman",
+    "title": "Socializare și cultură",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-socio-structuri",
+    "subject_id": "subj-bac-sociologie-uman",
+    "title": "Structuri și instituții sociale",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-socio-stratificare",
+    "subject_id": "subj-bac-sociologie-uman",
+    "title": "Stratificare și mobilitate",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-filo-cunoastere",
+    "subject_id": "subj-bac-filosofie-uman",
+    "title": "Cunoaștere și adevăr",
+    "order": 1,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-filo-etica",
+    "subject_id": "subj-bac-filosofie-uman",
+    "title": "Etică și valori",
+    "order": 2,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  },
+  {
+    "id": "chap-bac-filo-existenta",
+    "subject_id": "subj-bac-filosofie-uman",
+    "title": "Existență și curente filosofice",
+    "order": 3,
+    "published": true,
+    "exam_tags": ["BAC", "uman"],
+    "is_core_for_exam": true
+  }
+]

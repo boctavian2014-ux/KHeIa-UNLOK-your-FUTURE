@@ -1,0 +1,27 @@
+[
+  { "id": "subj-en-romana", "name": "Română", "level": "gimnaziu", "exam_tags": ["EN"] },
+  { "id": "subj-en-matematica", "name": "Matematică", "level": "gimnaziu", "exam_tags": ["EN"] },
+  { "id": "subj-bac-romana", "name": "Română", "level": "liceu", "exam_tags": ["BAC", "real", "uman"] },
+  { "id": "subj-bac-matematica-real", "name": "Matematică", "level": "liceu", "exam_tags": ["BAC", "real"] },
+  { "id": "subj-bac-istorie-uman", "name": "Istorie", "level": "liceu", "exam_tags": ["BAC", "uman"] },
+  { "id": "subj-bac-fizica-real", "name": "Fizică", "level": "liceu", "exam_tags": ["BAC", "real"] },
+  { "id": "subj-bac-chimie-real", "name": "Chimie", "level": "liceu", "exam_tags": ["BAC", "real"] },
+  {
+    "id": "subj-bac-biologie-real",
+    "name": "Biologie (inclusiv Anatomie)",
+    "level": "liceu",
+    "exam_tags": ["BAC", "real"]
+  },
+  { "id": "subj-bac-informatica-real", "name": "Informatică", "level": "liceu", "exam_tags": ["BAC", "real"] },
+  { "id": "subj-bac-geografie-uman", "name": "Geografie", "level": "liceu", "exam_tags": ["BAC", "uman"] },
+  {
+    "id": "subj-bac-logica-uman",
+    "name": "Logică, argumentare și comunicare",
+    "level": "liceu",
+    "exam_tags": ["BAC", "uman"]
+  },
+  { "id": "subj-bac-psihologie-uman", "name": "Psihologie", "level": "liceu", "exam_tags": ["BAC", "uman"] },
+  { "id": "subj-bac-economie-uman", "name": "Economie", "level": "liceu", "exam_tags": ["BAC", "uman"] },
+  { "id": "subj-bac-sociologie-uman", "name": "Sociologie", "level": "liceu", "exam_tags": ["BAC", "uman"] },
+  { "id": "subj-bac-filosofie-uman", "name": "Filosofie", "level": "liceu", "exam_tags": ["BAC", "uman"] }
+]
