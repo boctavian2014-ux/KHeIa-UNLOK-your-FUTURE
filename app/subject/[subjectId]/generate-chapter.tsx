@@ -1,20 +1,34 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, TextInput, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { getGeneratedChapters, addGeneratedChapter } from '@/lib/chapterStorage';
+import { getGeneratedChapters, addGeneratedChapter, setGeneratedTheory } from '@/lib/chapterStorage';
 import { useCatalogContext } from '@/components/common/CatalogProvider';
 import { createChapter } from '@/services/generator.service';
+
+const TUTORIAL_TEXT =
+  'Poți căuta și genera orice capitol din programa școlară de pregătire pentru Bacalaureat sau Evaluare Națională. Scrie tema sau alege una din sugestiile de mai jos.';
 
 export default function GenerateChapterScreen() {
   const { subjectId } = useLocalSearchParams<{ subjectId: string }>();
   const router = useRouter();
-  const { subjects } = useCatalogContext();
+  const insets = useSafeAreaInsets();
+  const { subjects, chapters } = useCatalogContext();
   const [topic, setTopic] = useState<string>('');
   const [saving, setSaving] = useState(false);
 
   const subject = subjects.find((s) => s.id === subjectId);
+
+  const suggestions = useMemo(
+    () =>
+      chapters
+        .filter((c) => c.subject_id === subjectId)
+        .sort((a, b) => a.order - b.order)
+        .map((c) => c.title),
+    [chapters, subjectId]
+  );
 
   const onGenerate = async () => {
     if (!topic.trim() || !subjectId) return;
@@ -22,7 +36,16 @@ export default function GenerateChapterScreen() {
     try {
       const { data, error } = await createChapter(topic.trim(), subjectId, 'liceu');
       if (error) {
-        Alert.alert('Eroare', error.message ?? 'Nu s-a putut genera capitolul.');
+        const msg =
+          error.message?.includes('non-2xx') || error.message?.includes('status code')
+            ? 'Serviciul de generare nu este disponibil. Verifică conexiunea sau încearcă mai târziu.'
+            : error.message ?? 'Nu s-a putut genera capitolul.';
+        Alert.alert('Eroare', msg);
+        return;
+      }
+      const payload = data as { source?: string; content?: string } | null;
+      if (payload?.source === 'error') {
+        Alert.alert('Eroare', payload.content ?? 'Nu s-a putut genera capitolul.');
         return;
       }
       const existing = await getGeneratedChapters();
@@ -35,6 +58,10 @@ export default function GenerateChapterScreen() {
         order,
         published: true,
       });
+      const content = (payload as { content?: string })?.content?.trim();
+      if (content) {
+        await setGeneratedTheory(id, [content]);
+      }
       router.back();
     } catch (e) {
       Alert.alert('Eroare', e instanceof Error ? e.message : 'Eroare neașteptată.');
@@ -47,7 +74,7 @@ export default function GenerateChapterScreen() {
 
   if (!subject) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
         <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
           <Text style={styles.backText}>← Înapoi</Text>
         </Pressable>
@@ -59,7 +86,7 @@ export default function GenerateChapterScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
@@ -71,16 +98,48 @@ export default function GenerateChapterScreen() {
         {subject.name} – Capitolele generate vor apărea local în lista de capitole.
       </Text>
 
+      <GlassCard dark intensity={14} style={styles.tutorialCard}>
+        <Text style={styles.tutorialIcon}>💡</Text>
+        <Text style={styles.tutorialText}>{TUTORIAL_TEXT}</Text>
+      </GlassCard>
+
       <Text style={styles.label}>Topic / Tema capitolului</Text>
       <GlassCard dark intensity={14} style={styles.inputCard}>
         <TextInput
           style={styles.input}
-          placeholder="Ex: Fracții și procente, Ecuații de gradul I..."
+          placeholder={
+            suggestions.length > 0
+              ? `Ex: ${suggestions[0]}${suggestions[1] ? `, ${suggestions[1]}...` : ''}`
+              : 'Scrie tema capitolului...'
+          }
           placeholderTextColor="rgba(255,255,255,0.5)"
           value={topic}
           onChangeText={setTopic}
         />
       </GlassCard>
+
+      {suggestions.length > 0 && (
+        <View style={styles.suggestionsSection}>
+          <Text style={styles.suggestionsLabel}>Sugestii din programa {subject.name}</Text>
+          <View style={styles.suggestionsGrid}>
+            {suggestions.map((title) => (
+              <Pressable
+                key={title}
+                onPress={() => setTopic(title)}
+                style={({ pressed }) => [
+                  styles.suggestionChip,
+                  pressed && styles.suggestionChipPressed,
+                  topic === title && styles.suggestionChipActive,
+                ]}
+              >
+                <Text style={styles.suggestionChipText} numberOfLines={1}>
+                  {title}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+      )}
 
       <Pressable
         onPress={onGenerate}
@@ -97,11 +156,26 @@ export default function GenerateChapterScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'transparent' },
-  content: { padding: spacing.lg, paddingBottom: 120 },
+  content: { padding: spacing.lg, paddingBottom: spacing.contentBottom },
   backRow: { marginBottom: spacing.md },
   backText: { fontSize: typography.size.md, fontWeight: '600', color: colors.dark.secondary },
   title: { fontSize: typography.size.xl, fontWeight: '700', color: '#ffffff', marginBottom: spacing.xs },
   subtitle: { fontSize: typography.size.sm, color: 'rgba(255,255,255,0.8)', marginBottom: spacing.lg },
+  tutorialCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: spacing.md,
+    marginBottom: spacing.lg,
+    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+    borderColor: 'rgba(59, 130, 246, 0.3)',
+  },
+  tutorialIcon: { fontSize: 20, marginRight: spacing.sm },
+  tutorialText: {
+    flex: 1,
+    fontSize: typography.size.sm,
+    color: 'rgba(255,255,255,0.95)',
+    lineHeight: 20,
+  },
   label: { fontSize: typography.size.sm, fontWeight: '600', color: 'rgba(255,255,255,0.9)', marginBottom: spacing.sm },
   inputCard: {
     padding: spacing.md,
@@ -110,6 +184,36 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   input: { fontSize: typography.size.md, color: '#ffffff', padding: 0 },
+  suggestionsSection: { marginTop: spacing.md, marginBottom: spacing.lg },
+  suggestionsLabel: {
+    fontSize: typography.size.sm,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.85)',
+    marginBottom: spacing.sm,
+  },
+  suggestionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  suggestionChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: 999,
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.3)',
+    maxWidth: '100%',
+  },
+  suggestionChipPressed: { opacity: 0.9 },
+  suggestionChipActive: {
+    backgroundColor: 'rgba(34, 197, 94, 0.25)',
+    borderColor: 'rgba(34, 197, 94, 0.5)',
+  },
+  suggestionChipText: {
+    fontSize: typography.size.sm,
+    color: 'rgba(255,255,255,0.95)',
+  },
   generateBtn: { marginTop: spacing.md },
   generateBtnDisabled: { opacity: 0.5 },
   generateBtnInner: {

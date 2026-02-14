@@ -73,9 +73,104 @@ async function fetchChapterItems(chapterId: string, count: number) {
     .select('*')
     .eq('chapter_id', chapterId)
     .limit(count * 2);
-  const items = (data ?? []) as Array<Record<string, unknown>>;
-  return items.slice(0, count);
+
+  let items = (data ?? []) as Array<Record<string, unknown>>;
+  if (items.length === 0) {
+    items = offlineItems
+      .filter((i) => i.chapter_id === chapterId)
+      .map((i) => ({ id: i.id, chapter_id: i.chapter_id, question: i.question, explanation: null }));
+  }
+
+  const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
+  return shuffle(items).slice(0, count);
 }
+
+const offlineChapters = require('../../assets/offline-data/chapters.json') as Array<{ id: string; subject_id: string }>;
+const offlineItems = require('../../assets/offline-data/chapterpracticeitems.json') as Array<{
+  id: string;
+  chapter_id: string;
+  question: string;
+}>;
+const offlineOpts = require('../../assets/offline-data/chapterpracticeoptions.json') as Array<{
+  id: string;
+  practice_item_id: string;
+  text: string;
+  is_correct: boolean;
+}>;
+
+/**
+ * Fetches quiz questions for an EN/BAC exam test (din toate capitolele unei materii).
+ */
+export const fetchExamTestQuestions = async (
+  subjectId: string,
+  count = 20
+): Promise<QuizQuestion[]> => {
+  const { data: chapters } = await supabase
+    .from('chapters')
+    .select('id')
+    .eq('subject_id', subjectId)
+    .eq('published', true);
+
+  let chapterIds = (chapters ?? []).map((c) => c.id);
+  if (chapterIds.length === 0) {
+    chapterIds = offlineChapters.filter((c) => c.subject_id === subjectId).map((c) => c.id);
+  }
+  if (chapterIds.length === 0) return [];
+
+  const { data: items } = await supabase
+    .from('chapterpracticeitems')
+    .select('*')
+    .in('chapter_id', chapterIds);
+
+  let allItems = (items ?? []) as Array<Record<string, unknown>>;
+  if (allItems.length === 0) {
+    allItems = offlineItems
+      .filter((i) => chapterIds.includes(i.chapter_id))
+      .map((i) => ({ id: i.id, chapter_id: i.chapter_id, question: i.question, explanation: null }));
+  }
+  const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
+  const selected = shuffle(allItems).slice(0, count);
+
+  if (selected.length === 0) return [];
+
+  const ids = selected.map((i) => i.id as string);
+  const { data: optsData } = await supabase
+    .from('chapterpracticeoptions')
+    .select('*')
+    .in('practice_item_id', ids);
+
+  let opts = (optsData ?? []) as Array<{ id: string; practice_item_id: string; text: string; is_correct: boolean }>;
+  if (opts.length === 0) {
+    opts = offlineOpts.filter((o) => ids.includes(o.practice_item_id));
+  }
+
+  const optsByItem = opts.reduce<Record<string, Array<{ id: string; text: string; is_correct: boolean }>>>(
+    (acc, o) => {
+      const pid = o.practice_item_id as string;
+      if (!acc[pid]) acc[pid] = [];
+      acc[pid].push({ id: o.id, text: o.text, is_correct: o.is_correct ?? false });
+      return acc;
+    },
+    {}
+  );
+
+  const shuffleOpts = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
+
+  return selected.map((item) => {
+    const raw = optsByItem[item.id as string] ?? [];
+    const options = shuffleOpts(raw).slice(0, 5).map((o) => ({
+      id: o.id,
+      text: o.text,
+      is_correct: o.is_correct,
+    }));
+    return {
+      id: item.id as string,
+      question: item.question as string,
+      explanation: (item.explanation as string) ?? null,
+      options,
+    };
+  });
+};
 
 /**
  * Selects non-repeating quiz questions with fallback repeats.
@@ -103,16 +198,9 @@ export const selectQuizQuestions = async (
   const allItems = items ?? [];
   const freshItems = allItems.filter((item) => !answeredIds.has(item.id as string));
 
-  const selected = freshItems.slice(0, count);
+  const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
+  const selected = shuffle(freshItems).slice(0, count);
   const repeatedIds: string[] = [];
-
-  if (selected.length < count) {
-    const needed = count - selected.length;
-    const repeatPool = allItems.filter((item) => !selected.includes(item));
-    const repeats = repeatPool.slice(0, needed);
-    repeatedIds.push(...repeats.map((item) => String(item.id)));
-    selected.push(...repeats);
-  }
 
   return { items: selected, repeatedIds };
 };

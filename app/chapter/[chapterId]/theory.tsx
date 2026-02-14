@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { getGeneratedChapters, getGeneratedTheory } from '@/lib/chapterStorage';
@@ -14,6 +15,7 @@ const chapterTheoryData = require('../../../assets/offline-data/chaptertheory.js
 export default function ChapterTheoryScreen() {
   const { chapterId } = useLocalSearchParams<{ chapterId: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { chapters: chaptersData, chapterDetails: chapterDetailsData, loading } = useCatalogContext();
   const [generatedChapters, setGeneratedChapters] = useState<typeof chaptersData>([]);
   const [generatedTheory, setGeneratedTheoryState] = useState<string[] | null>(null);
@@ -46,7 +48,7 @@ export default function ChapterTheoryScreen() {
 
   if (!chapter) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
         <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
           <Text style={styles.backText}>←</Text>
         </Pressable>
@@ -58,7 +60,7 @@ export default function ChapterTheoryScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable
@@ -66,7 +68,7 @@ export default function ChapterTheoryScreen() {
           if (router.canGoBack()) {
             router.back();
           } else {
-            router.replace('/(tabs)');
+            router.replace('/(tabs)/home');
           }
         }}
         style={styles.backRow}
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingBottom: 120,
+    paddingBottom: spacing.contentBottom,
   },
   centered: {
     justifyContent: 'center',

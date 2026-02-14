@@ -3,74 +3,90 @@ import { supabase } from '@/services/supabase';
 import {
   getUserGamification,
   getRecentTransactions,
-  getLevelFromXP,
-  type UserGamification,
+  getGamificationSummary,
   type CoinTransaction,
 } from '@/services/gamification.service';
 
-export type GamificationState = {
+type UseGamificationState = {
   coins: number;
-  xp: number;
   level: number;
-  streak: number;
   xpProgress: number;
+  streak: number;
   transactions: CoinTransaction[];
   loading: boolean;
   userId: string | null;
+  totalXP: number;
 };
 
-export const useGamification = () => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [data, setData] = useState<UserGamification | null>(null);
-  const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
+const initialState: UseGamificationState = {
+  coins: 0,
+  level: 1,
+  xpProgress: 0,
+  streak: 0,
+  transactions: [],
+  loading: true,
+  userId: null,
+  totalXP: 0,
+};
 
-  const fetch = useCallback(async () => {
+export function useGamification() {
+  const [state, setState] = useState<UseGamificationState>(initialState);
+
+  const refresh = useCallback(async () => {
+    setState((s) => ({ ...s, loading: true }));
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    setUserId(user?.id ?? null);
 
     if (!user?.id) {
-      setData(null);
-      setTransactions([]);
-      setLoading(false);
+      setState({ ...initialState, loading: false });
       return;
     }
 
-    const [gamification, tx] = await Promise.all([
+    const [gamification, transactions] = await Promise.all([
       getUserGamification(user.id),
-      getRecentTransactions(user.id, 10),
+      getRecentTransactions(user.id, 20),
     ]);
-    setData(gamification ?? null);
-    setTransactions(tx ?? []);
-    setLoading(false);
+
+    if (!gamification) {
+      setState({
+        ...initialState,
+        userId: user.id,
+        loading: false,
+      });
+      return;
+    }
+
+    const summary = getGamificationSummary(gamification);
+
+    setState({
+      coins: summary.coins,
+      level: summary.level,
+      xpProgress: summary.xpProgress,
+      streak: summary.streak,
+      transactions,
+      loading: false,
+      userId: gamification.user_id,
+      totalXP: summary.totalXP,
+    });
   }, []);
 
   useEffect(() => {
-    fetch();
+    void refresh();
+  }, [refresh]);
 
+  useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(() => {
-      fetch();
+      void refresh();
     });
     return () => subscription.unsubscribe();
-  }, [fetch]);
+  }, [refresh]);
 
-  const totalXp = data?.total_xp ?? 0;
-  const xpInLevel = totalXp % 100;
-
-  const state: GamificationState = {
-    coins: data?.coins ?? 0,
-    xp: totalXp,
-    level: getLevelFromXP(totalXp),
-    streak: data?.streak_days ?? 0,
-    xpProgress: xpInLevel / 100,
-    transactions,
-    loading,
-    userId,
+  return {
+    ...state,
+    refresh,
   };
-
-  return { ...state, refresh: fetch };
-};
+}

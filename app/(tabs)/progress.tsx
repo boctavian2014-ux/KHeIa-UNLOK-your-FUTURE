@@ -1,16 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
+import dayjs from 'dayjs';
 import { colors, spacing, typography } from '@/theme';
 import { useGamification } from '@/hooks/useGamification';
 import { getRewardsCatalog } from '@/services/gamification.service';
 import type { Reward } from '@/services/gamification.service';
+import {
+  generateDailyMissions,
+  type DailyMission as DailyMissionData,
+} from '@/services/daily-missions.client';
+import { getOnboardingExam } from '@/lib/onboardingStorage';
 import { XPBar } from '@/components/gamification/XPBar';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
 import { CoinsDisplay } from '@/components/gamification/CoinsDisplay';
@@ -18,26 +25,94 @@ import { DailyMission } from '@/components/gamification/DailyMission';
 import { RecentActivity } from '@/components/gamification/RecentActivity';
 import { RewardsPreview } from '@/components/gamification/RewardsPreview';
 
-const DAILY_MISSIONS = [
-  'Fă un quiz la capitolul citit',
-  'Citește un capitol',
-  'Completează un test EN/BAC',
-];
-
 export default function ProgressScreen() {
   const router = useRouter();
-  const { coins, level, xpProgress, streak, transactions, loading, userId, refresh } =
-    useGamification();
+  const {
+    coins,
+    level,
+    xpProgress,
+    streak,
+    transactions,
+    loading,
+    userId,
+    totalXP,
+    refresh,
+  } = useGamification();
+
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const [examContext, setExamContext] = useState<'EN' | 'BAC' | 'ANY'>('ANY');
 
   const loadRewards = useCallback(async () => {
     const data = await getRewardsCatalog();
     setRewards(data);
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      void refresh();
+    }, [refresh])
+  );
+
   useEffect(() => {
     loadRewards();
   }, [loadRewards]);
+
+  useEffect(() => {
+    getOnboardingExam().then((exam) => {
+      if (exam) setExamContext(exam);
+    });
+  }, []);
+
+  const missions = useMemo<DailyMissionData[]>(
+    () => generateDailyMissions(streak, transactions, examContext),
+    [streak, transactions, examContext]
+  );
+
+  const handleMissionPress = (mission: DailyMissionData) => {
+    switch (mission.type) {
+      case 'QUIZ_EN':
+      case 'QUIZ_BAC':
+      case 'ANY_QUIZ':
+        router.push({ pathname: '/select-chapter', params: { for: 'quiz' } });
+        break;
+      case 'TEST_EN':
+      case 'TEST_BAC':
+      case 'ANY_TEST':
+        router.push('/(tabs)/tests');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const todaySummary = useMemo(() => {
+    const today = dayjs();
+    const todaysTx = transactions.filter((tx) =>
+      dayjs(tx.created_at).isSame(today, 'day')
+    );
+
+    const coinsToday = todaysTx
+      .filter((tx) => tx.type === 'earn')
+      .reduce((sum, tx) => sum + tx.amount, 0);
+    const quizzesToday = todaysTx.filter((tx) => tx.source === 'quiz').length;
+    const testsToday = todaysTx.filter((tx) => tx.source === 'test').length;
+
+    return {
+      coinsToday,
+      quizzesToday,
+      testsToday,
+    };
+  }, [transactions]);
+
+  const dailyGoal = useMemo(() => {
+    if (streak >= 10) {
+      return 'Completează azi minim 2 teste pentru a-ți menține streak-ul puternic.';
+    }
+    if (streak >= 3) {
+      return 'Rezolvă azi 1 test și 1 quiz ca să-ți crești streak-ul.';
+    }
+    return 'Fă azi cel puțin 1 quiz ca să începi un nou streak.';
+  }, [streak]);
 
   if (loading) {
     return (
@@ -56,7 +131,9 @@ export default function ProgressScreen() {
       showsVerticalScrollIndicator={false}
     >
       <Text style={styles.title}>Progres</Text>
-      <Text style={styles.subtitle}>XP, streak și misiuni zilnice.</Text>
+      <Text style={styles.subtitle}>
+        Revino zilnic pentru XP, streak și recompense noi.
+      </Text>
 
       <View style={styles.header}>
         <View style={styles.avatar}>
@@ -65,6 +142,9 @@ export default function ProgressScreen() {
         <View style={styles.headerRight}>
           <Text style={styles.level}>Nivel {level}</Text>
           <XPBar progress={xpProgress} />
+          <Text style={styles.smallText}>
+            Ai acumulat {totalXP} XP până acum.
+          </Text>
         </View>
       </View>
 
@@ -72,16 +152,34 @@ export default function ProgressScreen() {
         <CoinsDisplay coins={coins} />
       </View>
 
-      <View style={styles.streakRow}>
-        <StreakCounter streak={streak} />
+      <View style={styles.section}>
+        <View style={styles.sectionHeaderRow}>
+          <Text style={styles.sectionTitle}>Streak-ul tău</Text>
+          <Text style={styles.streakLabel}>{streak} zile la rând</Text>
+        </View>
+        <View style={styles.streakRow}>
+          <StreakCounter streak={streak} />
+        </View>
+        <Text style={styles.sectionText}>{dailyGoal}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Astăzi ai făcut</Text>
+        <Text style={styles.sectionText}>
+          {todaySummary.coinsToday} monede câștigate, {todaySummary.quizzesToday} quiz-uri și {todaySummary.testsToday} teste.
+        </Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Misiuni zilnice</Text>
-        {DAILY_MISSIONS.map((m, i) => (
-          <View key={i} style={styles.missionWrap}>
-            <DailyMission text={m} />
-          </View>
+        {missions.map((m) => (
+          <Pressable
+            key={m.id}
+            style={({ pressed }) => [styles.missionWrap, pressed && styles.missionPressed]}
+            onPress={() => handleMissionPress(m)}
+          >
+            <DailyMission text={m.text} />
+          </Pressable>
         ))}
       </View>
 
@@ -90,7 +188,10 @@ export default function ProgressScreen() {
         <RecentActivity transactions={transactions} />
       </View>
 
-      <RewardsPreview rewards={rewards} onViewAll={() => router.push('/rewards')} />
+      <RewardsPreview
+        rewards={rewards}
+        onViewAll={() => router.push('/rewards')}
+      />
 
       <View style={styles.bottom} />
     </ScrollView>
@@ -108,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    paddingBottom: 110,
+    paddingBottom: spacing.contentBottom,
   },
   title: {
     fontSize: typography.size.xl,
@@ -152,7 +253,22 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   streakRow: {
-    marginTop: spacing.md,
+    marginTop: spacing.xs,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.xs,
+  },
+  streakLabel: {
+    fontSize: typography.size.xs,
+    color: colors.dark.muted,
+  },
+  smallText: {
+    fontSize: typography.size.xs,
+    color: colors.dark.muted,
+    marginTop: spacing.xs,
   },
   section: {
     marginTop: spacing.xl,
@@ -160,11 +276,20 @@ const styles = StyleSheet.create({
   missionWrap: {
     marginBottom: spacing.sm,
   },
+  missionPressed: {
+    opacity: 0.9,
+  },
   sectionTitle: {
     fontSize: typography.size.lg,
     fontWeight: '700',
     color: colors.dark.text,
     marginBottom: spacing.sm,
+  },
+  sectionText: {
+    fontSize: typography.size.md,
+    color: colors.dark.text,
+    marginTop: spacing.xs,
+    lineHeight: 22,
   },
   bottom: {
     height: spacing.lg,

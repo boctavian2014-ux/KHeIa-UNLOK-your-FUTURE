@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { useGamification } from '@/hooks/useGamification';
 import { getRewardsCatalog, redeemReward } from '@/services/gamification.service';
@@ -16,6 +17,7 @@ import type { Reward } from '@/services/gamification.service';
 
 export default function RewardsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { coins, userId, refresh } = useGamification();
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +79,7 @@ export default function RewardsScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable onPress={() => router.back()} style={styles.back}>
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    paddingBottom: 110,
+    paddingBottom: spacing.contentBottom,
   },
   back: {
     marginBottom: spacing.md,

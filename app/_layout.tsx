@@ -2,9 +2,11 @@ import { Stack } from 'expo-router';
 import { AppBackground } from '@/components/common/AppBackground';
 import { CatalogProvider } from '@/components/common/CatalogProvider';
 import { StreakUpdater } from '@/components/common/StreakUpdater';
+import { SkinProvider } from '@/contexts/SkinContext';
 
 export default function RootLayout() {
   return (
+    <SkinProvider>
     <AppBackground>
       <StreakUpdater />
       <CatalogProvider>
@@ -17,6 +19,7 @@ export default function RootLayout() {
           },
         }}
       >
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="subject/[subjectId]" />
         <Stack.Screen name="subject/[subjectId]/generate-chapter" />
@@ -55,5 +58,6 @@ export default function RootLayout() {
       </Stack>
       </CatalogProvider>
     </AppBackground>
+    </SkinProvider>
   );
 }

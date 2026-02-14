@@ -1,14 +1,12 @@
 import { corsHeaders } from '../_shared/cors.ts';
 import { getSupabaseClient } from '../_shared/supabase-client.ts';
-import { getJwtFromRequest } from '../_shared/auth.ts';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  const jwt = getJwtFromRequest(req);
-  const supabase = getSupabaseClient(jwt);
+  const supabase = getSupabaseClient();
   const body = await req.json();
 
   const backendUrl = Deno.env.get('NODE_BACKEND_URL') ?? '';

@@ -5,9 +5,34 @@
     "scheme": "kheia",
     "version": "0.1.0",
     "orientation": "portrait",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "userInterfaceStyle": "automatic",
-    "plugins": ["expo-router"],
-    "jsEngine": "hermes"
+    "plugins": [
+      "./node_modules/expo-router/app.plugin.js"
+    ],
+    "jsEngine": "hermes",
+    "icon": "./assets/BECKGROUND.png",
+    "splash": {
+      "image": "./assets/BECKGROUND.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1e293b"
+    },
+    "android": {
+      "package": "com.kheia.edumat",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/BECKGROUND.png",
+        "backgroundColor": "#1e293b"
+      }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ed20c160-2eb9-4be0-b11e-81050a8300b3"
+      }
+    }
   }
 }

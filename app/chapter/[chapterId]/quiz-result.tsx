@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, typography } from '@/theme';
 import { supabase } from '@/services/supabase';
-import { awardCoins } from '@/services/gamification.service';
+import { onQuizFinished } from '@/services/progress-events.service';
 
 export default function ChapterQuizResultScreen() {
   const { chapterId, correctCount } = useLocalSearchParams<{ chapterId: string; correctCount?: string }>();
@@ -11,15 +11,17 @@ export default function ChapterQuizResultScreen() {
 
   useEffect(() => {
     if (!chapterId || !correctCount) return;
+
     const run = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user?.id) return;
-      const correct = Math.min(10, Math.max(0, parseInt(correctCount ?? '0', 10)));
-      const coins = 5 + correct;
-      await awardCoins(user.id, coins, 'quiz', chapterId);
+
+      const correct = Math.max(0, parseInt(correctCount ?? '0', 10));
+      await onQuizFinished(user.id, chapterId, correct);
     };
+
     run();
   }, [chapterId, correctCount]);
 

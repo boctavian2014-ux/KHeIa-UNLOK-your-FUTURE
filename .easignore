@@ -1,0 +1,10 @@
+# EAS Build - exclude from upload (reduces size, avoids potential issues)
+.git
+.env
+.env.local
+.env.*.local
+.expo
+*.log
+coverage
+.nyc_output
+node-backend

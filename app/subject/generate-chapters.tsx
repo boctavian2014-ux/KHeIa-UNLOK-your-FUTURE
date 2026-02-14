@@ -76,7 +76,7 @@ export default function GenerateChaptersScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: spacing.lg,
-    paddingBottom: 100,
+    paddingBottom: spacing.contentBottom,
     backgroundColor: 'transparent',
   },
   title: {
@@ -95,8 +95,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   card: {
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: spacing.default,
+    paddingHorizontal: spacing.relaxed,
   },
   cardRow: {
     flexDirection: 'row',
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: spacing.sm,
   },
   cardTitle: {
     fontSize: 14,
@@ -140,14 +140,14 @@ const styles = StyleSheet.create({
     color: colors.dark.text,
   },
   cardMeta: {
-    marginTop: 2,
+    marginTop: spacing.tight,
     fontSize: 12,
     color: colors.dark.muted,
   },
   badge: {
     fontSize: 10,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.tight,
     borderRadius: 999,
     borderWidth: 1,
     borderColor: 'rgba(148, 163, 184, 0.6)',
@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(248, 250, 252, 0.09)',
   },
   status: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: spacing.compact,
+    paddingVertical: spacing.tight,
     borderRadius: 999,
     borderWidth: 1,
     alignSelf: 'center',
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     marginTop: spacing.lg,
-    paddingVertical: 12,
+    paddingVertical: spacing.default,
     borderRadius: 999,
     alignItems: 'center',
     backgroundColor: '#22C55E',

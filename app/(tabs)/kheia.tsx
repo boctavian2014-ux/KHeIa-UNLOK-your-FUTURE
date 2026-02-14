@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   subtitle: {
-    marginTop: 2,
+    marginTop: spacing.tight,
     fontSize: typography.size.sm,
     color: 'rgba(255,255,255,0.75)',
   },
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     padding: spacing.md,
-    paddingBottom: 100,
+    paddingBottom: spacing.contentBottom,
     gap: spacing.sm,
   },
   input: {
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
   fullScreenPromptArea: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingBottom: 100,
+    paddingBottom: spacing.contentBottom,
   },
   tutorialWrapper: {
     flex: 1,

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { spacing } from './spacing';
 
 type GlassVariant = 'card' | 'tabBar';
 
@@ -39,13 +40,13 @@ export const glassStyles = StyleSheet.create({
   card: {
     borderRadius: 16,
     borderWidth: 1,
-    padding: 16,
+    padding: spacing.relaxed,
   },
   tabBar: {
     borderRadius: 999,
     borderWidth: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.compact,
+    paddingHorizontal: spacing.relaxed,
   },
 });
 

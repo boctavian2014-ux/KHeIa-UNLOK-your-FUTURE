@@ -1,14 +1,15 @@
 import { ReactNode } from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSkin } from '@/contexts/SkinContext';
 
 type AppBackgroundProps = {
   children: ReactNode;
 };
 
-const backgroundSource = require('../../../assets/Kheya_bg_v2.png');
-
 export const AppBackground = ({ children }: AppBackgroundProps) => {
+  const { skinSource } = useSkin();
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -18,7 +19,7 @@ export const AppBackground = ({ children }: AppBackgroundProps) => {
         style={StyleSheet.absoluteFill}
       />
       <ImageBackground
-        source={backgroundSource}
+        source={skinSource}
         style={StyleSheet.absoluteFill}
         imageStyle={styles.image}
       />

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { supabase } from '@/services/supabase';
@@ -23,6 +24,7 @@ const QUESTION_COUNT = 10;
 export default function ChapterQuizScreen() {
   const { chapterId } = useLocalSearchParams<{ chapterId: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -101,7 +103,7 @@ export default function ChapterQuizScreen() {
 
   if (!chapterId || questions.length === 0) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
         <Text style={styles.title}>Quiz</Text>
         <Text style={styles.subtitle}>
           Nu există întrebări pentru acest capitol. Generează mai întâi conținutul.
@@ -113,7 +115,7 @@ export default function ChapterQuizScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable onPress={() => router.back()} style={styles.back} hitSlop={16}>
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingBottom: 120,
+    paddingBottom: spacing.contentBottom,
   },
   back: {
     marginBottom: spacing.md,

@@ -22,6 +22,10 @@ app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(pinoHttp());
 
+app.get('/', (_req, res) => {
+  res.send('Welcome to KhEIa - Unlock Your Future!');
+});
+
 registerHealthRoutes(app);
 registerGenerateRoutes(app);
 

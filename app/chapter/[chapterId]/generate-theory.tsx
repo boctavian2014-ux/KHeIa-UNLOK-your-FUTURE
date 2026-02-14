@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useCallback } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { colors, spacing, typography } from '@/theme';
@@ -11,6 +12,7 @@ import { generateTheory } from '@/services/generator.service';
 export default function GenerateTheoryScreen() {
   const { chapterId } = useLocalSearchParams<{ chapterId: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { chapters: chaptersData } = useCatalogContext();
   const [generating, setGenerating] = useState(false);
   const [generatedChapters, setGeneratedChapters] = useState<typeof chaptersData>([]);
@@ -31,10 +33,18 @@ export default function GenerateTheoryScreen() {
     try {
       const { data, error } = await generateTheory(chapterId, chapter?.title);
       if (error) {
-        Alert.alert('Eroare', error.message ?? 'Nu s-a putut genera teoria.');
+        const msg =
+          error.message?.includes('non-2xx') || error.message?.includes('status code')
+            ? 'Serviciul de generare nu este disponibil. Verifică conexiunea sau încearcă mai târziu.'
+            : error.message ?? 'Nu s-a putut genera teoria.';
+        Alert.alert('Eroare', msg);
         return;
       }
-      const payload = data as { content?: string } | null;
+      const payload = data as { source?: string; content?: string } | null;
+      if (payload?.source === 'error') {
+        Alert.alert('Eroare', payload.content ?? 'Nu s-a putut genera teoria.');
+        return;
+      }
       const content = payload?.content?.trim();
       if (content) {
         await setGeneratedTheory(chapterId, [content]);
@@ -49,9 +59,9 @@ export default function GenerateTheoryScreen() {
 
   if (!chapter) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
         <Pressable
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)'))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/home'))}
           style={styles.backRow}
           hitSlop={24}
         >
@@ -65,7 +75,7 @@ export default function GenerateTheoryScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable
@@ -108,7 +118,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingBottom: 120,
+    paddingBottom: spacing.contentBottom,
   },
   backRow: {
     marginBottom: spacing.sm,

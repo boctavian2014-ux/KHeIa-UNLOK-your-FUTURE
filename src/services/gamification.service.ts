@@ -34,16 +34,18 @@ export type Reward = {
 /**
  * Computes level from XP total.
  */
-export const getLevelFromXP = (totalXp: number) => Math.floor(totalXp / 100) + 1;
+export function getLevelFromXP(totalXp: number) {
+  return Math.floor((totalXp ?? 0) / 100) + 1;
+}
 
 /**
  * XP needed for next level (from current XP).
  */
-export const getXPForNextLevel = (totalXp: number) => {
+export function getXPForNextLevel(totalXp: number) {
   const currentLevel = getLevelFromXP(totalXp);
-  const xpForCurrentLevel = (currentLevel - 1) * 100;
-  return 100 - (totalXp - xpForCurrentLevel);
-};
+  const nextLevelBase = currentLevel * 100;
+  return Math.max(0, nextLevelBase - (totalXp ?? 0));
+}
 
 /**
  * Fetches user gamification data from Supabase.
@@ -261,6 +263,60 @@ export async function getRecentTransactions(
     .order('created_at', { ascending: false })
     .limit(limit);
   return (data ?? []) as CoinTransaction[];
+}
+
+/**
+ * Adds XP to user. Creates row if not exists.
+ * Call from quiz/test completion – does not modify awardCoins or updateStreak.
+ */
+export async function addXP(
+  userId: string,
+  amount: number
+): Promise<{ success: boolean; newTotalXp?: number }> {
+  if (!userId || amount <= 0) return { success: false };
+
+  const { data: row } = await supabase
+    .from('user_gamification')
+    .select('total_xp')
+    .eq('user_id', userId)
+    .single();
+
+  if (!row) {
+    const { error } = await supabase
+      .from('user_gamification')
+      .insert({ user_id: userId, total_xp: amount });
+    if (error) return { success: false };
+    return { success: true, newTotalXp: amount };
+  }
+
+  const newTotalXp = (row.total_xp ?? 0) + amount;
+  const { error } = await supabase
+    .from('user_gamification')
+    .update({ total_xp: newTotalXp, updated_at: new Date().toISOString() })
+    .eq('user_id', userId);
+
+  if (error) return { success: false };
+  return { success: true, newTotalXp };
+}
+
+/**
+ * Helper – derives summary from UserGamification (read-only).
+ */
+export function getGamificationSummary(user: UserGamification) {
+  const totalXP = user.total_xp ?? 0;
+  const level = getLevelFromXP(totalXP);
+  const xpForNextLevel = getXPForNextLevel(totalXP);
+
+  const progressWithinLevel = totalXP % 100;
+  const xpProgress = xpForNextLevel === 0 ? 1 : progressWithinLevel / 100;
+
+  return {
+    level,
+    xpProgress,
+    totalXP,
+    coins: user.coins ?? 0,
+    streak: user.streak_days ?? 0,
+  };
 }
 
 /**

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useCatalogContext } from '@/components/common/CatalogProvider';
@@ -25,9 +26,15 @@ const DAILY_MISSIONS = [
 export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState<'welcome' | 'progress'>('welcome');
   const { subjects, loading } = useCatalogContext();
-  const { coins, level, xpProgress, streak, transactions, loading: gamLoading, userId } =
+  const { coins, level, xpProgress, streak, transactions, loading: gamLoading, userId, refresh } =
     useGamification();
   const [rewards, setRewards] = useState<Reward[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void refresh();
+    }, [refresh])
+  );
 
   useEffect(() => {
     if (activeTab === 'progress') getRewardsCatalog().then(setRewards);
@@ -72,6 +79,7 @@ export default function HomeScreen() {
   const maxCount = Math.max(enCount, bacCount, 1);
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   if (loading) {
     return (
@@ -85,7 +93,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topTabs}>
+      <View style={[styles.topTabs, { marginTop: insets.top + spacing.md }]}>
         <Pressable
           onPress={() => setActiveTab('welcome')}
           style={[styles.topTab, activeTab === 'welcome' && styles.topTabActive]}
@@ -261,7 +269,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     backgroundColor: 'rgba(15, 23, 42, 0.5)',
     borderRadius: 16,
-    padding: 6,
+    padding: spacing.sm,
   },
   topTab: {
     flex: 1,
@@ -289,7 +297,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingBottom: 110,
+    paddingBottom: spacing.contentBottom,
   },
   progressContent: {
     paddingBottom: spacing.lg,
@@ -430,7 +438,7 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: typography.size.xs,
     color: colors.dark.muted,
-    marginTop: 2,
+    marginTop: spacing.tight,
   },
   statDivider: {
     width: 1,

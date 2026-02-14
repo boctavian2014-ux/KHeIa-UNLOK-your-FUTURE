@@ -1,10 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
-export const getSupabaseClient = (jwt?: string) => {
+/**
+ * Service role client pentru Edge Functions – bypass RLS.
+ * Folosit pentru ai_cache, chapters (catalog) etc.
+ */
+export const getSupabaseClient = () => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-  const supabaseKey = jwt ? Deno.env.get('SUPABASE_ANON_KEY') ?? '' : Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-
-  return createClient(supabaseUrl, supabaseKey, {
-    global: jwt ? { headers: { Authorization: `Bearer ${jwt}` } } : undefined,
-  });
+  const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  return createClient(supabaseUrl, supabaseKey);
 };

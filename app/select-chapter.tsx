@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { getGeneratedChapters } from '@/lib/chapterStorage';
@@ -9,6 +10,7 @@ import { useCatalogContext } from '@/components/common/CatalogProvider';
 export default function SelectChapterScreen() {
   const { for: forParam } = useLocalSearchParams<{ for?: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { subjects, chapters: chaptersData, loading } = useCatalogContext();
   const [generatedChapters, setGeneratedChapters] = useState<typeof chaptersData>([]);
   const isTheory = forParam === 'theory';
@@ -53,7 +55,7 @@ export default function SelectChapterScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingBottom: 120,
+    paddingBottom: spacing.contentBottom,
   },
   centered: {
     justifyContent: 'center',

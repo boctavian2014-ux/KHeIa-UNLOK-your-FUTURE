@@ -1,23 +1,11 @@
 import { Tabs } from 'expo-router';
-import { useColorScheme, StyleSheet, Image } from 'react-native';
-import { BlurView } from 'expo-blur';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { getGlassBlur, getGlassSurface } from '@/theme';
-
-const tabIcon = (name: keyof typeof Ionicons.glyphMap) =>
-  ({ color }: { color: string }) =>
-    <Ionicons name={name} size={22} color={color} />;
+import { useColorScheme, StyleSheet, View } from 'react-native';
+import { TabBarIcon } from '@/components/TabBarIcon';
+import { spacing } from '@/theme';
 
 export default function TabsLayout() {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
-  const tabSurface = getGlassSurface(isDark, 'tabBar');
-  const tabBlur = getGlassBlur('tabBar');
-  const tabBackground = { backgroundColor: tabSurface.backgroundColor };
-  const logoImg = require('../../assets/logo.jpeg');
-  const logoTabIcon = () => (
-    <Image source={logoImg} style={styles.logoIcon} resizeMode="contain" />
-  );
 
   return (
     <Tabs
@@ -27,73 +15,130 @@ export default function TabsLayout() {
           backgroundColor: 'transparent',
         },
         tabBarBackground: () => (
-          <BlurView
-            intensity={tabBlur}
-            tint={isDark ? 'dark' : 'light'}
-            style={[StyleSheet.absoluteFill, tabBackground]}
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: 'rgba(15, 23, 42, 0.5)',
+                borderRadius: 999,
+                borderWidth: 1,
+                borderColor: 'rgba(255, 255, 255, 0.12)',
+              },
+            ]}
           />
         ),
         tabBarStyle: {
           position: 'absolute',
-          left: 20,
-          right: 20,
-          bottom: 16,
+          left: spacing.screenPadding,
+          right: spacing.screenPadding,
+          bottom: spacing.relaxed,
           borderRadius: 999,
           backgroundColor: 'transparent',
-          borderWidth: 1,
-          borderColor: tabSurface.borderColor,
-          shadowColor: tabSurface.shadowColor,
-          shadowOpacity: tabSurface.shadowOpacity,
-          shadowRadius: tabSurface.shadowRadius,
-          shadowOffset: tabSurface.shadowOffset,
-          elevation: tabSurface.elevation,
-          paddingBottom: 8,
-          paddingTop: 8,
+          borderWidth: 0,
+          borderColor: 'transparent',
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0,
+          paddingBottom: spacing.compact,
+          paddingTop: spacing.compact,
           height: 64,
         },
         tabBarActiveTintColor: isDark ? '#F9FAFB' : '#111827',
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarItemStyle: {
           borderRadius: 999,
-          marginHorizontal: 4,
+          marginHorizontal: spacing.tight,
         },
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '600',
         },
-        tabBarActiveBackgroundColor: 'rgba(248, 250, 252, 0.12)',
+        tabBarActiveBackgroundColor: 'transparent',
         tabBarIconStyle: {
-          marginBottom: -2,
+          marginBottom: -spacing.tight,
         },
       }}
     >
       <Tabs.Screen
+        name="index"
+        options={{ href: null }}
+      />
+      <Tabs.Screen
         name="home"
-        options={{ title: 'Acasa', tabBarIcon: tabIcon('home') }}
+        options={{
+          title: 'Acasa',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabBarIcon
+              focused={focused}
+              color={color}
+              size={size}
+              activeName="book"
+              inactiveName="book-outline"
+            />
+          ),
+        }}
       />
       <Tabs.Screen
         name="kheia"
-        options={{ title: 'KhEIa', tabBarIcon: logoTabIcon }}
+        options={{
+          title: 'KhEIa',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabBarIcon
+              focused={focused}
+              color={color}
+              size={size}
+              activeName="chatbubble-ellipses"
+              inactiveName="chatbubble-ellipses-outline"
+            />
+          ),
+        }}
       />
       <Tabs.Screen
         name="tests"
-        options={{ title: 'Teste', tabBarIcon: tabIcon('document-text') }}
+        options={{
+          title: 'Teste',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabBarIcon
+              focused={focused}
+              color={color}
+              size={size}
+              activeName="clipboard"
+              inactiveName="clipboard-outline"
+            />
+          ),
+        }}
       />
       <Tabs.Screen
         name="progress"
-        options={{ title: 'Progres', tabBarIcon: tabIcon('stats-chart') }}
+        options={{
+          title: 'Progres',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabBarIcon
+              focused={focused}
+              color={color}
+              size={size}
+              activeName="bar-chart"
+              inactiveName="bar-chart-outline"
+            />
+          ),
+        }}
       />
       <Tabs.Screen
         name="profile"
-        options={{ title: 'Profil', tabBarIcon: tabIcon('person') }}
+        options={{
+          title: 'Profil',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabBarIcon
+              focused={focused}
+              color={color}
+              size={size}
+              activeName="person-circle"
+              inactiveName="person-circle-outline"
+            />
+          ),
+        }}
       />
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  logoIcon: {
-    width: 20,
-    height: 20,
-  },
-});

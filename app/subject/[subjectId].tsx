@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { getGeneratedChapters } from '@/lib/chapterStorage';
@@ -9,6 +10,7 @@ import { useCatalogContext } from '@/components/common/CatalogProvider';
 export default function SubjectDetailScreen() {
   const { subjectId } = useLocalSearchParams<{ subjectId: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { subjects, chapters: chaptersData, loading } = useCatalogContext();
   const [generatedChapters, setGeneratedChapters] = useState<typeof chaptersData>([]);
 
@@ -34,7 +36,7 @@ export default function SubjectDetailScreen() {
 
   if (!subject) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
         <Pressable onPress={() => router.back()} style={styles.backRow}>
           <Text style={styles.backText}>← Înapoi</Text>
         </Pressable>
@@ -46,7 +48,7 @@ export default function SubjectDetailScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Pressable onPress={() => router.back()} style={styles.backRow}>
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingBottom: 100,
+    paddingBottom: spacing.contentBottom,
   },
   backRow: {
     marginBottom: spacing.md,
