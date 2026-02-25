@@ -6,6 +6,8 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Share,
+  Linking,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,6 +23,7 @@ import {
 } from '@/services/quiz.service';
 import { parseTestId, createTestRecord } from '@/services/test.service';
 import { getOfficialTestById } from '@/services/official-tests.service';
+import { buildTestShareMessage } from '@/services/deep-linking.service';
 
 const QUESTION_COUNT = 20;
 
@@ -78,6 +81,11 @@ export default function TestSessionScreen() {
   const currentQuestion = questions[currentIndex];
   const correctOption = currentQuestion?.options.find((o) => o.is_correct);
   const isAnswered = selectedOptionId !== null;
+
+  const handleShareTest = async () => {
+    const message = buildTestShareMessage(String(testId), subject?.name);
+    await Share.share({ message, title: 'Share testul' });
+  };
 
   const handleSelectOption = (option: QuizOption) => {
     if (isAnswered) return;
@@ -145,6 +153,7 @@ export default function TestSessionScreen() {
   }
 
   if (questions.length === 0) {
+    const hasSourceUrl = officialTest?.sourceUrl;
     return (
       <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
         <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
@@ -152,8 +161,20 @@ export default function TestSessionScreen() {
         </Pressable>
         <Text style={styles.title}>Test {parsed.examType} · {subject.name}</Text>
         <Text style={styles.subtitle}>
-          Nu există încă întrebări pentru acest test. Revino mai târziu.
+          {hasSourceUrl
+            ? 'Nu există încă întrebări interactive pentru acest test. Poți folosi subiectul oficial în PDF.'
+            : 'Nu există încă întrebări pentru acest test. Revino mai târziu.'}
         </Text>
+        {hasSourceUrl && (
+          <Pressable
+            onPress={() => Linking.openURL(officialTest.sourceUrl!)}
+            style={({ pressed }) => [styles.pdfButton, pressed && styles.pdfButtonPressed]}
+          >
+            <GlassCard dark intensity={14} style={styles.pdfButtonInner}>
+              <Text style={styles.pdfButtonText}>📄 Deschide subiectul oficial (PDF)</Text>
+            </GlassCard>
+          </Pressable>
+        )}
       </View>
     );
   }
@@ -164,9 +185,14 @@ export default function TestSessionScreen() {
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
-      <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
-        <Text style={styles.backText}>← Înapoi</Text>
-      </Pressable>
+      <View style={styles.headerRow}>
+        <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
+          <Text style={styles.backText}>← Înapoi</Text>
+        </Pressable>
+        <Pressable onPress={handleShareTest} style={styles.shareBtn} hitSlop={16}>
+          <Text style={styles.shareBtnText}>Share</Text>
+        </Pressable>
+      </View>
       <Text style={styles.progress}>
         Întrebarea {currentIndex + 1} / {questions.length}
       </Text>
@@ -219,10 +245,22 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'transparent' },
   centered: { justifyContent: 'center', alignItems: 'center' },
   content: { padding: spacing.lg, paddingBottom: spacing.contentBottom },
-  backRow: { marginBottom: spacing.md },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md },
+  backRow: {},
+  shareBtn: { paddingVertical: spacing.xs, paddingHorizontal: spacing.sm },
+  shareBtnText: { fontSize: typography.size.sm, fontWeight: '600', color: colors.dark.secondary },
   backText: { fontSize: typography.size.md, fontWeight: '600', color: colors.dark.secondary },
   title: { fontSize: typography.size.xl, fontWeight: '700', color: colors.dark.text },
   subtitle: { marginTop: spacing.sm, fontSize: typography.size.md, color: colors.dark.muted },
+  pdfButton: { marginTop: spacing.lg },
+  pdfButtonPressed: { opacity: 0.9 },
+  pdfButtonInner: {
+    padding: spacing.md,
+    alignItems: 'center',
+    backgroundColor: 'rgba(59, 130, 246, 0.25)',
+    borderColor: 'rgba(59, 130, 246, 0.5)',
+  },
+  pdfButtonText: { fontSize: typography.size.md, fontWeight: '600', color: '#60a5fa' },
   progress: { fontSize: typography.size.sm, color: colors.dark.muted, marginBottom: spacing.sm },
   examBadge: { fontSize: typography.size.sm, fontWeight: '600', color: colors.dark.primary, marginBottom: spacing.md },
   question: { fontSize: typography.size.lg, fontWeight: '700', color: colors.dark.text, marginBottom: spacing.xl },

@@ -258,7 +258,19 @@ export default function TestsScreen() {
 
           <Text style={styles.sectionTitle}>Teste oficiale</Text>
           {officialTests.length === 0 ? (
-            <Text style={styles.emptyText}>Nu există teste oficiale pentru filtrele selectate.</Text>
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>
+                Nu există teste oficiale pentru filtrele selectate. Încearcă „Toate” la An și Materie, sau alege EN/BAC cu Română sau Matematică.
+              </Text>
+              <Pressable
+                onPress={() => setMode('GENERATED')}
+                style={({ pressed }) => [styles.emptyCta, pressed && styles.emptyCtaPressed]}
+              >
+                <GlassCard dark intensity={14} style={styles.emptyCtaInner}>
+                  <Text style={styles.emptyCtaText}>→ Mergi la Teste KhEIa (simulări)</Text>
+                </GlassCard>
+              </Pressable>
+            </View>
           ) : (
             <View style={styles.list}>
               {officialTests.map((t) => (
@@ -372,9 +384,19 @@ const styles = StyleSheet.create({
   chipTextActive: {
     color: '#fff',
   },
+  emptyState: { marginTop: spacing.sm },
   emptyText: {
     fontSize: typography.size.md,
     color: colors.dark.muted,
-    marginTop: spacing.md,
+    lineHeight: 22,
   },
+  emptyCta: { marginTop: spacing.lg },
+  emptyCtaPressed: { opacity: 0.9 },
+  emptyCtaInner: {
+    padding: spacing.md,
+    alignItems: 'center',
+    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+    borderColor: 'rgba(59, 130, 246, 0.4)',
+  },
+  emptyCtaText: { fontSize: typography.size.md, fontWeight: '600', color: '#60a5fa' },
 });

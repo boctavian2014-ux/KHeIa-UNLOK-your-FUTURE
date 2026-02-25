@@ -5,6 +5,7 @@ export type UserGamification = {
   coins: number;
   total_xp: number;
   streak_days: number;
+  consecutive_days_active: number;
   last_streak_at: string | null;
   updated_at: string;
 };
@@ -36,6 +37,18 @@ export type Reward = {
  */
 export function getLevelFromXP(totalXp: number) {
   return Math.floor((totalXp ?? 0) / 100) + 1;
+}
+
+/**
+ * Returns XP multiplier based on consecutive days active.
+ * 0 days: 1.0x, 3 days: 1.25x, 7 days: 1.5x, 14 days: 1.75x, 21+ days: 2x
+ */
+export function getXPMultiplier(consecutiveDaysActive: number): number {
+  if (consecutiveDaysActive >= 21) return 2;
+  if (consecutiveDaysActive >= 14) return 1.75;
+  if (consecutiveDaysActive >= 7) return 1.5;
+  if (consecutiveDaysActive >= 3) return 1.25;
+  return 1;
 }
 
 /**
@@ -75,8 +88,17 @@ export async function getUserGamification(userId: string): Promise<UserGamificat
 export type CoinSource = 'quiz' | 'test' | 'chapter' | 'daily';
 
 /**
+ * Start of today (UTC) as ISO string for "once per day" checks.
+ */
+function startOfTodayISO(): string {
+  const d = new Date();
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}T00:00:00.000Z`;
+}
+
+/**
  * Awards coins to user and records transaction.
- * Skips if already awarded for this source+sourceId (avoids double award).
+ * Skips if already awarded for this source+sourceId.
+ * For 'test': allows once per day (same test can award again tomorrow).
  */
 export async function awardCoins(
   userId: string,
@@ -85,16 +107,33 @@ export async function awardCoins(
   sourceId?: string
 ): Promise<{ success: boolean; newCoins?: number }> {
   if (sourceId) {
-    const { data: existing } = await supabase
+    const todayStart = startOfTodayISO();
+    const query = supabase
       .from('coin_transactions')
       .select('id')
       .eq('user_id', userId)
       .eq('source', source)
       .eq('source_id', sourceId)
       .eq('type', 'earn')
+      .gte('created_at', todayStart)
       .limit(1)
       .maybeSingle();
-    if (existing) return { success: true };
+
+    if (source === 'test') {
+      const { data: existing } = await query;
+      if (existing) return { success: true };
+    } else {
+      const { data: existing } = await supabase
+        .from('coin_transactions')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('source', source)
+        .eq('source_id', sourceId)
+        .eq('type', 'earn')
+        .limit(1)
+        .maybeSingle();
+      if (existing) return { success: true };
+    }
   }
 
   const { data: row } = await supabase
@@ -163,6 +202,7 @@ export async function updateStreak(userId: string): Promise<{
     await supabase.from('user_gamification').insert({
       user_id: userId,
       streak_days: 1,
+      consecutive_days_active: 1,
       last_streak_at: today,
     });
     const coins = 2 + 1;
@@ -186,6 +226,7 @@ export async function updateStreak(userId: string): Promise<{
     .from('user_gamification')
     .update({
       streak_days: newStreak,
+      consecutive_days_active: newStreak,
       last_streak_at: today,
       updated_at: new Date().toISOString(),
     })
@@ -198,56 +239,15 @@ export async function updateStreak(userId: string): Promise<{
 
 /**
  * Redeems a reward. Deducts coins and creates redemption.
+ * Răscumpărarea premiilor va urma.
  */
 export async function redeemReward(
-  userId: string,
-  rewardId: string
+  _userId: string,
+  _rewardId: string
 ): Promise<{ success: boolean; voucherCode?: string; error?: string }> {
-  const { data: reward } = await supabase
-    .from('rewards_catalog')
-    .select('*')
-    .eq('id', rewardId)
-    .eq('is_active', true)
-    .single();
-
-  if (!reward) return { success: false, error: 'Premiul nu există.' };
-
-  const { data: userRow } = await supabase
-    .from('user_gamification')
-    .select('coins')
-    .eq('user_id', userId)
-    .single();
-
-  const coins = userRow?.coins ?? 0;
-  if (coins < reward.coins_cost) {
-    return { success: false, error: 'Nu ai suficienți monede.' };
-  }
-
-  const voucherCode = `KH-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-
-  await supabase.from('user_gamification').update({
-    coins: coins - reward.coins_cost,
-    updated_at: new Date().toISOString(),
-  }).eq('user_id', userId);
-
-  await supabase.from('coin_transactions').insert({
-    user_id: userId,
-    amount: -reward.coins_cost,
-    type: 'redeem',
-    source: rewardId,
-    source_id: null,
-  });
-
-  await supabase.from('reward_redemptions').insert({
-    user_id: userId,
-    reward_id: rewardId,
-    coins_spent: reward.coins_cost,
-    status: 'claimed',
-    voucher_code: voucherCode,
-  });
-
-  return { success: true, voucherCode };
+  return { success: false, error: 'Răscumpărarea premiilor va urma.' };
 }
+
 
 /**
  * Fetches recent coin transactions.
@@ -266,37 +266,41 @@ export async function getRecentTransactions(
 }
 
 /**
- * Adds XP to user. Creates row if not exists.
+ * Adds XP to user. Applies streak-based multiplier.
  * Call from quiz/test completion – does not modify awardCoins or updateStreak.
  */
 export async function addXP(
   userId: string,
   amount: number
-): Promise<{ success: boolean; newTotalXp?: number }> {
+): Promise<{ success: boolean; newTotalXp?: number; multiplier?: number }> {
   if (!userId || amount <= 0) return { success: false };
 
   const { data: row } = await supabase
     .from('user_gamification')
-    .select('total_xp')
+    .select('total_xp, streak_days, consecutive_days_active')
     .eq('user_id', userId)
     .single();
+
+  const consecutiveDays = (row?.consecutive_days_active ?? row?.streak_days ?? 0) as number;
+  const multiplier = getXPMultiplier(consecutiveDays);
+  const finalAmount = Math.round(amount * multiplier);
 
   if (!row) {
     const { error } = await supabase
       .from('user_gamification')
-      .insert({ user_id: userId, total_xp: amount });
+      .insert({ user_id: userId, total_xp: finalAmount });
     if (error) return { success: false };
-    return { success: true, newTotalXp: amount };
+    return { success: true, newTotalXp: finalAmount, multiplier };
   }
 
-  const newTotalXp = (row.total_xp ?? 0) + amount;
+  const newTotalXp = (row.total_xp ?? 0) + finalAmount;
   const { error } = await supabase
     .from('user_gamification')
     .update({ total_xp: newTotalXp, updated_at: new Date().toISOString() })
     .eq('user_id', userId);
 
   if (error) return { success: false };
-  return { success: true, newTotalXp };
+  return { success: true, newTotalXp, multiplier };
 }
 
 /**
@@ -319,14 +323,110 @@ export function getGamificationSummary(user: UserGamification) {
   };
 }
 
+export type SchoolLeaderboardEntry = {
+  user_id: string;
+  school: string;
+  total_xp: number;
+  coins: number;
+  rank: number;
+};
+
+export type SchoolLeaderboard = {
+  school: string;
+  entries: SchoolLeaderboardEntry[];
+};
+
+/**
+ * Returns leaderboard grouped by school.
+ * Users are ranked by total_xp within each school.
+ * Requires profiles.school to be set.
+ */
+export async function getSchoolLeaderboard(
+  limitPerSchool = 10
+): Promise<SchoolLeaderboard[]> {
+  const { data: rows, error } = await supabase
+    .from('profiles')
+    .select('id, school')
+    .not('school', 'is', null);
+
+  if (error || !rows?.length) return [];
+
+  const schoolIds = new Map<string, string[]>();
+  for (const r of rows as { id: string; school: string }[]) {
+    const school = (r.school ?? '').trim();
+    if (!school) continue;
+    const list = schoolIds.get(school) ?? [];
+    list.push(r.id);
+    schoolIds.set(school, list);
+  }
+
+  const result: SchoolLeaderboard[] = [];
+  for (const [school, userIds] of schoolIds) {
+    const { data: gam } = await supabase
+      .from('user_gamification')
+      .select('user_id, total_xp, coins')
+      .in('user_id', userIds)
+      .order('total_xp', { ascending: false })
+      .limit(limitPerSchool);
+
+    const entries: SchoolLeaderboardEntry[] = (gam ?? []).map((g, i) => ({
+      user_id: g.user_id,
+      school,
+      total_xp: g.total_xp ?? 0,
+      coins: g.coins ?? 0,
+      rank: i + 1,
+    })) as SchoolLeaderboardEntry[];
+
+    if (entries.length > 0) {
+      result.push({ school, entries });
+    }
+  }
+
+  result.sort((a, b) => {
+    const maxA = Math.max(...a.entries.map((e) => e.total_xp));
+    const maxB = Math.max(...b.entries.map((e) => e.total_xp));
+    return maxB - maxA;
+  });
+
+  return result;
+}
+
+/**
+ * Builds shareable text for a "Progress Certificate" (quiz score).
+ * Can be shared on Instagram/TikTok as caption or story text.
+ */
+export function buildProgressCertificateShareText(
+  correctCount: number,
+  totalQuestions: number,
+  chapterTitle?: string
+): string {
+  const pct = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+  const chapter = chapterTitle ? ` la ${chapterTitle}` : '';
+  return `Am obținut ${correctCount}/${totalQuestions} (${pct}%)${chapter} pe KhEIa! 📚 Pregătire Evaluare Națională 2026 și BAC. Încearcă și tu!`;
+}
+
+/**
+ * Builds shareable text for a test result (score).
+ */
+export function buildTestResultShareText(
+  correctCount: number,
+  totalCount: number,
+  subjectName?: string
+): string {
+  const pct = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+  const subject = subjectName ? ` la ${subjectName}` : '';
+  return `Am obținut ${correctCount}/${totalCount} (${pct}%)${subject} pe KhEIa! 📚 Pregătire Evaluare Națională 2026 și BAC. Încearcă și tu!`;
+}
+
 /**
  * Fetches active rewards from catalog.
  */
 export async function getRewardsCatalog(): Promise<Reward[]> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('rewards_catalog')
     .select('*')
     .eq('is_active', true)
     .order('coins_cost', { ascending: true });
+  if (error) return [];
   return (data ?? []) as Reward[];
 }

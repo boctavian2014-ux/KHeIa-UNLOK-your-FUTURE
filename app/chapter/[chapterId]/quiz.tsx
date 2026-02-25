@@ -10,6 +10,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
+import { useCatalogContext } from '@/components/common/CatalogProvider';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { supabase } from '@/services/supabase';
 import {
@@ -24,6 +25,8 @@ const QUESTION_COUNT = 10;
 export default function ChapterQuizScreen() {
   const { chapterId } = useLocalSearchParams<{ chapterId: string }>();
   const router = useRouter();
+  const { chapters } = useCatalogContext();
+  const chapterTitle = chapters.find((c) => c.id === chapterId)?.title;
   const insets = useSafeAreaInsets();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,9 +80,14 @@ export default function ChapterQuizScreen() {
           }))
         );
       }
+      const fromFreeQuiz = questions.length <= 5 ? 'true' : 'false';
       router.replace({
         pathname: `/chapter/${chapterId}/quiz-result`,
-        params: { correctCount: String(correctCount) },
+        params: {
+          correctCount: String(correctCount),
+          chapterTitle: chapterTitle ?? '',
+          fromFreeQuiz,
+        },
       });
     }
   };

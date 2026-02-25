@@ -26,13 +26,19 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const TUTORIAL_STEPS = [
   'Scrie întrebarea ta aici',
   'Ex: Cum se structurează un eseu la BAC?',
+  'Ex: Care este formula derivatei pentru x^n?',
+  'Ex: Ce sunt genurile literare și speciile?',
+  'Ex: Cum se rezolvă ecuații de gradul II?',
+  'Ex: Ce este funcția referențială în comunicare?',
+  'Ex: Cum se calculează probabilitatea unui eveniment?',
   'Apasă → pentru a trimite',
 ];
 
 export default function KheiaScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [tutorialDismissed, setTutorialDismissed] = useState(false);
-  const stepOpacity = useRef(TUTORIAL_STEPS.map(() => new Animated.Value(0))).current;
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const stepOpacity = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,27 +53,34 @@ export default function KheiaScreen() {
       setTutorialDismissed(true);
       return;
     }
-    stepOpacity.forEach((_, i) => stepOpacity[i].setValue(0));
-    const sequences = TUTORIAL_STEPS.map((_, i) =>
+    let cancelled = false;
+    const runStep = (index: number) => {
+      if (cancelled) return;
+      if (index >= TUTORIAL_STEPS.length) {
+        setCurrentStepIndex(0);
+        stepOpacity.setValue(0.5);
+        return;
+      }
+      setCurrentStepIndex(index);
+      stepOpacity.setValue(0);
       Animated.sequence([
-        Animated.timing(stepOpacity[i], {
+        Animated.timing(stepOpacity, {
           toValue: 1,
-          duration: 600,
+          duration: 500,
           useNativeDriver: true,
         }),
-        Animated.delay(2000),
-        Animated.timing(stepOpacity[i], {
+        Animated.delay(2500),
+        Animated.timing(stepOpacity, {
           toValue: 0,
           duration: 400,
           useNativeDriver: true,
         }),
-      ])
-    );
-    const loop = Animated.loop(
-      Animated.stagger(400, sequences),
-      { resetBeforeIteration: true }
-    );
-    loop.start();
+        Animated.delay(300),
+      ]).start(() => {
+        if (!cancelled) runStep(index + 1);
+      });
+    };
+    runStep(0);
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
@@ -84,7 +97,7 @@ export default function KheiaScreen() {
     );
     pulse.start();
     return () => {
-      loop.stop();
+      cancelled = true;
       pulse.stop();
     };
   }, [messages.length]);
@@ -197,14 +210,11 @@ export default function KheiaScreen() {
               />
               {!tutorialDismissed && !input.trim() && (
                 <View style={styles.tutorialSteps} pointerEvents="none">
-                  {TUTORIAL_STEPS.map((step, i) => (
-                    <Animated.Text
-                      key={i}
-                      style={[styles.tutorialStepText, { opacity: stepOpacity[i] }]}
-                    >
-                      {step}
-                    </Animated.Text>
-                  ))}
+                  <Animated.Text
+                    style={[styles.tutorialStepText, { opacity: stepOpacity }]}
+                  >
+                    {TUTORIAL_STEPS[currentStepIndex]}
+                  </Animated.Text>
                 </View>
               )}
             </View>

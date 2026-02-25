@@ -2,6 +2,26 @@ import type { OfficialExamTest } from '@/types/tests';
 
 export const officialExamTestsFixture: OfficialExamTest[] = [
   {
+    id: 'en-2025-romana-model-1',
+    examType: 'EN',
+    year: 2025,
+    session: 'model',
+    subjectId: 'subj-en-romana',
+    title: 'Evaluare Națională 2025 – Română – Model oficial',
+    sourceUrl: 'https://www.edu.ro/evaluare-nationala',
+    isPublic: true,
+  },
+  {
+    id: 'en-2025-matematica-model-1',
+    examType: 'EN',
+    year: 2025,
+    session: 'model',
+    subjectId: 'subj-en-matematica',
+    title: 'Evaluare Națională 2025 – Matematică – Model oficial',
+    sourceUrl: 'https://www.edu.ro/evaluare-nationala',
+    isPublic: true,
+  },
+  {
     id: 'en-2024-romana-model-1',
     examType: 'EN',
     year: 2024,
@@ -28,6 +48,27 @@ export const officialExamTestsFixture: OfficialExamTest[] = [
     session: 'model',
     subjectId: 'subj-en-romana',
     title: 'Evaluare Națională 2023 – Română – Model oficial 1',
+    sourceUrl: 'https://www.edu.ro/subiecte-evaluare-nationala-2023',
+    isPublic: true,
+  },
+  {
+    id: 'bac-2025-romana-examen',
+    examType: 'BAC',
+    year: 2025,
+    session: 'examen',
+    subjectId: 'subj-bac-romana',
+    title: 'Bacalaureat 2025 – Română – Examen',
+    sourceUrl: 'https://www.edu.ro/bacalaureat',
+    isPublic: true,
+  },
+  {
+    id: 'bac-2025-matematica-examen',
+    examType: 'BAC',
+    year: 2025,
+    session: 'examen',
+    subjectId: 'subj-bac-matematica-real',
+    title: 'Bacalaureat 2025 – Matematică M1 – Examen',
+    sourceUrl: 'https://www.edu.ro/bacalaureat',
     isPublic: true,
   },
   {
@@ -37,6 +78,7 @@ export const officialExamTestsFixture: OfficialExamTest[] = [
     session: 'examen',
     subjectId: 'subj-bac-romana',
     title: 'Bacalaureat 2024 – Română – Examen sesiune iunie',
+    sourceUrl: 'https://subiecte2024.edu.ro/2024/bacalaureat/Subiecte_si_bareme/',
     isPublic: true,
   },
   {
@@ -46,6 +88,7 @@ export const officialExamTestsFixture: OfficialExamTest[] = [
     session: 'examen',
     subjectId: 'subj-bac-matematica-real',
     title: 'Bacalaureat 2024 – Matematică M1 – Examen sesiune iunie',
+    sourceUrl: 'https://subiecte2024.edu.ro/2024/bacalaureat/Subiecte_si_bareme/',
     isPublic: true,
   },
   {
@@ -55,6 +98,7 @@ export const officialExamTestsFixture: OfficialExamTest[] = [
     session: 'examen',
     subjectId: 'subj-bac-romana',
     title: 'Bacalaureat 2023 – Română – Examen sesiune iunie',
+    sourceUrl: 'https://www.edu.ro/subiecte-bacalaureat-2023',
     isPublic: true,
   },
   {
@@ -64,6 +108,7 @@ export const officialExamTestsFixture: OfficialExamTest[] = [
     session: 'examen',
     subjectId: 'subj-bac-matematica-real',
     title: 'Bacalaureat 2023 – Matematică M1 – Examen sesiune iunie',
+    sourceUrl: 'https://www.edu.ro/subiecte-bacalaureat-2023',
     isPublic: true,
   },
 ];

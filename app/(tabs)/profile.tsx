@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -20,9 +20,12 @@ import { CoinsDisplay } from '@/components/gamification/CoinsDisplay';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
 import { GDPR_TEXT, PRIVACY_POLICY_TEXT, TERMS_TEXT } from '@/content/legal';
 import { signOut } from '@/services/auth.service';
+import { getSchoolLeaderboard, type SchoolLeaderboard } from '@/services/gamification.service';
+import { getProfile } from '@/services/referral.service';
 
 const PROFILE_TABS: TabItem[] = [
   { id: 'evolutie', label: 'Evoluție' },
+  { id: 'clasament', label: 'Clasament' },
   { id: 'statistici', label: 'Statistici' },
   { id: 'plan', label: 'Plan studiu' },
   { id: 'setari', label: 'Setări' },
@@ -56,6 +59,14 @@ export default function ProfileScreen() {
 
   const [activeTab, setActiveTab] = useState('evolutie');
   const [legalTab, setLegalTab] = useState('gdpr');
+  const [leaderboard, setLeaderboard] = useState<SchoolLeaderboard[]>([]);
+  const [userSchool, setUserSchool] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!userId) return;
+    getSchoolLeaderboard(10).then(setLeaderboard);
+    getProfile(userId).then((p) => setUserSchool(p?.school ?? null));
+  }, [userId]);
 
   useFocusEffect(
     useCallback(() => {
@@ -95,6 +106,32 @@ export default function ProfileScreen() {
           <StreakCounter streak={streak} />
         </View>
 
+        <Pressable
+          onPress={() => router.push('/referral')}
+          style={({ pressed }) => [styles.referralCard, pressed && styles.chapterRowPressed]}
+        >
+          <GlassCard dark intensity={18} style={styles.referralCardInner}>
+            <Text style={styles.referralTitle}>Invită colegii</Text>
+            <Text style={styles.referralSubtitle}>
+              Share codul tău și deblochează capitol nou
+            </Text>
+            <Text style={styles.referralCta}>→ Deschide</Text>
+          </GlassCard>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push('/rewards')}
+          style={({ pressed }) => [styles.referralCard, pressed && styles.chapterRowPressed]}
+        >
+          <GlassCard dark intensity={18} style={styles.rewardsCardInner}>
+            <Text style={styles.referralTitle}>Schimbă premii</Text>
+            <Text style={styles.referralSubtitle}>
+              Folosește monedele pentru premii. Va urma.
+            </Text>
+            <Text style={styles.referralCta}>→ Deschide</Text>
+          </GlassCard>
+        </Pressable>
+
         <GlassCard dark intensity={18} style={styles.card}>
           <Text style={styles.cardTitle}>Progres capitole</Text>
           <View style={styles.progressRow}>
@@ -130,6 +167,62 @@ export default function ProfileScreen() {
           </View>
         )}
       </>
+    );
+  };
+
+  const renderClasamentTab = () => {
+    if (!userId) {
+      return (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>Autentifică-te pentru a vedea clasamentul</Text>
+        </View>
+      );
+    }
+
+    if (leaderboard.length === 0) {
+      return (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>Clasament pe școala</Text>
+          <Text style={styles.emptySubtitle}>
+            Adaugă școala în profil pentru a apărea în clasament. Va urma.
+          </Text>
+        </View>
+      );
+    }
+
+    const sortedLeaderboard = userSchool
+      ? [...leaderboard].sort((a, b) => {
+          if (a.school === userSchool) return -1;
+          if (b.school === userSchool) return 1;
+          return 0;
+        })
+      : leaderboard;
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Clasament pe școală</Text>
+        <Text style={styles.sectionDesc}>
+          Top XP după școală. Adaugă școala în profil pentru a apărea.
+        </Text>
+        {sortedLeaderboard.map(({ school, entries }) => (
+          <GlassCard key={school} dark intensity={18} style={styles.leaderboardCard}>
+            <Text style={styles.leaderboardSchool}>{school}</Text>
+            {entries.map((e) => (
+              <View
+                key={e.user_id}
+                style={[
+                  styles.leaderboardRow,
+                  e.user_id === userId && styles.leaderboardRowHighlight,
+                ]}
+              >
+                <Text style={styles.leaderboardRank}>#{e.rank}</Text>
+                <Text style={styles.leaderboardXP}>{e.total_xp} XP</Text>
+                <Text style={styles.leaderboardCoins}>🪙 {e.coins}</Text>
+              </View>
+            ))}
+          </GlassCard>
+        ))}
+      </View>
     );
   };
 
@@ -281,6 +374,8 @@ export default function ProfileScreen() {
     switch (activeTab) {
       case 'evolutie':
         return renderEvolutieTab();
+      case 'clasament':
+        return renderClasamentTab();
       case 'statistici':
         return renderStatisticiTab();
       case 'plan':
@@ -388,6 +483,36 @@ const styles = StyleSheet.create({
   streakRow: {
     marginTop: spacing.sm,
   },
+  referralCard: {
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+  },
+  referralCardInner: {
+    padding: spacing.lg,
+    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+    borderColor: 'rgba(34, 197, 94, 0.3)',
+  },
+  referralTitle: {
+    fontSize: typography.size.md,
+    fontWeight: '700',
+    color: colors.dark.text,
+  },
+  referralSubtitle: {
+    fontSize: typography.size.sm,
+    color: colors.dark.muted,
+    marginTop: spacing.tight,
+  },
+  referralCta: {
+    marginTop: spacing.sm,
+    fontSize: typography.size.sm,
+    fontWeight: '600',
+    color: '#22C55E',
+  },
+  rewardsCardInner: {
+    padding: spacing.lg,
+    backgroundColor: 'rgba(34, 197, 94, 0.08)',
+    borderColor: 'rgba(34, 197, 94, 0.2)',
+  },
   card: {
     marginTop: spacing.lg,
     padding: spacing.lg,
@@ -420,6 +545,53 @@ const styles = StyleSheet.create({
   },
   section: {
     marginTop: spacing.xl,
+  },
+  sectionDesc: {
+    fontSize: typography.size.sm,
+    color: colors.dark.muted,
+    marginTop: spacing.xs,
+    marginBottom: spacing.md,
+  },
+  leaderboardCard: {
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  leaderboardSchool: {
+    fontSize: typography.size.md,
+    fontWeight: '700',
+    color: colors.dark.text,
+    marginBottom: spacing.sm,
+  },
+  leaderboardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.xs,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(148, 163, 184, 0.15)',
+  },
+  leaderboardRowHighlight: {
+    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+    marginHorizontal: -spacing.md,
+    marginVertical: -spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: 8,
+  },
+  leaderboardRank: {
+    width: 36,
+    fontSize: typography.size.sm,
+    fontWeight: '600',
+    color: colors.dark.muted,
+  },
+  leaderboardXP: {
+    flex: 1,
+    fontSize: typography.size.sm,
+    fontWeight: '600',
+    color: colors.dark.text,
+  },
+  leaderboardCoins: {
+    fontSize: typography.size.sm,
+    color: colors.dark.muted,
   },
   sectionTitle: {
     fontSize: typography.size.lg,

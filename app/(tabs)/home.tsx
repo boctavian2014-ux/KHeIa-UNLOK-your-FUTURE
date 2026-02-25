@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -6,29 +6,34 @@ import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useCatalogContext } from '@/components/common/CatalogProvider';
 import { useGamification } from '@/hooks/useGamification';
-import { getRewardsCatalog } from '@/services/gamification.service';
-import type { Reward } from '@/services/gamification.service';
 import { XPBar } from '@/components/gamification/XPBar';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
 import { CoinsDisplay } from '@/components/gamification/CoinsDisplay';
 import { DailyMission } from '@/components/gamification/DailyMission';
 import { RecentActivity } from '@/components/gamification/RecentActivity';
-import { RewardsPreview } from '@/components/gamification/RewardsPreview';
+import { ExamCountdownDual } from '@/components/gamification/ExamCountdown';
+import { generateDailyMissions } from '@/services/daily-missions.client';
+import { getOnboardingExam } from '@/lib/onboardingStorage';
 
 const kheiaIcon = require('../../assets/KHEIA ICON.png');
 
-const DAILY_MISSIONS = [
-  'Fă un quiz la capitolul citit',
-  'Citește un capitol',
-  'Completează un test EN/BAC',
-];
-
 export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState<'welcome' | 'progress'>('welcome');
+  const [examContext, setExamContext] = useState<'EN' | 'BAC' | 'ANY'>('ANY');
   const { subjects, loading } = useCatalogContext();
   const { coins, level, xpProgress, streak, transactions, loading: gamLoading, userId, refresh } =
     useGamification();
-  const [rewards, setRewards] = useState<Reward[]>([]);
+
+  useEffect(() => {
+    getOnboardingExam().then((exam) => {
+      if (exam) setExamContext(exam);
+    });
+  }, []);
+
+  const missions = useMemo(
+    () => generateDailyMissions(streak, transactions, examContext),
+    [streak, transactions, examContext]
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -36,9 +41,6 @@ export default function HomeScreen() {
     }, [refresh])
   );
 
-  useEffect(() => {
-    if (activeTab === 'progress') getRewardsCatalog().then(setRewards);
-  }, [activeTab]);
 
   const formatTags = (subject: { level: string; exam_tags: string[] }) => {
     const tags = subject.exam_tags ?? [];
@@ -124,6 +126,10 @@ export default function HomeScreen() {
               <Text style={styles.heroTitle}>Unlock Your Future</Text>
               <Text style={styles.heroSubtitle}>Antrenorul tău pentru EN & Bac</Text>
               <Text style={styles.heroBody}>Alege o materie și începe antrenamentul.</Text>
+
+              <View style={styles.countdownWrap}>
+                <ExamCountdownDual />
+              </View>
 
               <View style={styles.chartCard}>
                 <Text style={styles.chartTitle}>Materii disponibile</Text>
@@ -239,9 +245,9 @@ export default function HomeScreen() {
             </View>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Misiuni zilnice</Text>
-              {DAILY_MISSIONS.map((m, i) => (
-                <View key={i} style={styles.missionWrap}>
-                  <DailyMission text={m} />
+              {missions.map((m) => (
+                <View key={m.id} style={styles.missionWrap}>
+                  <DailyMission text={m.text} />
                 </View>
               ))}
             </View>
@@ -249,7 +255,6 @@ export default function HomeScreen() {
               <Text style={styles.sectionTitle}>Ultimele activități</Text>
               <RecentActivity transactions={transactions} />
             </View>
-            <RewardsPreview rewards={rewards} onViewAll={() => router.push('/rewards')} />
           </View>
         )}
       </ScrollView>
@@ -373,6 +378,10 @@ const styles = StyleSheet.create({
     fontSize: typography.size.md,
     color: colors.dark.text,
     textAlign: 'center',
+  },
+  countdownWrap: {
+    marginTop: spacing.lg,
+    width: '100%',
   },
   chartCard: {
     marginTop: spacing.xl,

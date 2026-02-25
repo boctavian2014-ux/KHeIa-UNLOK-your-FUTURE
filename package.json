@@ -18,6 +18,7 @@
   "main": "index.js",
   "scripts": {
     "seed": "npx ts-node -r dotenv/config scripts/seed-supabase.ts",
+    "seo:generate": "npx ts-node -r dotenv/config scripts/generate-seo-metadata.ts",
     "verify:generate": "node scripts/verify-generate-chapter.js",
     "start": "expo start",
     "android": "expo run:android",

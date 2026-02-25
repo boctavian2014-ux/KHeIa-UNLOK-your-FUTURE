@@ -11,8 +11,6 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import dayjs from 'dayjs';
 import { colors, spacing, typography } from '@/theme';
 import { useGamification } from '@/hooks/useGamification';
-import { getRewardsCatalog } from '@/services/gamification.service';
-import type { Reward } from '@/services/gamification.service';
 import {
   generateDailyMissions,
   type DailyMission as DailyMissionData,
@@ -23,7 +21,6 @@ import { StreakCounter } from '@/components/gamification/StreakCounter';
 import { CoinsDisplay } from '@/components/gamification/CoinsDisplay';
 import { DailyMission } from '@/components/gamification/DailyMission';
 import { RecentActivity } from '@/components/gamification/RecentActivity';
-import { RewardsPreview } from '@/components/gamification/RewardsPreview';
 
 export default function ProgressScreen() {
   const router = useRouter();
@@ -39,23 +36,13 @@ export default function ProgressScreen() {
     refresh,
   } = useGamification();
 
-  const [rewards, setRewards] = useState<Reward[]>([]);
   const [examContext, setExamContext] = useState<'EN' | 'BAC' | 'ANY'>('ANY');
-
-  const loadRewards = useCallback(async () => {
-    const data = await getRewardsCatalog();
-    setRewards(data);
-  }, []);
 
   useFocusEffect(
     useCallback(() => {
       void refresh();
     }, [refresh])
   );
-
-  useEffect(() => {
-    loadRewards();
-  }, [loadRewards]);
 
   useEffect(() => {
     getOnboardingExam().then((exam) => {
@@ -132,7 +119,7 @@ export default function ProgressScreen() {
     >
       <Text style={styles.title}>Progres</Text>
       <Text style={styles.subtitle}>
-        Revino zilnic pentru XP, streak și recompense noi.
+        Revino zilnic pentru XP și streak.
       </Text>
 
       <View style={styles.header}>
@@ -187,11 +174,6 @@ export default function ProgressScreen() {
         <Text style={styles.sectionTitle}>Ultimele activități</Text>
         <RecentActivity transactions={transactions} />
       </View>
-
-      <RewardsPreview
-        rewards={rewards}
-        onViewAll={() => router.push('/rewards')}
-      />
 
       <View style={styles.bottom} />
     </ScrollView>

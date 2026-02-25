@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { getSubscriptionStatus, getQuizQuestionLimit } from './subscription.service';
 
 export type QuizOption = {
   id: string;
@@ -19,14 +20,19 @@ type QuizSelection = {
 };
 
 /**
- * Fetches 10 quiz questions with 5 options each for a chapter.
+ * Fetches quiz questions for a chapter.
+ * Free users: max 5 questions. Premium: 10.
  * Shuffles options per question. Works without userId (anonymous mode).
  */
 export const fetchQuizWithOptions = async (
   chapterId: string,
   userId: string | null,
-  count = 10
+  requestedCount = 10
 ): Promise<QuizQuestion[]> => {
+  const status = await getSubscriptionStatus(userId);
+  const limit = getQuizQuestionLimit(status.isPremium);
+  const count = Math.min(requestedCount, limit);
+
   const { items } = userId
     ? await selectQuizQuestions(chapterId, userId, count)
     : { items: await fetchChapterItems(chapterId, count) };
@@ -204,6 +210,108 @@ export const selectQuizQuestions = async (
 
   return { items: selected, repeatedIds };
 };
+
+const BONUS_CHAPTERS = require('../../assets/offline-data/chapters.json') as Array<{
+  id: string;
+  subject_id: string;
+  title: string;
+  order: number;
+}>;
+
+export type MonitorPerformanceResult = {
+  needsEncouragement: boolean;
+  averageScore: number;
+  totalAttempts: number;
+  message: string | null;
+  unlockedResource: { type: 'coins'; amount: number } | null;
+  suggestedChapter: { chapterId: string; title: string } | null;
+  offerDiscount24h: boolean;
+};
+
+const SCORE_THRESHOLD = 5.0;
+const CONCIERGE_BONUS_COINS = 10;
+
+/**
+ * Smart Concierge: Monitors user performance for a chapter.
+ * If average score is below 5.0, returns encouragement and unlocks a bonus resource.
+ */
+export async function monitorPerformance(
+  userId: string,
+  chapterId: string
+): Promise<MonitorPerformanceResult> {
+  const { data: items } = await supabase
+    .from('chapterpracticeitems')
+    .select('id')
+    .eq('chapter_id', chapterId);
+
+  const practiceIds = (items ?? []).map((i) => i.id as string);
+  if (practiceIds.length === 0) {
+    return {
+      needsEncouragement: false,
+      averageScore: 0,
+      totalAttempts: 0,
+      message: null,
+      unlockedResource: null,
+      suggestedChapter: null,
+      offerDiscount24h: false,
+    };
+  }
+
+  const { data: answered } = await supabase
+    .from('userquizitems')
+    .select('practice_item_id, is_correct')
+    .eq('user_id', userId)
+    .in('practice_item_id', practiceIds);
+
+  const relevant = (answered ?? []).filter((a) => practiceIds.includes(a.practice_item_id as string));
+  const totalAttempts = relevant.length;
+  const correctCount = relevant.filter((a) => a.is_correct).length;
+  const averageScore = totalAttempts > 0 ? (correctCount / totalAttempts) * 10 : 0;
+
+  if (averageScore >= SCORE_THRESHOLD || totalAttempts < 3) {
+    return {
+      needsEncouragement: false,
+      averageScore,
+      totalAttempts,
+      message: null,
+      unlockedResource: null,
+      suggestedChapter: null,
+      offerDiscount24h: false,
+    };
+  }
+
+  const { awardCoins } = await import('./gamification.service');
+  await awardCoins(userId, CONCIERGE_BONUS_COINS, 'chapter', `concierge-${chapterId}`);
+
+  const chapter = BONUS_CHAPTERS.find((c) => c.id === chapterId);
+  const chapterTitle = chapter?.title ?? 'acest capitol';
+
+  const messages = [
+    `Ești pe drumul cel bun! Am deblocat ${CONCIERGE_BONUS_COINS} monede bonus. Continuă exersarea la ${chapterTitle} – fiecare încercare te aduce mai aproape de succes.`,
+    `Scorul tău mediu la ${chapterTitle} poate crește. Primești ${CONCIERGE_BONUS_COINS} monede bonus pentru perseverență. Revino la teorie și încearcă din nou!`,
+  ];
+  const message = messages[Math.floor(Math.random() * messages.length)];
+
+  const subjectId = chapter?.subject_id;
+  const nextChapter = subjectId
+    ? BONUS_CHAPTERS.filter((c) => c.subject_id === subjectId && c.id !== chapterId)
+        .sort((a, b) => a.order - b.order)[0]
+    : null;
+
+  const chapterHint = nextChapter
+    ? ` Încearcă și capitolul „${nextChapter.title}” pentru exersare suplimentară.`
+    : '';
+
+  return {
+    needsEncouragement: true,
+    averageScore,
+    totalAttempts,
+    message: message + chapterHint,
+    unlockedResource: { type: 'coins', amount: CONCIERGE_BONUS_COINS },
+    suggestedChapter: nextChapter ? { chapterId: nextChapter.id, title: nextChapter.title } : null,
+    offerDiscount24h: true,
+  };
+}
 
 /**
  * Marks questions as answered for a user.

@@ -1,80 +1,34 @@
-import { useCallback, useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
-import { useGamification } from '@/hooks/useGamification';
-import { getRewardsCatalog, redeemReward } from '@/services/gamification.service';
-import type { Reward } from '@/services/gamification.service';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { getRewardsCatalog, redeemReward, type Reward } from '@/services/gamification.service';
+import { supabase } from '@/services/supabase';
 
 export default function RewardsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { coins, userId, refresh } = useGamification();
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [loading, setLoading] = useState(true);
   const [redeeming, setRedeeming] = useState<string | null>(null);
 
-  const loadRewards = useCallback(async () => {
-    const data = await getRewardsCatalog();
-    setRewards(data);
-    setLoading(false);
+  useEffect(() => {
+    getRewardsCatalog().then(setRewards).finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    loadRewards();
-  }, [loadRewards]);
-
   const handleRedeem = async (reward: Reward) => {
-    if (!userId) {
-      Alert.alert('Autentificare', 'Trebuie să fii autentificat pentru a schimba premii.');
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.id) {
+      Alert.alert('Autentificare', 'Autentifică-te pentru a schimba premii.');
       return;
     }
-    if (coins < reward.coins_cost) {
-      Alert.alert('Monede insuficiente', `Ai nevoie de ${reward.coins_cost} monede. Ai ${coins}.`);
-      return;
-    }
-    Alert.alert(
-      'Confirmare',
-      `Schimbi "${reward.name}" pentru ${reward.coins_cost} monede?`,
-      [
-        { text: 'Anulează', style: 'cancel' },
-        {
-          text: 'Schimbă',
-          onPress: async () => {
-            setRedeeming(reward.id);
-            const result = await redeemReward(userId, reward.id);
-            setRedeeming(null);
-            if (result.success && result.voucherCode) {
-              Alert.alert(
-                'Felicitări!',
-                `Codul tău: ${result.voucherCode}\n\nPrezintă acest cod la ${reward.partner_name ?? 'partener'} pentru a-ți primi premiul.`
-              );
-              await refresh();
-            } else {
-              Alert.alert('Eroare', result.error ?? 'Nu s-a putut finaliza răscumpărarea.');
-            }
-          },
-        },
-      ]
-    );
+    setRedeeming(reward.id);
+    const result = await redeemReward(user.id, reward.id);
+    setRedeeming(null);
+    Alert.alert(result.success ? 'Succes' : 'Info', result.error ?? (result.success ? 'Premiul a fost răscumpărat!' : 'Eroare'));
   };
-
-  if (loading) {
-    return (
-      <View style={[styles.container, styles.centered]}>
-        <ActivityIndicator size="large" color={colors.dark.primary} />
-      </View>
-    );
-  }
 
   return (
     <ScrollView
@@ -86,43 +40,35 @@ export default function RewardsScreen() {
         <Text style={styles.backText}>← Înapoi</Text>
       </Pressable>
       <Text style={styles.title}>Schimbă premii</Text>
-      <Text style={styles.coins}>Ai {coins} monede</Text>
+      <Text style={styles.subtitle}>Folosește monedele câștigate din quiz-uri și teste</Text>
 
-      {rewards.length === 0 ? (
-        <Text style={styles.empty}>Nicio premiu disponibil momentan</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.dark.primary} style={styles.loader} />
+      ) : rewards.length === 0 ? (
+        <Text style={styles.placeholder}>Premiile vor fi disponibile în curând. Va urma.</Text>
       ) : (
         <View style={styles.list}>
           {rewards.map((r) => (
-            <View key={r.id} style={styles.card}>
-              <View style={styles.cardContent}>
-                <Text style={styles.name}>{r.name}</Text>
-                {r.description ? (
-                  <Text style={styles.desc}>{r.description}</Text>
-                ) : null}
-                {r.partner_name ? (
-                  <Text style={styles.partner}>{r.partner_name}</Text>
-                ) : null}
-                {r.partner_location ? (
-                  <Text style={styles.location}>{r.partner_location}</Text>
-                ) : null}
-                <Text style={styles.cost}>{r.coins_cost} monede</Text>
+            <GlassCard key={r.id} dark intensity={18} style={styles.card}>
+              <View style={styles.cardRow}>
+                <View style={styles.cardInfo}>
+                  <Text style={styles.cardName}>{r.name}</Text>
+                  {r.description && (
+                    <Text style={styles.cardDesc}>{r.description}</Text>
+                  )}
+                  <Text style={styles.cardCost}>🪙 {r.coins_cost} monede</Text>
+                </View>
+                <Pressable
+                  onPress={() => handleRedeem(r)}
+                  disabled={!!redeeming}
+                  style={({ pressed }) => [styles.redeemBtn, pressed && styles.redeemBtnPressed]}
+                >
+                  <Text style={styles.redeemBtnText}>
+                    {redeeming === r.id ? '...' : 'Schimbă'}
+                  </Text>
+                </Pressable>
               </View>
-              <Pressable
-                onPress={() => handleRedeem(r)}
-                disabled={redeeming === r.id || coins < r.coins_cost}
-                style={({ pressed }) => [
-                  styles.button,
-                  (coins < r.coins_cost || redeeming === r.id) && styles.buttonDisabled,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                {redeeming === r.id ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Text style={styles.buttonText}>Schimbă</Text>
-                )}
-              </Pressable>
-            </View>
+            </GlassCard>
           ))}
         </View>
       )}
@@ -135,10 +81,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.lg,
     backgroundColor: 'transparent',
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   content: {
     paddingBottom: spacing.contentBottom,
@@ -156,70 +98,63 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.dark.text,
   },
-  coins: {
-    marginTop: spacing.sm,
-    fontSize: typography.size.md,
-    color: colors.dark.muted,
-  },
-  empty: {
-    marginTop: spacing.xl,
-    fontSize: typography.size.md,
-    color: colors.dark.muted,
-  },
-  list: {
-    marginTop: spacing.xl,
-    gap: spacing.md,
-  },
-  card: {
-    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-    borderRadius: 16,
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: 'rgba(148, 163, 184, 0.2)',
-  },
-  cardContent: {
-    marginBottom: spacing.md,
-  },
-  name: {
-    fontSize: typography.size.lg,
-    fontWeight: '700',
-    color: colors.dark.text,
-  },
-  desc: {
+  subtitle: {
     marginTop: spacing.xs,
     fontSize: typography.size.sm,
     color: colors.dark.muted,
   },
-  partner: {
-    marginTop: spacing.sm,
-    fontSize: typography.size.sm,
+  loader: {
+    marginTop: spacing.xl,
+  },
+  placeholder: {
+    marginTop: spacing.xl,
+    fontSize: typography.size.md,
+    color: colors.dark.muted,
+    fontStyle: 'italic',
+  },
+  list: {
+    marginTop: spacing.lg,
+    gap: spacing.sm,
+  },
+  card: {
+    padding: spacing.md,
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cardInfo: {
+    flex: 1,
+  },
+  cardName: {
+    fontSize: typography.size.md,
+    fontWeight: '700',
     color: colors.dark.text,
   },
-  location: {
-    fontSize: typography.size.xs,
+  cardDesc: {
+    marginTop: spacing.xs,
+    fontSize: typography.size.sm,
     color: colors.dark.muted,
   },
-  cost: {
-    marginTop: spacing.sm,
-    fontSize: typography.size.md,
-    fontWeight: '600',
+  cardCost: {
+    marginTop: spacing.xs,
+    fontSize: typography.size.sm,
     color: colors.dark.primary,
+    fontWeight: '600',
   },
-  button: {
-    backgroundColor: colors.dark.primary,
+  redeemBtn: {
     paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
+    backgroundColor: 'rgba(59, 130, 246, 0.3)',
     borderRadius: 12,
-    alignItems: 'center',
   },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonPressed: {
+  redeemBtnPressed: {
     opacity: 0.9,
   },
-  buttonText: {
-    color: '#fff',
+  redeemBtnText: {
+    fontSize: typography.size.sm,
     fontWeight: '600',
+    color: '#60a5fa',
   },
 });

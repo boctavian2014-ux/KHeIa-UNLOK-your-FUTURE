@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KhEIa - Pregătire Evaluare Națională 2026, Bacalaureat Română, simulări admitere. Teorie structurată, quiz-uri și teste pentru EN și BAC. Unlock Your Future!">
+  <meta name="keywords" content="Evaluare Națională 2026, BAC Română, pregătire BAC, simulări admitere, quiz EN, teste Bacalaureat, gimnaziu, liceu">
+  <title>KhEIa - Evaluare Națională 2026 & Pregătire BAC Română</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #020617;
+      --surface: rgba(15, 23, 42, 0.8);
+      --text: #F9FAFB;
+      --muted: #9CA3AF;
+      --primary: #22C55E;
+      --secondary: #22D3EE;
+      --accent: #06B6D4;
+      --border: rgba(148, 163, 184, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Subtle gradient background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 197, 94, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 50%, rgba(34, 211, 238, 0.08), transparent),
+        radial-gradient(ellipse 60% 40% at 0% 80%, rgba(34, 197, 94, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    .logo {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 24px;
+      border-radius: 24px;
+      object-fit: contain;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 24px;
+    }
+
+    .features h2 {
+      font-size: clamp(1.8rem, 4vw, 2.2rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+      color: var(--text);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Exams */
+    .exams {
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .exams h2 {
+      font-size: clamp(1.5rem, 3vw, 1.8rem);
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .exam-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .micro-simulari {
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .micro-simulari h2 {
+      font-size: clamp(1.5rem, 3vw, 1.8rem);
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .micro-desc {
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 24px;
+    }
+
+    .cta-unlock {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+    }
+
+    .badge {
+      padding: 12px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <img src="assets/kheia-icon.png" alt="KhEIa Logo" class="logo">
+        <h1>KhEIa</h1>
+        <p class="tagline">Unlock Your Future</p>
+        <p>
+          Antrenorul tău personal pentru Evaluare Națională și Bacalaureat. 
+          Pregătește-te eficient, învață la propriul ritm și urcă în clasament.
+        </p>
+        <a href="https://expo.dev/accounts/devaieoodltd1/projects/kheia" class="cta" target="_blank" rel="noopener">
+          Descarcă aplicația →
+        </a>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <h2>Ce oferim</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3>Teorie structurată</h3>
+            <p>Capitole organizate pentru EN și Bacalaureat, cu conținut generat inteligent pentru fiecare materie.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🧩</div>
+            <h3>Quiz-uri interactive</h3>
+            <p>Verifică-ți cunoștințele cu întrebări după fiecare capitol și primește explicații detaliate.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Teste simulate</h3>
+            <p>Exersează în condiții de examen cu teste cronometrate și urmărește progresul tău.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3>Gamificare</h3>
+            <p>XP, streak-uri, monede și recompense pentru a rămâne motivat în fiecare zi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="exams">
+      <div class="container">
+        <h2>Pentru ce examene te pregătești?</h2>
+        <div class="exam-badges">
+          <span class="badge">Evaluare Națională</span>
+          <span class="badge">Bacalaureat</span>
+          <span class="badge">Gimnaziu</span>
+          <span class="badge">Liceu</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="micro-simulari">
+      <div class="container">
+        <h2>Micro-Simulări</h2>
+        <p class="micro-desc">Exersează pe secțiuni scurte, cronometrate. Ideal pentru pregătirea zilnică.</p>
+        <a href="https://expo.dev/accounts/devaieoodltd1/projects/kheia" class="cta cta-unlock" target="_blank" rel="noopener">
+          Deblochează Rezolvarea Completă →
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>
+          © KhEIa — Unlock Your Future. Pregătire pentru EN și Bacalaureat.<br>
+          <a href="privacy.html" style="color: var(--muted); font-size: 0.9rem;">Politica de confidențialitate</a>
+        </p>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

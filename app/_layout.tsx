@@ -55,6 +55,9 @@ export default function RootLayout() {
         <Stack.Screen name="test/[testId]" />
         <Stack.Screen name="test/result/[testId]" />
         <Stack.Screen name="rewards" options={{ headerShown: false, headerTitle: '' }} />
+        <Stack.Screen name="referral" options={{ headerShown: false, headerTitle: '' }} />
+        <Stack.Screen name="subscription" options={{ headerShown: false, headerTitle: '' }} />
+        <Stack.Screen name="subscription-success" options={{ headerShown: false, headerTitle: '' }} />
       </Stack>
       </CatalogProvider>
     </AppBackground>

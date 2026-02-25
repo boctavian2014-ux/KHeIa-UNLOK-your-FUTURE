@@ -1,9 +1,14 @@
 import { useEffect } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Share } from 'react-native';
 import { colors, spacing, typography } from '@/theme';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { useCatalogContext } from '@/components/common/CatalogProvider';
 import { supabase } from '@/services/supabase';
 import { onTestFinished } from '@/services/progress-events.service';
+import { buildTestResultShareText } from '@/services/gamification.service';
+import { parseTestId } from '@/services/test.service';
+import { getOfficialTestById } from '@/services/official-tests.service';
 
 export default function TestResultScreen() {
   const { testId, correctCount, totalCount } = useLocalSearchParams<{
@@ -12,11 +17,28 @@ export default function TestResultScreen() {
     totalCount?: string;
   }>();
   const router = useRouter();
+  const { subjects } = useCatalogContext();
 
   const correct = Math.max(0, parseInt(correctCount ?? '0', 10));
   const total = Math.max(1, parseInt(totalCount ?? '1', 10));
   const score = Math.round((correct / total) * 100);
   const coins = Math.floor(20 + (score / 100) * 30);
+  const xpGained = correct * 10;
+
+  const officialTest = testId ? getOfficialTestById(String(testId)) : null;
+  const parsed = officialTest
+    ? { subjectId: officialTest.subjectId }
+    : testId
+      ? parseTestId(String(testId))
+      : null;
+  const subjectName = parsed?.subjectId
+    ? subjects.find((s) => s.id === parsed.subjectId)?.name
+    : undefined;
+
+  const handleShare = async () => {
+    const message = buildTestResultShareText(correct, total, subjectName);
+    await Share.share({ message, title: 'Rezultatul meu pe KhEIa' });
+  };
 
   useEffect(() => {
     if (!testId || !correctCount) return;
@@ -44,6 +66,15 @@ export default function TestResultScreen() {
       </Text>
       <Text style={styles.percent}>{score}%</Text>
       <Text style={styles.coins}>+{coins} monede</Text>
+      <Text style={styles.xp}>+{xpGained} XP</Text>
+      <Pressable
+        onPress={handleShare}
+        style={({ pressed }) => [styles.shareBtn, pressed && styles.buttonPressed]}
+      >
+        <GlassCard dark intensity={18} style={styles.shareBtnInner}>
+          <Text style={styles.shareBtnText}>Share rezultatul</Text>
+        </GlassCard>
+      </Pressable>
       <Pressable
         onPress={() => router.replace('/(tabs)/tests')}
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
@@ -81,6 +112,27 @@ const styles = StyleSheet.create({
     fontSize: typography.size.md,
     color: colors.dark.primary,
     fontWeight: '600',
+  },
+  xp: {
+    marginTop: spacing.xs,
+    fontSize: typography.size.sm,
+    color: colors.dark.muted,
+    fontWeight: '600',
+  },
+  shareBtn: {
+    marginTop: spacing.xl,
+    marginBottom: spacing.sm,
+  },
+  shareBtnInner: {
+    padding: spacing.md,
+    alignItems: 'center',
+    backgroundColor: 'rgba(34, 211, 238, 0.15)',
+    borderColor: 'rgba(34, 211, 238, 0.4)',
+  },
+  shareBtnText: {
+    fontSize: typography.size.md,
+    fontWeight: '600',
+    color: colors.dark.secondary,
   },
   button: {
     marginTop: spacing.xl,

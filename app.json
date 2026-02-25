@@ -1,19 +1,13 @@
 {
   "expo": {
-    "name": "KhEIa",
+    "name": "KhEIa - Evaluare Națională 2026 & BAC",
     "slug": "kheia",
     "scheme": "kheia",
     "version": "0.1.0",
     "orientation": "portrait",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "userInterfaceStyle": "automatic",
-    "plugins": [
-      "./node_modules/expo-router/app.plugin.js"
-    ],
+    "plugins": ["./node_modules/expo-router/app.plugin.js"],
     "jsEngine": "hermes",
     "icon": "./assets/BECKGROUND.png",
     "splash": {
@@ -21,6 +15,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#1e293b"
     },
+    "description": "Pregătire Evaluare Națională 2026, Bacalaureat Română, simulări admitere. Teorie, quiz-uri și teste pentru EN și BAC.",
     "android": {
       "package": "com.kheia.edumat",
       "adaptiveIcon": {
