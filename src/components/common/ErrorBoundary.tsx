@@ -1,40 +1,96 @@
-import { Component, ReactNode } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors, spacing } from '@/theme';
+import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { colors, spacing, typography } from '@/theme';
 
-type ErrorBoundaryProps = {
+interface Props {
   children: ReactNode;
-};
+  fallback?: ReactNode;
+}
 
-type ErrorBoundaryState = {
+interface State {
   hasError: boolean;
-};
+  error: Error | null;
+}
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
+export class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false, error: null };
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('[ErrorBoundary]', error, errorInfo);
+  }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null });
+  };
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
         <View style={styles.container}>
-          <Text style={styles.text}>A apărut o eroare.</Text>
+          <Text style={styles.emoji}>😕</Text>
+          <Text style={styles.title}>Ceva nu a mers bine</Text>
+          <Text style={styles.message}>
+            A apărut o eroare neașteptată. Poți încerca din nou sau restarta aplicația.
+          </Text>
+          <Pressable
+            onPress={this.handleRetry}
+            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+            accessibilityRole="button"
+            accessibilityLabel="Reîncearcă"
+          >
+            <Text style={styles.buttonText}>Reîncearcă</Text>
+          </Pressable>
         </View>
       );
     }
-
     return this.props.children;
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: spacing.lg,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.xl,
+    backgroundColor: 'transparent',
   },
-  text: {
-    color: colors.light.text,
+  emoji: {
+    fontSize: 48,
+    marginBottom: spacing.md,
+  },
+  title: {
+    fontSize: typography.size.xl,
+    fontWeight: '700',
+    color: colors.dark.text,
+    textAlign: 'center',
+    marginBottom: spacing.sm,
+  },
+  message: {
+    fontSize: typography.size.md,
+    color: colors.dark.muted,
+    textAlign: 'center',
+    marginBottom: spacing.xl,
+  },
+  button: {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+    backgroundColor: colors.dark.primary,
+    borderRadius: 12,
+  },
+  buttonPressed: {
+    opacity: 0.9,
+  },
+  buttonText: {
+    fontSize: typography.size.md,
+    fontWeight: '700',
+    color: '#fff',
   },
 });

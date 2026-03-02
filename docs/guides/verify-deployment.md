@@ -92,4 +92,5 @@ supabase link --project-ref YOUR_PROJECT_REF
 supabase functions deploy generate-chapter-content
 supabase functions deploy generate-chapter-summary
 supabase functions deploy generate-test
+supabase functions deploy delete-account
 ```

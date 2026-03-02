@@ -19,6 +19,8 @@ import {
   type QuizQuestion,
   type QuizOption,
 } from '@/services/quiz.service';
+import { getGeneratedChapters } from '@/lib/chapterStorage';
+import { getSubscriptionStatus, canAccessChapter } from '@/services/subscription.service';
 
 const QUESTION_COUNT = 10;
 
@@ -26,7 +28,11 @@ export default function ChapterQuizScreen() {
   const { chapterId } = useLocalSearchParams<{ chapterId: string }>();
   const router = useRouter();
   const { chapters } = useCatalogContext();
-  const chapterTitle = chapters.find((c) => c.id === chapterId)?.title;
+  const [generatedChapters, setGeneratedChapters] = useState<typeof chapters>([]);
+  const chapter =
+    chapters.find((c) => c.id === chapterId) ??
+    generatedChapters.find((c) => c.id === chapterId);
+  const chapterTitle = chapter?.title;
   const insets = useSafeAreaInsets();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,12 +52,28 @@ export default function ChapterQuizScreen() {
         setLoading(false);
         return;
       }
+
+      const generated = await getGeneratedChapters();
+      setGeneratedChapters(generated);
+      const ch =
+        chapters.find((c) => c.id === chapterId) ??
+        generated.find((c) => c.id === chapterId);
+
+      if (ch) {
+        const status = await getSubscriptionStatus(user?.id ?? null);
+        if (!canAccessChapter(ch.subject_id, ch.order, status)) {
+          router.replace({ pathname: '/subscription', params: { source: 'quiz_lock' } });
+          setLoading(false);
+          return;
+        }
+      }
+
       const q = await fetchQuizWithOptions(chapterId, user?.id ?? null, QUESTION_COUNT);
       setQuestions(q);
       setLoading(false);
     };
     run();
-  }, [chapterId]);
+  }, [chapterId, chapters]);
 
   const currentQuestion = questions[currentIndex];
   const correctOption = currentQuestion?.options.find((o) => o.is_correct);

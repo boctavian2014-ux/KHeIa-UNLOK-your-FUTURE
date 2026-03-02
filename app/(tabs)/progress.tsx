@@ -159,15 +159,23 @@ export default function ProgressScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Misiuni zilnice</Text>
-        {missions.map((m) => (
-          <Pressable
-            key={m.id}
-            style={({ pressed }) => [styles.missionWrap, pressed && styles.missionPressed]}
-            onPress={() => handleMissionPress(m)}
-          >
-            <DailyMission text={m.text} />
-          </Pressable>
-        ))}
+        {missions.length === 0 ? (
+          <Text style={styles.emptyText}>
+            Nicio misiune activă momentan. Fă un quiz sau un test pentru a câștiga XP și monede.
+          </Text>
+        ) : (
+          missions.map((m) => (
+            <Pressable
+              key={m.id}
+              style={({ pressed }) => [styles.missionWrap, pressed && styles.missionPressed]}
+              onPress={() => handleMissionPress(m)}
+              accessibilityRole="button"
+              accessibilityLabel={m.text}
+            >
+              <DailyMission text={m.text} />
+            </Pressable>
+          ))
+        )}
       </View>
 
       <View style={styles.section}>
@@ -275,5 +283,11 @@ const styles = StyleSheet.create({
   },
   bottom: {
     height: spacing.lg,
+  },
+  emptyText: {
+    fontSize: typography.size.md,
+    color: colors.dark.muted,
+    textAlign: 'center',
+    paddingVertical: spacing.md,
   },
 });

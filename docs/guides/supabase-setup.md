@@ -35,7 +35,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 1. Instalează CLI: `npm install -g supabase`
 2. Autentificare: `supabase login`
-3. Link proiect: `supabase link --project-ref <project-id>`
+3. Link proiect: `supabase link --project-ref YOUR_PROJECT_REF` (înlocuiește cu ID-ul proiectului din dashboard)
 4. Push migrații: `supabase db push`
 
 ### B) Supabase local
@@ -80,7 +80,30 @@ Scriptul citește `assets/offline-data/*.json` și inserează în Supabase:
 | tests, testitems | uuid | RLS per user |
 | ai_cache | uuid | cache generare AI |
 
+## 6. Autentificare cu Google (opțional)
+
+Pentru **Înregistrare / Log in cu Google** în app:
+
+1. **Google Cloud Console**
+   - Creează un proiect (sau folosește unul existent) → [APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials).
+   - **Create Credentials → OAuth client ID** → Application type: **Web application**.
+   - Notează **Client ID** (Web client). Pentru production, adaugă în **Authorized redirect URIs**:
+     - `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback`  
+     (înlocuiește `YOUR_PROJECT_REF` cu ID-ul proiectului Supabase din URL-ul dashboard-ului).
+
+2. **Supabase Dashboard**
+   - **Authentication → Providers** → activează **Google** și lipește **Client ID** și **Client Secret** de la Google.
+   - **Authentication → URL Configuration** → **Redirect URLs**: adaugă:
+     - `kheia://auth/callback`  
+     (acest URL este folosit de app la revenirea din browser după log in cu Google).
+
+3. **Migrații**
+   - Migrația `015_auto_create_profile_on_signup.sql` creează automat un rând în `profiles` la primul sign-up (email sau Google).
+
+Testare: folosește un **development build** (`npx expo run:android` / `npx expo run:ios`), nu Expo Go, ca scheme-ul `kheia://` să funcționeze corect la redirect.
+
 ## Resurse
 
 - [Supabase Docs](https://supabase.com/docs)
 - [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
+- [Supabase – Login with Google](https://supabase.com/docs/guides/auth/social-login/auth-google)

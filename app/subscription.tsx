@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,25 +6,48 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SUBSCRIPTION_PRICES_RON } from '@/services/subscription.service';
 import { getQuizQuestionLimit } from '@/services/subscription.service';
+import { updateSubscriptionAfterPurchase } from '@/services/subscription.service';
+import {
+  isRevenueCatConfigured,
+  initPurchases,
+  purchasePackage,
+  PLAN_TO_PACKAGE_ID,
+} from '@/services/purchases.service';
+import { supabase } from '@/services/supabase';
 
-type PlanId = 'monthly' | 'yearly' | 'full_edumat';
+type PlanId = 'monthly' | 'yearly';
 
 const PLANS: Array<{
   id: PlanId;
   title: string;
   price: number;
-  period: string;
+  priceLabel: string; // ex. "19 RON/lună"
+  billingNote: string; // ex. "Facturare lunară"
   highlight?: boolean;
 }> = [
-  { id: 'monthly', title: 'Lunar', price: SUBSCRIPTION_PRICES_RON.monthly, period: '/lună' },
-  { id: 'yearly', title: 'Anual', price: SUBSCRIPTION_PRICES_RON.yearly, period: '/an', highlight: true },
-  { id: 'full_edumat', title: 'Full Edumat (KhEIa + MEDIX)', price: SUBSCRIPTION_PRICES_RON.full_edumat, period: 'one-time' },
+  {
+    id: 'monthly',
+    title: 'Lunar',
+    price: SUBSCRIPTION_PRICES_RON.monthly,
+    priceLabel: `${SUBSCRIPTION_PRICES_RON.monthly} RON/lună`,
+    billingNote: 'Facturare lunară',
+    highlight: false,
+  },
+  {
+    id: 'yearly',
+    title: 'Anual',
+    price: SUBSCRIPTION_PRICES_RON.yearly,
+    priceLabel: `${SUBSCRIPTION_PRICES_RON.yearly} RON/an`,
+    billingNote: 'Facturare anuală',
+    highlight: true,
+  },
 ];
 
 export default function SubscriptionScreen() {
@@ -34,20 +57,49 @@ export default function SubscriptionScreen() {
 
   const showDiscount = discount24h === 'true';
 
+  useEffect(() => {
+    if (!isRevenueCatConfigured()) return;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      await initPurchases(user?.id ?? null);
+    })();
+  }, []);
+
   const handlePurchase = async (planId: PlanId) => {
     setPurchasing(planId);
     try {
-      // TODO: Integrate RevenueCat
-      // const Purchases = await import('react-native-purchases').then(m => m.default);
-      // const { customerInfo } = await Purchases.purchasePackage(packages[planId]);
-      // await updateSubscriptionAfterPurchase(userId, planType, customerInfo.expirationDate);
-      await new Promise((r) => setTimeout(r, 1500));
-      router.replace({
-        pathname: '/subscription-success',
-        params: { plan: planId },
-      });
+      if (isRevenueCatConfigured()) {
+        const packageId = PLAN_TO_PACKAGE_ID[planId] ?? planId;
+        const result = await purchasePackage(packageId);
+        if (!result.success) {
+          const msg = result.error instanceof Error ? result.error.message : 'Plata a eșuat.';
+          if (msg.toLowerCase().includes('cancelled') || msg.toLowerCase().includes('canceled')) {
+            setPurchasing(null);
+            return;
+          }
+          Alert.alert('Eroare', msg);
+          setPurchasing(null);
+          return;
+        }
+        const expirationDate = result.customerInfo.expirationDate;
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user?.id && expirationDate) {
+          await updateSubscriptionAfterPurchase(user.id, planId, expirationDate);
+        }
+        router.replace({
+          pathname: '/subscription-success',
+          params: { plan: planId, ...(expirationDate && { expiration: expirationDate }) },
+        });
+      } else {
+        await new Promise((r) => setTimeout(r, 1500));
+        router.replace({
+          pathname: '/subscription-success',
+          params: { plan: planId },
+        });
+      }
     } catch (err) {
       console.error(err);
+      Alert.alert('Eroare', 'A apărut o problemă. Încearcă din nou.');
     } finally {
       setPurchasing(null);
     }
@@ -59,7 +111,12 @@ export default function SubscriptionScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Pressable onPress={() => router.back()} style={styles.back}>
+      <Pressable
+        onPress={() => router.back()}
+        style={styles.back}
+        accessibilityRole="button"
+        accessibilityLabel="Înapoi"
+      >
         <Text style={styles.backText}>← Înapoi</Text>
       </Pressable>
 
@@ -67,6 +124,16 @@ export default function SubscriptionScreen() {
       <Text style={styles.subtitle}>
         Deblochează {getQuizQuestionLimit(true)} întrebări per quiz, toate capitolele și simulări complete.
       </Text>
+
+      {source === 'chapter_lock' && (
+        <Text style={styles.sourceMessage}>Acest capitol necesită Premium.</Text>
+      )}
+      {source === 'quiz_lock' && (
+        <Text style={styles.sourceMessage}>Quiz-ul acestui capitol necesită Premium.</Text>
+      )}
+      {source === 'test_limit' && (
+        <Text style={styles.sourceMessage}>Ai folosit testul gratuit. Pentru mai multe teste, abonează-te.</Text>
+      )}
 
       {showDiscount && (
         <GlassCard dark intensity={18} style={styles.discountBanner}>
@@ -87,6 +154,8 @@ export default function SubscriptionScreen() {
               plan.highlight && styles.planCardHighlight,
               pressed && styles.planCardPressed,
             ]}
+            accessibilityRole="button"
+            accessibilityLabel={`Plan ${plan.title}, ${plan.priceLabel}, ${plan.billingNote}. Alege acest plan.`}
           >
             <GlassCard dark intensity={18} style={styles.planCardInner}>
               {plan.highlight && (
@@ -95,10 +164,8 @@ export default function SubscriptionScreen() {
                 </View>
               )}
               <Text style={styles.planTitle}>{plan.title}</Text>
-              <Text style={styles.planPrice}>
-                {plan.price} RON
-                <Text style={styles.planPeriod}> {plan.period}</Text>
-              </Text>
+              <Text style={styles.planPrice}>{plan.priceLabel}</Text>
+              <Text style={styles.planBillingNote}>{plan.billingNote}</Text>
               <View style={styles.planButton}>
                 {purchasing === plan.id ? (
                   <ActivityIndicator size="small" color="#fff" />
@@ -124,6 +191,12 @@ const styles = StyleSheet.create({
   back: { marginBottom: spacing.md },
   backText: { fontSize: typography.size.md, fontWeight: '600', color: colors.dark.secondary },
   title: { fontSize: typography.size.xl, fontWeight: '700', color: colors.dark.text },
+  sourceMessage: {
+    fontSize: typography.size.sm,
+    color: colors.dark.primary,
+    marginBottom: spacing.sm,
+    fontStyle: 'italic',
+  },
   subtitle: {
     marginTop: spacing.sm,
     fontSize: typography.size.md,
@@ -157,7 +230,7 @@ const styles = StyleSheet.create({
   badgeText: { fontSize: 10, fontWeight: '700', color: '#fff' },
   planTitle: { fontSize: typography.size.lg, fontWeight: '700', color: colors.dark.text },
   planPrice: { fontSize: typography.size.xl, fontWeight: '700', color: colors.dark.primary, marginTop: spacing.sm },
-  planPeriod: { fontSize: typography.size.sm, fontWeight: '400', color: colors.dark.muted },
+  planBillingNote: { fontSize: typography.size.sm, color: colors.dark.muted, marginTop: spacing.xs },
   planButton: {
     marginTop: spacing.md,
     padding: spacing.md,

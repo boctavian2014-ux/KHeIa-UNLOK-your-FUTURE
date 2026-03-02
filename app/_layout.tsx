@@ -2,10 +2,12 @@ import { Stack } from 'expo-router';
 import { AppBackground } from '@/components/common/AppBackground';
 import { CatalogProvider } from '@/components/common/CatalogProvider';
 import { StreakUpdater } from '@/components/common/StreakUpdater';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { SkinProvider } from '@/contexts/SkinContext';
 
 export default function RootLayout() {
   return (
+    <ErrorBoundary>
     <SkinProvider>
     <AppBackground>
       <StreakUpdater />
@@ -62,5 +64,6 @@ export default function RootLayout() {
       </CatalogProvider>
     </AppBackground>
     </SkinProvider>
+    </ErrorBoundary>
   );
 }

@@ -58,7 +58,13 @@ export default function SelectChapterScreen() {
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
-      <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
+      <Pressable
+        onPress={() => router.back()}
+        style={styles.backRow}
+        hitSlop={16}
+        accessibilityRole="button"
+        accessibilityLabel="Înapoi"
+      >
         <Text style={styles.backText}>← Înapoi</Text>
       </Pressable>
 
@@ -71,6 +77,13 @@ export default function SelectChapterScreen() {
             : 'Alege un capitol.'}
       </Text>
 
+      {published.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}>
+            Nu există capitole disponibile. Mergi la o materie și generează sau deschide capitole din program.
+          </Text>
+        </View>
+      ) : (
       <View style={styles.list}>
         {published.map((chapter) => (
           <Pressable
@@ -86,6 +99,7 @@ export default function SelectChapterScreen() {
           </Pressable>
         ))}
       </View>
+      )}
     </ScrollView>
   );
 }
@@ -150,5 +164,15 @@ const styles = StyleSheet.create({
   cardArrow: {
     fontSize: typography.size.lg,
     color: 'rgba(255,255,255,0.7)',
+  },
+  emptyState: {
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.md,
+  },
+  emptyText: {
+    fontSize: typography.size.md,
+    color: 'rgba(255,255,255,0.75)',
+    textAlign: 'center',
+    lineHeight: 22,
   },
 });

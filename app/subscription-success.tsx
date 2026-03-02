@@ -14,7 +14,7 @@ const PLAN_LABELS: Record<string, string> = {
 };
 
 export default function SubscriptionSuccessScreen() {
-  const { plan } = useLocalSearchParams<{ plan: string }>();
+  const { plan, expiration } = useLocalSearchParams<{ plan: string; expiration?: string }>();
   const router = useRouter();
   const [done, setDone] = useState(false);
 
@@ -25,10 +25,15 @@ export default function SubscriptionSuccessScreen() {
       } = await supabase.auth.getUser();
       if (!user?.id || !plan) return;
 
-      const periodEnd = new Date();
-      if (plan === 'monthly') periodEnd.setMonth(periodEnd.getMonth() + 1);
-      else if (plan === 'yearly') periodEnd.setFullYear(periodEnd.getFullYear() + 1);
-      else periodEnd.setFullYear(periodEnd.getFullYear() + 10);
+      const periodEnd = expiration
+        ? new Date(expiration)
+        : (() => {
+            const d = new Date();
+            if (plan === 'monthly') d.setMonth(d.getMonth() + 1);
+            else if (plan === 'yearly') d.setFullYear(d.getFullYear() + 1);
+            else d.setFullYear(d.getFullYear() + 10);
+            return d;
+          })();
 
       await updateSubscriptionAfterPurchase(
         user.id,
@@ -40,7 +45,7 @@ export default function SubscriptionSuccessScreen() {
       setTimeout(() => router.replace('/(tabs)'), 2500);
     };
     run();
-  }, [plan, router]);
+  }, [plan, expiration, router]);
 
   return (
     <View style={styles.container}>

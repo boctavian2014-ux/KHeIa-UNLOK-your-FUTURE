@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,6 +6,8 @@ import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { getGeneratedChapters, getGeneratedTheory } from '@/lib/chapterStorage';
 import { useCatalogContext } from '@/components/common/CatalogProvider';
+import { supabase } from '@/services/supabase';
+import { getSubscriptionStatus, canAccessChapter } from '@/services/subscription.service';
 
 const chapterTheoryData = require('../../../assets/offline-data/chaptertheory.json') as Array<{
   chapter_id: string;
@@ -19,6 +21,8 @@ export default function ChapterTheoryScreen() {
   const { chapters: chaptersData, chapterDetails: chapterDetailsData, loading } = useCatalogContext();
   const [generatedChapters, setGeneratedChapters] = useState<typeof chaptersData>([]);
   const [generatedTheory, setGeneratedTheoryState] = useState<string[] | null>(null);
+  const [accessChecked, setAccessChecked] = useState(false);
+  const [canAccess, setCanAccess] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -30,6 +34,23 @@ export default function ChapterTheoryScreen() {
   const chapter =
     chaptersData.find((c) => c.id === chapterId) ??
     generatedChapters.find((c) => c.id === chapterId);
+
+  useEffect(() => {
+    if (!chapter || !chapterId) {
+      setAccessChecked(true);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      const status = await getSubscriptionStatus(user?.id ?? null);
+      if (cancelled) return;
+      setCanAccess(canAccessChapter(chapter.subject_id, chapter.order, status));
+      setAccessChecked(true);
+    })();
+    return () => { cancelled = true; };
+  }, [chapter, chapterId]);
+
   const details = chapterDetailsData.find((d) => d.chapter_id === chapterId);
   const theoryEntry = chapterTheoryData.find((t) => t.chapter_id === chapterId);
   const sectionContents =
@@ -53,6 +74,31 @@ export default function ChapterTheoryScreen() {
           <Text style={styles.backText}>←</Text>
         </Pressable>
         <Text style={styles.title}>Capitol negăsit</Text>
+      </View>
+    );
+  }
+
+  if (accessChecked && !canAccess) {
+    return (
+      <View style={[styles.container, styles.centered, { paddingTop: insets.top + spacing.lg }]}>
+        <Pressable onPress={() => router.back()} style={styles.backRow} hitSlop={16}>
+          <Text style={styles.backText}>← Înapoi</Text>
+        </Pressable>
+        <GlassCard dark intensity={14} style={styles.paywallCard}>
+          <Text style={styles.paywallEmoji}>🔒</Text>
+          <Text style={styles.paywallTitle}>Acest capitol necesită KhEIa Premium</Text>
+          <Text style={styles.paywallMessage}>
+            Deblochează toate capitolele și teste cu un abonament Premium.
+          </Text>
+          <Pressable
+            onPress={() => router.push({ pathname: '/subscription', params: { source: 'chapter_lock' } })}
+            style={({ pressed }) => [styles.paywallButton, pressed && styles.paywallButtonPressed]}
+            accessibilityRole="button"
+            accessibilityLabel="Mergi la abonament"
+          >
+            <Text style={styles.paywallButtonText}>Abonează-te</Text>
+          </Pressable>
+        </GlassCard>
       </View>
     );
   }
@@ -246,5 +292,42 @@ const styles = StyleSheet.create({
     fontSize: typography.size.xl,
     fontWeight: '700',
     color: colors.dark.text,
+  },
+  paywallCard: {
+    marginHorizontal: spacing.lg,
+    padding: spacing.xl,
+    alignItems: 'center',
+    backgroundColor: 'rgba(2, 6, 23, 0.7)',
+    borderColor: 'rgba(148, 163, 184, 0.25)',
+    borderRadius: 14,
+  },
+  paywallEmoji: { fontSize: 48, marginBottom: spacing.md },
+  paywallTitle: {
+    fontSize: typography.size.lg,
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+  paywallMessage: {
+    fontSize: typography.size.md,
+    color: colors.dark.muted,
+    textAlign: 'center',
+    marginBottom: spacing.lg,
+    lineHeight: 22,
+  },
+  paywallButton: {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+    backgroundColor: 'rgba(34, 197, 94, 0.4)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(34, 197, 94, 0.6)',
+  },
+  paywallButtonPressed: { opacity: 0.9 },
+  paywallButtonText: {
+    fontSize: typography.size.md,
+    fontWeight: '700',
+    color: '#4ade80',
   },
 });

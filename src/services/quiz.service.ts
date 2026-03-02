@@ -33,9 +33,16 @@ export const fetchQuizWithOptions = async (
   const limit = getQuizQuestionLimit(status.isPremium);
   const count = Math.min(requestedCount, limit);
 
-  const { items } = userId
-    ? await selectQuizQuestions(chapterId, userId, count)
-    : { items: await fetchChapterItems(chapterId, count) };
+  let items: Array<Record<string, unknown>>;
+  if (userId) {
+    const result = await selectQuizQuestions(chapterId, userId, count);
+    items = result.items;
+    if (items.length === 0) {
+      items = await fetchChapterItems(chapterId, count);
+    }
+  } else {
+    items = await fetchChapterItems(chapterId, count);
+  }
 
   if (items.length === 0) return [];
 
@@ -58,7 +65,12 @@ export const fetchQuizWithOptions = async (
   const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
 
   return items.map((item) => {
-    const raw = optsByItem[item.id as string] ?? [];
+    let raw = optsByItem[item.id as string] ?? [];
+    if (raw.length === 0 && offlineOpts.length > 0) {
+      raw = offlineOpts
+        .filter((o) => o.practice_item_id === item.id)
+        .map((o) => ({ id: o.id, text: o.text, is_correct: o.is_correct ?? false }));
+    }
     const options = shuffle(raw).slice(0, 5).map((o) => ({
       id: o.id,
       text: o.text,
@@ -179,7 +191,7 @@ export const fetchExamTestQuestions = async (
 };
 
 /**
- * Selects non-repeating quiz questions with fallback repeats.
+ * Selects quiz questions, preferring never-answered; fills with repeats if needed so quiz always has up to `count` questions.
  * @param chapterId Chapter id.
  * @param userId User id.
  * @param count Number of questions.
@@ -205,8 +217,20 @@ export const selectQuizQuestions = async (
   const freshItems = allItems.filter((item) => !answeredIds.has(item.id as string));
 
   const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
-  const selected = shuffle(freshItems).slice(0, count);
+  let selected = shuffle(freshItems).slice(0, count);
   const repeatedIds: string[] = [];
+
+  if (selected.length < count && allItems.length > 0) {
+    const selectedIds = new Set(selected.map((i) => i.id as string));
+    const pool = allItems.filter((i) => !selectedIds.has(i.id as string));
+    const needed = count - selected.length;
+    const repeats = shuffle(pool).slice(0, needed);
+    repeats.forEach((r) => {
+      repeatedIds.push(r.id as string);
+      selected = [...selected, r];
+    });
+    selected = shuffle(selected);
+  }
 
   return { items: selected, repeatedIds };
 };

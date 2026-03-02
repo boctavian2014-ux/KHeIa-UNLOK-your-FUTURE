@@ -12,6 +12,11 @@ export type SubscriptionStatus = {
 const FREE_QUIZ_LIMIT = 5;
 const PREMIUM_QUIZ_LIMIT = 10;
 
+/** Primele N capitole per materie sunt gratuite (teorie + quiz). */
+export const FREE_CHAPTERS_PER_SUBJECT = 2;
+/** Numărul de teste gratuite în total; apoi e nevoie de Premium. */
+export const FREE_TESTS_LIMIT = 1;
+
 /**
  * Returns max quiz questions for user based on subscription.
  */
@@ -66,6 +71,45 @@ export async function getSubscriptionStatus(userId: string | null): Promise<Subs
     currentPeriodEnd: periodEnd,
     referralPremiumUntil,
   };
+}
+
+/**
+ * Numără câte teste a început/utilizat userul (pentru limita gratuită).
+ */
+export async function getFreeTestsUsedCount(userId: string | null): Promise<number> {
+  if (!userId) return 0;
+  const { count, error } = await supabase
+    .from('tests')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId);
+  if (error) return 0;
+  return count ?? 0;
+}
+
+/**
+ * Verifică dacă userul poate accesa un capitol (teorie + quiz).
+ * Primele FREE_CHAPTERS_PER_SUBJECT capitole per materie sunt gratuite; restul necesită Premium.
+ * @param chapterOrder – ordinea capitolului în materie (1-based, ex. 1, 2, 3…).
+ */
+export function canAccessChapter(
+  _subjectId: string,
+  chapterOrder: number,
+  status: SubscriptionStatus
+): boolean {
+  if (status.isPremium) return true;
+  return chapterOrder <= FREE_CHAPTERS_PER_SUBJECT;
+}
+
+/**
+ * Verifică dacă userul poate începe un nou test (limita de teste gratuite).
+ */
+export async function canStartTest(
+  userId: string | null,
+  status: SubscriptionStatus
+): Promise<boolean> {
+  if (status.isPremium) return true;
+  const used = await getFreeTestsUsedCount(userId);
+  return used < FREE_TESTS_LIMIT;
 }
 
 /**

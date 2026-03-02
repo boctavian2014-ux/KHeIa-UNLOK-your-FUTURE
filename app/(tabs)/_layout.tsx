@@ -68,6 +68,7 @@ export default function TabsLayout() {
         name="home"
         options={{
           title: 'Acasa',
+          tabBarAccessibilityLabel: 'Acasă',
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               focused={focused}
@@ -83,6 +84,7 @@ export default function TabsLayout() {
         name="kheia"
         options={{
           title: 'KhEIa',
+          tabBarAccessibilityLabel: 'Chat KhEIa',
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               focused={focused}
@@ -98,6 +100,7 @@ export default function TabsLayout() {
         name="tests"
         options={{
           title: 'Teste',
+          tabBarAccessibilityLabel: 'Teste',
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               focused={focused}
@@ -113,6 +116,7 @@ export default function TabsLayout() {
         name="progress"
         options={{
           title: 'Progres',
+          tabBarAccessibilityLabel: 'Progres',
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               focused={focused}
@@ -128,6 +132,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: 'Profil',
+          tabBarAccessibilityLabel: 'Profil',
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               focused={focused}

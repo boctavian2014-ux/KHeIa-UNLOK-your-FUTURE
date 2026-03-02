@@ -1,7 +1,7 @@
 {
   "name": "edumat-romania",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
@@ -12,7 +12,9 @@
       }
     },
     "install": {
-      "exclude": ["@react-navigation/native"]
+      "exclude": [
+        "@react-navigation/native"
+      ]
     }
   },
   "main": "index.js",
@@ -24,6 +26,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "build:android:aab": "eas build --platform android --profile preview --non-interactive",
+    "build:android:prod": "eas build --platform android --profile production --non-interactive",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -37,15 +41,19 @@
     "dayjs": "^1.11.19",
     "expo": "^54.0.0",
     "expo-blur": "~15.0.8",
+    "expo-build-properties": "~1.0.10",
     "expo-constants": "~18.0.13",
     "expo-linear-gradient": "~15.0.8",
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.23",
     "expo-secure-store": "~15.0.8",
+    "expo-web-browser": "~15.0.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
+    "react-native-purchases": "^9.10.5",
+    "react-native-purchases-ui": "^9.10.5",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",

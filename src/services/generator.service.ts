@@ -51,10 +51,16 @@ export const createChapter = async (topic: string, subjectId: string, level: 'gi
 
 /**
  * Generates chapter theory summary.
- * Folosește Edge Function; dacă eșuează, încercă backend-ul direct.
+ * Încearcă mai întâi backend-ul direct (dacă e configurat), apoi Edge Function – ca „Generează teorie” să meargă și fără Edge deployat.
  */
 export const generateTheory = async (chapterId: string, topic?: string) => {
   const body = { chapter_id: chapterId, ...(topic && { topic }), summaryOnly: true };
+
+  if (BACKEND_URL) {
+    const direct = await fetchBackend<{ source?: string; content?: string }>('/api/generate/summary', body);
+    if (direct.data) return { data: direct.data, error: null };
+  }
+
   const { data, error } = await supabase.functions.invoke('generate-chapter-summary', {
     body: { chapter_id: chapterId, ...(topic && { topic }) },
   });
@@ -63,7 +69,13 @@ export const generateTheory = async (chapterId: string, topic?: string) => {
     const fallback = await fetchBackend<{ source?: string; content?: string }>('/api/generate/summary', body);
     if (fallback.data) return { data: fallback.data, error: null };
   }
-  if (error) return { data: null, error };
+  if (error) {
+    const msg =
+      error.message?.includes('Failed to send a request') || error.message?.includes('edge function')
+        ? 'Serviciul de generare nu este disponibil. Verifică EXPO_PUBLIC_NODE_BACKEND_URL în .env sau deploy Edge Function în Supabase.'
+        : error.message;
+    return { data: null, error: new Error(msg ?? 'Nu s-a putut genera teoria.') };
+  }
   return { data, error: null };
 };
 

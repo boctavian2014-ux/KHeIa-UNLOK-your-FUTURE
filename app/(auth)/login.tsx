@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { signInWithEmail, signUpWithEmail, resetPassword } from '@/services/auth.service';
+import { signInWithEmail, signUpWithEmail, resetPassword, signInWithGoogle } from '@/services/auth.service';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -93,6 +93,23 @@ export default function LoginScreen() {
     else handleForgot();
   };
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      const { error } = await signInWithGoogle();
+      if (error) {
+        if (error.message === 'Anulare') {
+          return;
+        }
+        Alert.alert('Eroare', error.message ?? 'Autentificare cu Google eșuată.');
+        return;
+      }
+      router.replace('/(tabs)/home');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -122,6 +139,8 @@ export default function LoginScreen() {
             autoCapitalize="none"
             autoCorrect={false}
             editable={!loading}
+            accessibilityLabel="Email"
+            accessibilityHint={mode === 'forgot' ? 'Introdu adresa de email pentru resetarea parolei' : 'Introdu adresa de email'}
           />
           {mode !== 'forgot' && (
             <>
@@ -134,6 +153,8 @@ export default function LoginScreen() {
                 onChangeText={setPassword}
                 secureTextEntry
                 editable={!loading}
+                accessibilityLabel="Parolă"
+                accessibilityHint="Minim 6 caractere"
               />
             </>
           )}
@@ -141,6 +162,8 @@ export default function LoginScreen() {
             onPress={handleSubmit}
             disabled={loading}
             style={[styles.submitBtn, loading && styles.submitBtnDisabled]}
+            accessibilityRole="button"
+            accessibilityLabel={mode === 'signin' ? 'Conectare' : mode === 'signup' ? 'Înregistrare' : 'Trimite link resetare parolă'}
           >
             <Text style={styles.submitBtnText}>
               {loading
@@ -154,19 +177,50 @@ export default function LoginScreen() {
           </Pressable>
         </GlassCard>
 
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>sau</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
+        <Pressable
+          onPress={handleGoogleSignIn}
+          disabled={loading}
+          style={[styles.googleBtn, loading && styles.submitBtnDisabled]}
+          accessibilityRole="button"
+          accessibilityLabel="Continua cu Google"
+        >
+          <Text style={styles.googleBtnText}>Continua cu Google</Text>
+        </Pressable>
+
         <View style={styles.links}>
           {mode === 'signin' && (
             <>
-              <Pressable onPress={() => setMode('signup')} disabled={loading}>
+              <Pressable
+                onPress={() => setMode('signup')}
+                disabled={loading}
+                accessibilityRole="button"
+                accessibilityLabel="Nu ai cont? Înregistrează-te"
+              >
                 <Text style={styles.link}>Nu ai cont? Înregistrează-te</Text>
               </Pressable>
-              <Pressable onPress={() => setMode('forgot')} disabled={loading}>
+              <Pressable
+                onPress={() => setMode('forgot')}
+                disabled={loading}
+                accessibilityRole="button"
+                accessibilityLabel="Ai uitat parola?"
+              >
                 <Text style={styles.link}>Ai uitat parola?</Text>
               </Pressable>
             </>
           )}
           {(mode === 'signup' || mode === 'forgot') && (
-            <Pressable onPress={() => setMode('signin')} disabled={loading}>
+            <Pressable
+              onPress={() => setMode('signin')}
+              disabled={loading}
+              accessibilityRole="button"
+              accessibilityLabel="Înapoi la conectare"
+            >
               <Text style={styles.link}>Înapoi la conectare</Text>
             </Pressable>
           )}
@@ -176,6 +230,8 @@ export default function LoginScreen() {
           onPress={() => router.replace('/(tabs)/home')}
           style={styles.skipBtn}
           disabled={loading}
+          accessibilityRole="button"
+          accessibilityLabel="Continuă fără cont"
         >
           <Text style={styles.skipText}>Continuă fără cont</Text>
         </Pressable>
@@ -229,6 +285,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitBtnDisabled: { opacity: 0.6 },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.xl,
+    marginBottom: spacing.md,
+    gap: spacing.md,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(148, 163, 184, 0.3)',
+  },
+  dividerText: {
+    fontSize: typography.size.sm,
+    color: colors.dark.muted,
+    fontWeight: '500',
+  },
+  googleBtn: {
+    paddingVertical: spacing.md,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.3)',
+    alignItems: 'center',
+  },
+  googleBtnText: {
+    fontSize: typography.size.md,
+    fontWeight: '600',
+    color: colors.dark.text,
+  },
   submitBtnText: {
     fontSize: typography.size.md,
     fontWeight: '700',

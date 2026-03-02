@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { colors, spacing, typography } from '@/theme';
@@ -19,7 +20,7 @@ import { XPBar } from '@/components/gamification/XPBar';
 import { CoinsDisplay } from '@/components/gamification/CoinsDisplay';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
 import { GDPR_TEXT, PRIVACY_POLICY_TEXT, TERMS_TEXT } from '@/content/legal';
-import { signOut } from '@/services/auth.service';
+import { signOut, deleteAccount } from '@/services/auth.service';
 import { getSchoolLeaderboard, type SchoolLeaderboard } from '@/services/gamification.service';
 import { getProfile } from '@/services/referral.service';
 
@@ -321,6 +322,42 @@ export default function ProfileScreen() {
     await signOut();
   };
 
+  const handleDeleteAccount = () => {
+    if (!userId) return;
+    Alert.alert(
+      'Ștergere cont',
+      'Toate datele tale (profil, progres, statistici, abonament) vor fi șterse definitiv. Conform GDPR, nu poți reveni după ștergere. Ești sigur?',
+      [
+        { text: 'Anulare', style: 'cancel' },
+        {
+          text: 'Continuă',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Confirmă ștergerea',
+              'Contul tău și toate datele asociate vor fi șterse permanent. Apasă „Șterge cont” pentru a confirma.',
+              [
+                { text: 'Anulare', style: 'cancel' },
+                {
+                  text: 'Șterge cont',
+                  style: 'destructive',
+                  onPress: async () => {
+                    const { error } = await deleteAccount();
+                    if (error) {
+                      Alert.alert('Eroare', error.message ?? 'Ștergerea contului a eșuat. Încearcă din nou sau contactează contact@edumat.ro.');
+                    } else {
+                      router.replace('/(tabs)/home');
+                    }
+                  },
+                },
+              ]
+            );
+          },
+        },
+      ]
+    );
+  };
+
   const renderSetariTab = () => (
     <View style={styles.skinSection}>
       <Text style={styles.skinTitle}>Cont</Text>
@@ -330,11 +367,24 @@ export default function ProfileScreen() {
       <Pressable
         onPress={() => (userId ? handleLogout() : router.push('/login'))}
         style={({ pressed }) => [styles.authBtn, pressed && styles.authBtnPressed]}
+        accessibilityRole="button"
+        accessibilityLabel={userId ? 'Deconectare' : 'Autentificare'}
       >
         <GlassCard dark intensity={18} style={styles.authBtnInner}>
           <Text style={styles.authBtnText}>{userId ? 'Deconectare' : 'Autentificare'}</Text>
         </GlassCard>
       </Pressable>
+
+      {userId && (
+        <Pressable
+          onPress={handleDeleteAccount}
+          style={({ pressed }) => [styles.deleteAccountBtn, pressed && styles.authBtnPressed]}
+          accessibilityRole="button"
+          accessibilityLabel="Șterge cont și toate datele"
+        >
+        <Text style={styles.deleteAccountText}>Șterge cont (GDPR)</Text>
+        </Pressable>
+      )}
 
       <Text style={[styles.skinTitle, { marginTop: spacing.xl }]}>Temă / Skin</Text>
       <Text style={styles.skinSubtitle}>Alege fundalul aplicației</Text>
@@ -725,6 +775,17 @@ const styles = StyleSheet.create({
     fontSize: typography.size.md,
     fontWeight: '700',
     color: '#60a5fa',
+  },
+  deleteAccountBtn: {
+    marginTop: spacing.sm,
+    paddingVertical: spacing.md,
+    alignItems: 'center',
+  },
+  deleteAccountText: {
+    fontSize: typography.size.sm,
+    fontWeight: '600',
+    color: colors.dark.muted,
+    textDecorationLine: 'underline',
   },
   skinTitle: {
     fontSize: typography.size.lg,

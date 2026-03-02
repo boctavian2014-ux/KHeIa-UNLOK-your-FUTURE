@@ -7,6 +7,8 @@ import { useCatalogContext } from '@/components/common/CatalogProvider';
 import { getGeneratedChapters } from '@/lib/chapterStorage';
 import { getOfficialExamTests } from '@/services/official-tests.service';
 import { getOnboardingExam } from '@/lib/onboardingStorage';
+import { supabase } from '@/services/supabase';
+import { getSubscriptionStatus, canStartTest } from '@/services/subscription.service';
 import type { ExamType } from '@/types/tests';
 
 const YEARS = [2026, 2025, 2024, 2023, 2022];
@@ -50,6 +52,17 @@ export default function TestsScreen() {
     () => getOfficialExamTests({ examType, year, subjectId }),
     [examType, year, subjectId]
   );
+
+  const handleTestPress = useCallback(async (targetTestId: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const status = await getSubscriptionStatus(user?.id ?? null);
+    const allowed = await canStartTest(user?.id ?? null, status);
+    if (allowed) {
+      router.push(`/test/${targetTestId}`);
+    } else {
+      router.push({ pathname: '/subscription', params: { source: 'test_limit' } });
+    }
+  }, [router]);
 
   if (loading) {
     return (
@@ -118,12 +131,21 @@ export default function TestsScreen() {
 
           <Text style={styles.sectionTitle}>Quiz-uri capitole</Text>
           <Text style={styles.sectionDesc}>Întrebări din fiecare capitol</Text>
+          {published.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>
+                Nu există încă capitole. Generează un quiz din butonul de mai sus sau alege o materie și deschide capitole.
+              </Text>
+            </View>
+          ) : (
           <View style={styles.list}>
             {published.map((ch) => (
               <Pressable
                 key={ch.id}
                 onPress={() => router.push(`/chapter/${ch.id}/quiz`)}
                 style={({ pressed }) => [pressed && styles.cardPressed]}
+                accessibilityRole="button"
+                accessibilityLabel={`Quiz capitol ${ch.title}`}
               >
                 <GlassCard dark intensity={16} style={styles.card}>
                   <Text style={styles.cardTitle} numberOfLines={1} ellipsizeMode="tail">
@@ -137,6 +159,7 @@ export default function TestsScreen() {
               </Pressable>
             ))}
           </View>
+          )}
 
           <Text style={styles.sectionTitle}>Evaluare Națională</Text>
           <Text style={styles.sectionDesc}>Simulări conform programei și formei de examen</Text>
@@ -144,7 +167,7 @@ export default function TestsScreen() {
             {enSubjects.map((s) => (
               <Pressable
                 key={s.id}
-                onPress={() => router.push(`/test/en-${s.id}`)}
+                onPress={() => handleTestPress(`en-${s.id}`)}
                 style={({ pressed }) => [pressed && styles.cardPressed]}
               >
                 <GlassCard dark intensity={16} style={styles.card}>
@@ -164,7 +187,7 @@ export default function TestsScreen() {
             {bacSubjects.map((s) => (
               <Pressable
                 key={s.id}
-                onPress={() => router.push(`/test/bac-${s.id}`)}
+                onPress={() => handleTestPress(`bac-${s.id}`)}
                 style={({ pressed }) => [pressed && styles.cardPressed]}
               >
                 <GlassCard dark intensity={16} style={styles.card}>
@@ -276,7 +299,7 @@ export default function TestsScreen() {
               {officialTests.map((t) => (
                 <Pressable
                   key={t.id}
-                  onPress={() => router.push(`/test/${t.id}`)}
+                  onPress={() => handleTestPress(t.id)}
                   style={({ pressed }) => [pressed && styles.cardPressed]}
                 >
                   <GlassCard dark intensity={16} style={styles.card}>

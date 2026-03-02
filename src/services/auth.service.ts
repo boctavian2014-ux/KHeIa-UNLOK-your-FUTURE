@@ -1,4 +1,8 @@
+import * as WebBrowser from 'expo-web-browser';
 import { supabase } from './supabase';
+
+/** Redirect URL for OAuth (must be allowed in Supabase Dashboard → Auth → URL Configuration). */
+const GOOGLE_OAUTH_REDIRECT = 'kheia://auth/callback';
 
 /**
  * Signs in with email and password.
@@ -22,6 +26,56 @@ export const resetPassword = async (email: string) => {
 };
 
 /**
+ * Starts Google OAuth flow: opens browser and returns the URL to open.
+ * Caller should use WebBrowser.openAuthSessionAsync with this URL and the redirect,
+ * then pass the result URL to setSessionFromOAuthRedirectUrl.
+ */
+export const getGoogleOAuthUrl = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: GOOGLE_OAUTH_REDIRECT,
+      skipBrowserRedirect: true,
+    },
+  });
+  if (error) return { url: null as string | null, error };
+  return { url: data?.url ?? null, error: null };
+};
+
+/**
+ * Parses the OAuth redirect URL (with hash fragment from Supabase) and sets the session.
+ */
+export const setSessionFromOAuthRedirectUrl = async (url: string) => {
+  const fragment = url.includes('#') ? url.split('#')[1] : '';
+  if (!fragment) return { error: new Error('No fragment in redirect URL') };
+  const params = new URLSearchParams(fragment);
+  const access_token = params.get('access_token');
+  const refresh_token = params.get('refresh_token');
+  if (!access_token || !refresh_token) {
+    return { error: new Error('Missing access_token or refresh_token in URL') };
+  }
+  return supabase.auth.setSession({ access_token, refresh_token });
+};
+
+/**
+ * Signs in (or registers) with Google via OAuth in browser.
+ * Opens the system browser, then sets the session from the redirect URL.
+ */
+export const signInWithGoogle = async () => {
+  const { url, error: urlError } = await getGoogleOAuthUrl();
+  if (urlError || !url) {
+    return { error: urlError ?? new Error('No OAuth URL returned') };
+  }
+  const result = await WebBrowser.openAuthSessionAsync(url, GOOGLE_OAUTH_REDIRECT);
+  if (result.type !== 'success' || !result.url) {
+    return { error: new Error(result.type === 'cancel' ? 'Anulare' : 'Autentificare eșuată') };
+  }
+  const { error: sessionError } = await setSessionFromOAuthRedirectUrl(result.url);
+  if (sessionError) return { error: sessionError };
+  return { error: null };
+};
+
+/**
  * Signs in with a test user for development.
  */
 export const signInTestUser = async () => {
@@ -35,4 +89,36 @@ export const signInTestUser = async () => {
  */
 export const signOut = async () => {
   return supabase.auth.signOut();
+};
+
+/**
+ * GDPR: Șterge contul curent și toate datele asociate.
+ * Apelează Edge Function delete-account, apoi deconectează.
+ * Returnează { error: null } la succes sau { error } la eșec.
+ */
+export const deleteAccount = async (): Promise<{ error: Error | null }> => {
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (sessionError || !session) {
+    return { error: sessionError ?? new Error('Nu ești autentificat.') };
+  }
+
+  const { data, error } = await supabase.functions.invoke('delete-account', {
+    method: 'POST',
+  });
+
+  if (error) {
+    return { error: new Error(error.message ?? 'Ștergerea contului a eșuat.') };
+  }
+
+  const body = data as { error?: string } | undefined;
+  if (body?.error) {
+    return { error: new Error(body.error) };
+  }
+
+  await supabase.auth.signOut();
+  return { error: null };
 };

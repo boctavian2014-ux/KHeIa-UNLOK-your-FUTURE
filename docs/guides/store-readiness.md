@@ -17,8 +17,8 @@
 
 ### 1. Configurare app (app.json / app.config.js)
 
-- [ ] **Icon** – `icon` și `adaptiveIcon` (Android) – lipsesc din app.json
-- [ ] **Splash screen** – `splash` (imagine, backgroundColor) – lipsește
+- [ ] **Icon** – în **`assets/`** (ex. `icon.png` 1024×1024); în app.json: `icon`, `android.adaptiveIcon.foregroundImage` – vezi [Icon și Splash](./icon-and-splash.md)
+- [ ] **Splash screen** – în **`assets/`** (ex. `splash.png`); în app.json: `splash.image`, `splash.backgroundColor`
 - [ ] **Bundle ID** – `ios.bundleIdentifier`, `android.package` – pentru build production
 - [ ] **Versiune** – `version` (0.1.0) și `ios.buildNumber` / `android.versionCode` pentru fiecare release
 
