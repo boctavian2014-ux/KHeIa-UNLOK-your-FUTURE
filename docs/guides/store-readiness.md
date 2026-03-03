@@ -37,7 +37,7 @@
 
 ### 4. Store listing
 
-- [ ] **Titlu** – KhEIa / KhEla (consistent)
+- [ ] **Titlu** – KHEYA (consistent)
 - [ ] **Descriere** – scurtă + lungă (EN/RO)
 - [ ] **Screenshot-uri** – 2–8 pe device (phone/tablet)
 - [ ] **Feature graphic** – 1024x500 (Play Store)
@@ -61,7 +61,7 @@
 - [ ] **Internal testing** – build instalat pe device real
 - [ ] **Generează capitol** – flow complet, conținut salvat
 - [ ] **Generează teorie** – flow complet
-- [ ] **Chat KhEla** – funcțional cu backend
+- [ ] **Chat KHEYA** – funcțional cu backend
 - [ ] **Quiz** – răspunsuri, scor, navigare
 - [ ] **Teste EN/BAC** – dacă sunt folosite
 

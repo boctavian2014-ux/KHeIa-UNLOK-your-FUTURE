@@ -77,9 +77,9 @@ function loadCta(): string {
   try {
     const content = readFileSync(path, 'utf-8');
     const ctaMatch = content.match(/CTA:\s*(.+?)(?:\n|$)/);
-    return ctaMatch ? ctaMatch[1].trim() : 'Descarcă aplicația KhEIa și începe pregătirea acum!';
+    return ctaMatch ? ctaMatch[1].trim() : 'Descarcă aplicația KHEYA și începe pregătirea acum!';
   } catch {
-    return 'Descarcă aplicația KhEIa și începe pregătirea acum! Unlock Your Future.';
+    return 'Descarcă aplicația KHEYA și începe pregătirea acum! Unlock Your Future.';
   }
 }
 
@@ -117,14 +117,14 @@ function main() {
         subject.level,
         'pregătire',
         'quiz',
-        'KhEIa',
+        'KHEYA',
       ].join(', ');
 
       output.push({
         examType: fixture.examType,
         subjectId: subject.id,
         subjectName: subject.name,
-        title: `Pregătire ${subject.name} - ${examLabel} 2026 | KhEIa`,
+        title: `Pregătire ${subject.name} - ${examLabel} 2026 | KHEYA`,
         description: `${descriptionSnippet} ${cta}`,
         keywords,
         cta,

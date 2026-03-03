@@ -16,17 +16,24 @@ export function LegalConsentOverlay({ onAccept }: LegalConsentOverlayProps) {
   const slideY = useRef(new Animated.Value(-SCREEN_HEIGHT)).current;
 
   useEffect(() => {
-    Animated.spring(slideY, {
-      toValue: 0,
-      useNativeDriver: true,
-      damping: 20,
-      stiffness: 120,
-      mass: 0.8,
-    }).start();
+    // Scurtă întârziere ca overlay-ul să fie montat în Expo Go, apoi slide-ul e vizibil
+    const t = setTimeout(() => {
+      Animated.spring(slideY, {
+        toValue: 0,
+        useNativeDriver: true,
+        damping: 18,
+        stiffness: 100,
+        mass: 0.9,
+      }).start();
+    }, 120);
+    return () => clearTimeout(t);
   }, [slideY]);
 
   return (
-    <View style={[styles.backdrop, { paddingTop: insets.top + spacing.md }]} pointerEvents="auto">
+    <View
+      style={[styles.backdrop, styles.backdropVisible, { paddingTop: insets.top + spacing.md }]}
+      pointerEvents="auto"
+    >
       <Animated.View
         style={[styles.slideWrapper, { transform: [{ translateY: slideY }] }]}
       >
@@ -42,7 +49,7 @@ export function LegalConsentOverlay({ onAccept }: LegalConsentOverlayProps) {
           >
             <Text style={styles.legalHeading}>POLITICA DE CONFIDENȚIALITATE</Text>
             <Text style={styles.legalHeading}>TERMENI ȘI CONDIȚII</Text>
-            <Text style={styles.title}>Bine ai venit în Kheia</Text>
+            <Text style={styles.title}>Bine ai venit în KHEYA</Text>
             <Text style={styles.subtitle}>
               Pentru a folosi aplicația, te rugăm să accepți Termenii și Condițiile și Politica de
               Confidențialitate. Conturile sunt create de părinte sau tutore legal; prin accept,
@@ -75,6 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingHorizontal: spacing.lg,
     paddingBottom: 0,
+  },
+  backdropVisible: {
+    backgroundColor: 'rgba(0,0,0,0.25)',
   },
   slideWrapper: {
     flex: 1,

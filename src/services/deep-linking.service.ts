@@ -15,5 +15,5 @@ export function buildTestDeepLink(testId: string): string {
 export function buildTestShareMessage(testId: string, subjectName?: string): string {
   const url = buildTestDeepLink(testId);
   const subject = subjectName ? ` la ${subjectName}` : '';
-  return `Încearcă acest test${subject} pe KhEIa! Pregătire Evaluare Națională 2026 și BAC. ${url}`;
+  return `Încearcă acest test${subject} pe KHEYA! Pregătire Evaluare Națională 2026 și BAC. ${url}`;
 }

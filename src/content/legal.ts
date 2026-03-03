@@ -1,5 +1,5 @@
 /**
- * Texte legale pentru aplicația Kheia – Unlock Your Future (DEV AI LTD EOOD).
+ * Texte legale pentru aplicația KHEYA – Unlock Your Future (DEV AI LTD EOOD).
  * Conform GDPR și legislației UE. Conturile sunt create de părinte/tutore legal.
  */
 
@@ -37,7 +37,7 @@ Datele sunt păstrate atât timp cât este necesar pentru furnizarea serviciilor
 Contact
 Pentru exercitarea drepturilor sau pentru întrebări legate de protecția datelor: contact@kheya.ro, contact@devaieood.com | +40 725 177 971`;
 
-export const PRIVACY_POLICY_TEXT = `Politica de confidențialitate – Kheia – Unlock Your Future
+export const PRIVACY_POLICY_TEXT = `Politica de confidențialitate – KHEYA – Unlock Your Future
 
 Operator: DEV AI LTD EOOD. Sediu: 1 Bogdan Voyvoda str./blvd., 7002 Ruse, Bulgaria.
 Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
@@ -45,14 +45,14 @@ Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
 Ultima actualizare: 2025
 
 1. Introducere
-Kheia – Unlock Your Future („aplicația”) este oferită de DEV AI LTD EOOD și respectă confidențialitatea utilizatorilor. Ne angajăm să protejăm datele personale în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și legislația în vigoare. Conturile pot fi create doar de părinte sau tutore legal; pentru minori sub 16 ani, consimțământul este acordat de părinte/tutore.
+KHEYA – Unlock Your Future („aplicația”) este oferită de DEV AI LTD EOOD și respectă confidențialitatea utilizatorilor. Ne angajăm să protejăm datele personale în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și legislația în vigoare. Conturile pot fi create doar de părinte sau tutore legal; pentru minori sub 16 ani, consimțământul este acordat de părinte/tutore.
 
 2. Ce date colectăm
 • Date de cont: email (părinte/tutore), nume, parolă (stocată securizat)
 • Date elev: nume elev (dacă este furnizat)
 • Date de utilizare: progres pe capitole, scoruri la quiz-uri și teste, statistici
 • Date tehnice: adresă IP (pentru securitate și anti-abuz), tip device, versiunea aplicației
-• Nu colectăm date inutile; nu afișăm reclame terțe. Monetizarea este prin abonamente Kheia Premium.
+• Nu colectăm date inutile; nu afișăm reclame terțe. Monetizarea este prin abonamente KHEYA Premium.
 
 3. Cum folosim datele
 • Furnizarea și funcționarea aplicației (autentificare, sincronizare progres)
@@ -78,17 +78,17 @@ Putem actualiza această politică. Te vom informa despre modificări semnificat
 9. Contact
 Pentru întrebări legate de confidențialitate: contact@kheya.ro, contact@devaieood.com | +40 725 177 971`;
 
-export const TERMS_TEXT = `Termeni și condiții de utilizare – Kheia – Unlock Your Future
+export const TERMS_TEXT = `Termeni și condiții de utilizare – KHEYA – Unlock Your Future
 
 Furnizor: DEV AI LTD EOOD. Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
 
 Ultima actualizare: 2025
 
 1. Acceptarea termenilor
-Prin accesarea și utilizarea aplicației Kheia – Unlock Your Future, accepți acești termeni și condiții. Acceptarea se face de către părinte sau tutore legal în numele minorului. Dacă nu ești de acord, te rugăm să nu folosești aplicația.
+Prin accesarea și utilizarea aplicației KHEYA – Unlock Your Future, accepți acești termeni și condiții. Acceptarea se face de către părinte sau tutore legal în numele minorului. Dacă nu ești de acord, te rugăm să nu folosești aplicația.
 
 2. Descrierea serviciului
-Kheia este o aplicație educațională pentru pregătirea la Evaluarea Națională și Bacalaureat. Oferă lecții, quiz-uri și teste. Conținutul este furnizat „ca atare”; nu garantăm promovarea la examene sau anumite rezultate. Monetizarea este prin abonamente (29 RON/lună, 249 RON/an), fără reclame terțe.
+KHEYA este o aplicație educațională pentru pregătirea la Evaluarea Națională și Bacalaureat. Oferă lecții, quiz-uri și teste. Conținutul este furnizat „ca atare”; nu garantăm promovarea la examene sau anumite rezultate. Monetizarea este prin abonamente (29 RON/lună, 249 RON/an), fără reclame terțe.
 
 3. Cont utilizator
 • Conturile sunt create doar de părinte sau tutore legal.

@@ -18,7 +18,7 @@ export const SKINS: Record<SkinName, SkinConfig> = {
   },
   kheia: {
     name: 'kheia',
-    label: 'KhEIa',
+    label: 'KHEYA',
     backgroundImage: require('../../assets/Kheya_bg_v2.png'),
     primaryColor: '#7C3AED',
   },

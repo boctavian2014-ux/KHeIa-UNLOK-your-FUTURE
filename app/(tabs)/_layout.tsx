@@ -85,8 +85,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="kheia"
         options={{
-          title: 'KhEIa',
-          tabBarAccessibilityLabel: 'Chat KhEIa',
+          title: 'KHEYA',
+          tabBarAccessibilityLabel: 'Chat KHEYA',
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               focused={focused}

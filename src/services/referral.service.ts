@@ -127,5 +127,5 @@ export async function getReferredCount(referrerId: string): Promise<number> {
  * Builds share message for referral.
  */
 export function buildReferralShareMessage(referralCode: string): string {
-  return `Invită-mă pe KhEIa! Folosește codul meu ${referralCode} la înregistrare și deblochează capitol nou. Pregătire Evaluare Națională 2026 și BAC: ${REFERRAL_APP_URL}`;
+  return `Invită-mă pe KHEYA! Folosește codul meu ${referralCode} la înregistrare și deblochează capitol nou. Pregătire Evaluare Națională 2026 și BAC: ${REFERRAL_APP_URL}`;
 }

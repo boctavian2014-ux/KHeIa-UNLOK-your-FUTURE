@@ -39,7 +39,7 @@ describe('gamification.service', () => {
     expect(text).toContain('8/10');
     expect(text).toContain('80%');
     expect(text).toContain('Text literar');
-    expect(text).toContain('KhEIa');
+    expect(text).toContain('KHEYA');
     expect(text).toContain('Evaluare Națională 2026');
   });
 
@@ -48,6 +48,6 @@ describe('gamification.service', () => {
     expect(text).toContain('15/20');
     expect(text).toContain('75%');
     expect(text).toContain('Română');
-    expect(text).toContain('KhEIa');
+    expect(text).toContain('KHEYA');
   });
 });

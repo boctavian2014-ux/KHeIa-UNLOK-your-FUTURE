@@ -1,6 +1,6 @@
 # TERMENI ȘI CONDIȚII
 
-**Aplicația: Kheia – Unlock Your Future**  
+**Aplicația: KHEYA – Unlock Your Future**  
 *Document orientativ, nerevizat de un avocat. Recomandăm verificarea de către un jurist sau consultant înainte de utilizare.*
 
 ---
@@ -17,7 +17,7 @@
 
 ## 2. Acceptarea Termenilor
 
-Prin accesarea și utilizarea aplicației Kheia – Unlock Your Future („Aplicația”), accepți prezentele Termeni și Condiții. **Acceptarea se face de către părinte sau tutore legal**, în numele minorului care va folosi aplicația. Dacă nu ești de acord cu acești termeni, te rugăm să nu folosești Aplicația.
+Prin accesarea și utilizarea aplicației KHEYA – Unlock Your Future („Aplicația”), accepți prezentele Termeni și Condiții. **Acceptarea se face de către părinte sau tutore legal**, în numele minorului care va folosi aplicația. Dacă nu ești de acord cu acești termeni, te rugăm să nu folosești Aplicația.
 
 ---
 
@@ -31,7 +31,7 @@ Prin accesarea și utilizarea aplicației Kheia – Unlock Your Future („Aplic
 
 ## 4. Scopul serviciului
 
-Kheia este o **aplicație educațională** destinată pregătirii pentru examene (Evaluarea Națională și Bacalaureat). Oferă conținut de tip lecții, teste grilă și statistici de progres. Scopul este exclusiv educațional; Aplicația **nu garantează** promovarea la examene sau obținerea unor anumite note.
+KHEYA este o **aplicație educațională** destinată pregătirii pentru examene (Evaluarea Națională și Bacalaureat). Oferă conținut de tip lecții, teste grilă și statistici de progres. Scopul este exclusiv educațional; Aplicația **nu garantează** promovarea la examene sau obținerea unor anumite note.
 
 ---
 
@@ -67,7 +67,7 @@ Utilizatorul (prin părinte/tutore și/sau minor) se obligă să:
 
 ### 8.1 Planuri disponibile
 
-Monetizarea Aplicației se face **exclusiv prin abonamente** (nu se afișează reclame terțe). Sunt disponibile următoarele planuri sub denumirea **„Kheia Unlock Your Future”**:
+Monetizarea Aplicației se face **exclusiv prin abonamente** (nu se afișează reclame terțe). Sunt disponibile următoarele planuri sub denumirea **„KHEYA Unlock Your Future”**:
 
 | Plan   | Preț       | Etichetă afișată în aplicație |
 |--------|------------|-------------------------------|

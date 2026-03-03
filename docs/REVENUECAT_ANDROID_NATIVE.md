@@ -1,6 +1,6 @@
 # RevenueCat SDK – Android nativ (Kotlin + Gradle)
 
-**Notă:** Aplicația KheIA este **Expo / React Native**. Integrarea RevenueCat este deja făcută în **TypeScript** (`src/services/purchases.service.ts`). Acest ghid este pentru:
+**Notă:** Aplicația KHEYA este **Expo / React Native**. Integrarea RevenueCat este deja făcută în **TypeScript** (`src/services/purchases.service.ts`). Acest ghid este pentru:
 - proiecte Android **nativ** (doar Kotlin/Java), sau
 - customizări în folderul `android/` după `expo prebuild` (ex: log level, configurare în `MainApplication`).
 
@@ -85,9 +85,9 @@ fun setRevenueCatUserId(userId: String) {
 
 ---
 
-## 4. Verificare entitlement: KheIA Pro
+## 4. Verificare entitlement: KHEYA Pro
 
-În RevenueCat, entitlement-ul trebuie să aibă **exact** același identifier ca în cod (ex: `pro` sau `KheIA Pro`). În `purchases.service.ts` folosești `KHEIA_PRO_ENTITLEMENT_ID = 'pro'`, deci în dashboard ar trebui să fie `pro`. Dacă în dashboard e „KheIA Pro” (cu spațiu), atunci folosești acel string.
+În RevenueCat, entitlement-ul trebuie să aibă **exact** același identifier ca în cod (ex: `pro` sau `KHEYA Pro`). În `purchases.service.ts` folosești `KHEIA_PRO_ENTITLEMENT_ID = 'pro'`, deci în dashboard ar trebui să fie `pro`. Dacă în dashboard e „KHEYA Pro” (cu spațiu), atunci folosești acel string.
 
 **Kotlin – verificare entitlement:**
 
@@ -96,7 +96,7 @@ import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.CustomerInfo
 import com.revenuecat.purchases.PurchasesError
 
-const val ENTITLEMENT_KHEIA_PRO = "pro"  // sau "KheIA Pro" dacă așa e în dashboard
+const val ENTITLEMENT_KHEIA_PRO = "pro"  // sau "KHEYA Pro" dacă așa e în dashboard
 
 fun checkProAccess(
     onResult: (Boolean) -> Unit
@@ -186,7 +186,7 @@ fun purchasePackage(pkg: Package) {
 
 ## 6. Produse și Offering în RevenueCat
 
-- **Dashboard → Products:** asociază Product ID-urile din Google Play (`monthly`, `yearly`, `lifetime`) cu entitlement-ul `pro` (sau „KheIA Pro”).
+- **Dashboard → Products:** asociază Product ID-urile din Google Play (`monthly`, `yearly`, `lifetime`) cu entitlement-ul `pro` (sau „KHEYA Pro”).
 - **Offerings → default:** adaugă packages cu identifier-ele `monthly`, `yearly`, `lifetime` (sau `$rc_monthly`, `$rc_annual`, `$rc_lifetime` dacă folosești convenția RevenueCat). În cod folosești același identifier la `getPackage("monthly")` etc.
 
 ---
@@ -238,6 +238,6 @@ Documentație: [Customer Center](https://www.revenuecat.com/docs/tools/customer-
 
 - **Erori:** toate callback-urile au `onError(error: PurchasesError)`. Verifică `error.code` (ex: `PurchaseCancelledError`, `NetworkError`) și `userCancelled` la purchase pentru a nu afișa „Eroare” când user-ul a dat înapoi.
 - **Best practice:** configure o singură dată în `Application.onCreate`; identifică user-ul cu `logIn(userId)` după login; verifică entitlement înainte de a afișa conținut premium; oferă Customer Center pentru restaurare și gestionare abonament.
-- **Produse:** monthly, yearly, lifetime în Google Play + RevenueCat Products + Offering packages cu aceleași ID-uri; entitlement `pro` (sau „KheIA Pro”) legat de toate cele trei.
+- **Produse:** monthly, yearly, lifetime în Google Play + RevenueCat Products + Offering packages cu aceleași ID-uri; entitlement `pro` (sau „KHEYA Pro”) legat de toate cele trei.
 
-Pentru **aplicația ta KheIA (Expo)**, toate acestea sunt deja acoperite în **TypeScript** în `src/services/purchases.service.ts` și în ecranele de abonament; trebuie doar configurate dashboard-ul RevenueCat, Google Play și `.env` cu API key-ul Google.
+Pentru **aplicația ta KHEYA (Expo)**, toate acestea sunt deja acoperite în **TypeScript** în `src/services/purchases.service.ts` și în ecranele de abonament; trebuie doar configurate dashboard-ul RevenueCat, Google Play și `.env` cu API key-ul Google.

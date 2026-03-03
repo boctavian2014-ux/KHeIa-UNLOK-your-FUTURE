@@ -19,7 +19,7 @@
 
 ### 3. App (.env / supabase/.env)
 
-- [ ] `EXPO_PUBLIC_NODE_BACKEND_URL` = URL Railway (pentru **Chat KhEla**)
+- [ ] `EXPO_PUBLIC_NODE_BACKEND_URL` = URL Railway (pentru **Chat KHEYA**)
 - [ ] `EXPO_PUBLIC_SUPABASE_URL` și `EXPO_PUBLIC_SUPABASE_ANON_KEY` corecte
 
 ---
@@ -30,10 +30,10 @@
 |---------|---------------|------------------|----------------|
 | Generează capitol | `generate-chapter-content` | `/api/generate/chapter` | generate-chapter.tsx |
 | Generează teorie | `generate-chapter-summary` | `/api/generate/summary` | generate-theory.tsx |
-| Chat KhEla | — | `/api/generate/chat` | kheia.tsx (direct) |
+| Chat KHEYA | — | `/api/generate/chat` | kheia.tsx (direct) |
 | Test EN/BAC | `generate-test` | `/api/generate/test` | test/[testId] (stub) |
 
-**Important:** Chat-ul KhEla apelează direct backend-ul. Dacă `EXPO_PUBLIC_NODE_BACKEND_URL` nu e setat, chat-ul nu funcționează.
+**Important:** Chat-ul KHEYA apelează direct backend-ul. Dacă `EXPO_PUBLIC_NODE_BACKEND_URL` nu e setat, chat-ul nu funcționează.
 
 ---
 
@@ -63,9 +63,9 @@ Răspuns așteptat:
 2. Apasă **Generează teorie**
 3. Ar trebui să se redea la ecranul de teorie cu conținut generat
 
-### 4. Chat KhEla (prin app)
+### 4. Chat KHEYA (prin app)
 
-1. Tab **KhEla**
+1. Tab **KHEYA**
 2. Scrie o întrebare și trimite
 3. Ar trebui să primești un răspuns (dacă `EXPO_PUBLIC_NODE_BACKEND_URL` e setat)
 

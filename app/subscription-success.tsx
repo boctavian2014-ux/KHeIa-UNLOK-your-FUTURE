@@ -10,7 +10,7 @@ import { updateSubscriptionAfterPurchase } from '@/services/subscription.service
 const PLAN_LABELS: Record<string, string> = {
   monthly: 'Lunar',
   yearly: 'Anual',
-  full_edumat: 'Kheia Premium',
+  full_edumat: 'KHEYA Premium',
 };
 
 export default function SubscriptionSuccessScreen() {
@@ -59,7 +59,7 @@ export default function SubscriptionSuccessScreen() {
         </Animated.Text>
         <Animated.Text entering={FadeInDown.delay(600).duration(500)} style={styles.subtitle}>
           {done
-            ? `Ai activat KhEIa ${PLAN_LABELS[plan ?? ''] ?? 'Premium'}. Accesul complet este deblocat!`
+            ? `Ai activat KHEYA ${PLAN_LABELS[plan ?? ''] ?? 'Premium'}. Accesul complet este deblocat!`
             : 'Se procesează...'}
         </Animated.Text>
       </Animated.View>

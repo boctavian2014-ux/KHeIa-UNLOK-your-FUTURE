@@ -47,7 +47,7 @@ Ca un tester să poată **„plăti” în app** și să fie deblocat (Premium) 
 
 **Pași în Google Play Console:**
 
-1. Deschide [Play Console](https://play.google.com/console) și alege aplicația **KheIA**.
+1. Deschide [Play Console](https://play.google.com/console) și alege aplicația **KHEYA**.
 2. În meniul din stânga: **Setup** → **License testing** (sau **Settings** → **License testing**, în funcție de versiunea UI).
 3. La **License testers**:
    - Adaugă adresele **Gmail** ale testerilor (câte una per linie sau separate prin virgulă, conform câmpului din consolă).
@@ -59,7 +59,7 @@ Ca un tester să poată **„plăti” în app** și să fie deblocat (Premium) 
 1. Pe telefon: contul **Google (Gmail)** trebuie să fie același cu cel adăugat la License testers (contul cu care e înscris în track-ul de testing).
 2. Instalează app-ul din **Open testing** (linkul din Play Console sau din emailul de invitație).
 3. Deschide app-ul, se loghează (cu orice cont din app – email/parolă sau Google).
-4. Mergi la ecranul **Abonament** (KhEIa Premium) și apasă pe un plan (ex. **Anual**).
+4. Mergi la ecranul **Abonament** (KHEYA Premium) și apasă pe un plan (ex. **Anual**).
 5. Se deschide fereastra **Google Play** – va apărea o tranzacție de **test** (nu se debitează card real). Testerul finalizează flow-ul (Confirm / Accept).
 6. După finalizare, app-ul îl tratează ca **Premium** (RevenueCat + backend) și este deblocat.
 

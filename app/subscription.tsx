@@ -142,7 +142,7 @@ export default function SubscriptionScreen() {
         <Text style={styles.backText}>← Înapoi</Text>
       </Pressable>
 
-      <Text style={styles.title}>KhEIa Premium</Text>
+      <Text style={styles.title}>KHEYA Premium</Text>
       <Text style={styles.subtitle}>
         Deblochează {getQuizQuestionLimit(true)} întrebări per quiz, toate capitolele și simulări complete.
       </Text>

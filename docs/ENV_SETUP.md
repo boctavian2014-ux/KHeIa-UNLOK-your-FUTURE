@@ -1,4 +1,4 @@
-# Unde pui EXPO_PUBLIC_NODE_BACKEND_URL (Chat KhEla)
+# Unde pui EXPO_PUBLIC_NODE_BACKEND_URL (Chat KHEYA)
 
 URL-ul backend-ului pentru chat se citește din **expo.extra**, populat în `app.config.js`. Poți seta variabila în unul din locurile de mai jos.
 

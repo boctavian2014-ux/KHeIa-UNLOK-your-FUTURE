@@ -65,7 +65,7 @@ export default function ChapterQuizResultScreen() {
     );
     await Share.share({
       message,
-      title: 'Rezultatul meu pe KhEIa',
+      title: 'Rezultatul meu pe KHEYA',
     });
   };
 

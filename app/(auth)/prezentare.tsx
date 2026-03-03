@@ -27,7 +27,7 @@ export default function PrezentareScreen() {
     >
       <View style={styles.content}>
         <Image source={kheiaIcon} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.title}>KhEIa</Text>
+        <Text style={styles.title}>KHEYA</Text>
         <Text style={styles.tagline}>Unlock Your Future</Text>
         <Text style={styles.subtitle}>
           Antrenorul tău personal pentru Evaluare Națională și Bacalaureat. Pregătește-te eficient,

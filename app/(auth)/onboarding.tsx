@@ -18,7 +18,7 @@ export default function OnboardingScreen() {
     <View style={[styles.container, { paddingTop: insets.top + spacing.xl }]}>
       <View style={styles.content}>
         <Image source={kheiaIcon} style={styles.icon} resizeMode="contain" />
-        <Text style={styles.title}>KhEIa</Text>
+        <Text style={styles.title}>KHEYA</Text>
         <Text style={styles.tagline}>Unlock Your Future</Text>
         <Text style={styles.subtitle}>
           Antrenorul tău personal pentru Evaluare Națională și Bacalaureat. Alege tipul de examen și

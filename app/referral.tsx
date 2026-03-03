@@ -50,7 +50,7 @@ export default function ReferralScreen() {
       const message = buildReferralShareMessage(referralCode);
       const result = await Share.share({
         message,
-        title: 'Invită un coleg pe KhEIa',
+        title: 'Invită un coleg pe KHEYA',
       });
       if (result.action === Share.sharedAction) {
         // Shared successfully

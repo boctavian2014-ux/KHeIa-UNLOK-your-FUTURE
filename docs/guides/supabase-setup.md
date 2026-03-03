@@ -1,4 +1,4 @@
-# Configurare Supabase – Kheia – Unlock Your Future
+# Configurare Supabase – KHEYA – Unlock Your Future
 
 ## Precondiții
 

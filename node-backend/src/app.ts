@@ -23,15 +23,20 @@ app.use(express.json({ limit: '1mb' }));
 app.use(pinoHttp());
 
 app.get('/', (_req, res) => {
-  res.send('Welcome to KhEIa - Unlock Your Future!');
+  res.send('Welcome to KHEYA - Unlock Your Future!');
 });
 
 registerHealthRoutes(app);
 registerGenerateRoutes(app);
 
+/** Exported for integration tests (supertest). */
+export { app };
+
 const port = process.env.PORT ? Number(process.env.PORT) : 8080;
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Node backend listening on ${port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Node backend listening on ${port}`);
+  });
+}

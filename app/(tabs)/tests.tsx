@@ -96,7 +96,7 @@ export default function TestsScreen() {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              Teste KhEIa
+              Teste KHEYA
             </Text>
           </Pressable>
           <Pressable
@@ -291,7 +291,7 @@ export default function TestsScreen() {
                 onPress={() => setMode('GENERATED')}
                 style={({ pressed }) => [styles.emptyCta, pressed && styles.emptyCtaPressed]}
               >
-                <Text style={styles.emptyCtaText}>→ Mergi la Teste KhEIa (simulări)</Text>
+                <Text style={styles.emptyCtaText}>→ Mergi la Teste KHEYA (simulări)</Text>
               </Pressable>
             </>
           ) : (

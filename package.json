@@ -29,7 +29,12 @@
     "build:android:aab": "eas build --platform android --profile preview --non-interactive",
     "build:android:prod": "eas build --platform android --profile production --non-interactive",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "test:e2e": "jest --testPathPattern=tests/e2e",
+    "test:coverage": "jest --coverage --coverageReporters=text --coverageReporters=lcov",
+    "test:backend": "cd node-backend && npm test"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",

@@ -28,7 +28,7 @@ export default function Index() {
   if (!ready) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingTitle}>KheIA Unlok your future</Text>
+        <Text style={styles.loadingTitle}>KHEYA – Unlock Your Future</Text>
         <ActivityIndicator size="small" color={colors.dark.primary} style={styles.spinner} />
       </View>
     );
@@ -37,7 +37,7 @@ export default function Index() {
   if (legalAccepted === false) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingTitle}>KheIA Unlok your future</Text>
+        <Text style={styles.loadingTitle}>KHEYA – Unlock Your Future</Text>
         <LegalConsentOverlay onAccept={handleLegalAccept} />
       </View>
     );

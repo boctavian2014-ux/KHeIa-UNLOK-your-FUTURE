@@ -37,7 +37,7 @@ export default function TestResultScreen() {
 
   const handleShare = async () => {
     const message = buildTestResultShareText(correct, total, subjectName);
-    await Share.share({ message, title: 'Rezultatul meu pe KhEIa' });
+    await Share.share({ message, title: 'Rezultatul meu pe KHEYA' });
   };
 
   useEffect(() => {

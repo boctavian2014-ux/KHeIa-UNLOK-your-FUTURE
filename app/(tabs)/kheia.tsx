@@ -176,7 +176,7 @@ export default function KheiaScreen() {
         <View style={styles.touchableContent}>
           <View style={[styles.header, styles.headerRow, { paddingTop: insets.top + spacing.md }]}>
             <View style={styles.headerTextWrap}>
-              <Text style={styles.title}>KhEIa</Text>
+              <Text style={styles.title}>KHEYA</Text>
               <Text style={styles.subtitle}>Chatbot EN & Bacalaureat</Text>
             </View>
             {showFullScreenPrompt && (

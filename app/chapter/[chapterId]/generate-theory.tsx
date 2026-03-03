@@ -91,7 +91,7 @@ export default function GenerateTheoryScreen() {
 
       <GlassCard dark intensity={14} style={styles.infoCard}>
         <Text style={styles.infoText}>
-          KhEla poate genera teoria pentru acest capitol. După generare, teoria va apărea în secțiunile
+          KHEYA poate genera teoria pentru acest capitol. După generare, teoria va apărea în secțiunile
           capitolului (ex. Genuri, Specii).
         </Text>
       </GlassCard>

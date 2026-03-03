@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 const APPLE_KEY = (typeof process !== 'undefined' && process.env?.EXPO_PUBLIC_REVENUECAT_API_KEY_APPLE) ?? '';
 const GOOGLE_KEY = (typeof process !== 'undefined' && process.env?.EXPO_PUBLIC_REVENUECAT_API_KEY_GOOGLE) ?? '';
 
-/** Entitlement identifier in RevenueCat dashboard for KheIA Pro access. */
+/** Entitlement identifier in RevenueCat dashboard for KHEYA Pro access. */
 export const KHEIA_PRO_ENTITLEMENT_ID = 'pro';
 
 /** RevenueCat nu rulează pe web. */
@@ -57,7 +57,7 @@ export async function getCustomerInfo(): Promise<CustomerInfo | null> {
   }
 }
 
-/** Returns true if the user has the KheIA Pro entitlement. */
+/** Returns true if the user has the KHEYA Pro entitlement. */
 export async function hasProEntitlement(): Promise<boolean> {
   const info = await getCustomerInfo();
   if (!info?.entitlements?.active) return false;
@@ -140,7 +140,7 @@ export async function presentPaywall(): Promise<PaywallResult> {
   }
 }
 
-/** Present paywall only if user does not have KheIA Pro. Returns whether paywall was shown and result. */
+/** Present paywall only if user does not have KHEYA Pro. Returns whether paywall was shown and result. */
 export async function presentPaywallIfNeeded(): Promise<{ presented: boolean; result: PaywallResult }> {
   if (!isNative || !isRevenueCatConfigured()) return { presented: false, result: 'ERROR' };
   try {

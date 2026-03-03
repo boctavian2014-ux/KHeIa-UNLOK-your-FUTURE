@@ -60,7 +60,7 @@ Conținutul din **`android-proguard-rules.pro`** îl poți:
 
 ### Unde încarci mapping.txt în Play Console (ReTrace pentru App bundle 0.2.0)
 
-1. **Play Console** → aplicația KheIA.
+1. **Play Console** → aplicația KHEYA.
 2. **Release** → **App bundle explorer** (sau **Production** / **Testing** → versiunea 0.2.0).
 3. Selectează **App bundle 0.2.0** (versiunea care corespunde build-ului din care ai descărcat mapping.txt).
 4. Caută **„Upload mapping file”** / **„ReTrace mapping file”** / **„Deobfuscation file”**.

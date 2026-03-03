@@ -29,7 +29,7 @@ git init
 
 ```powershell
 git add .
-git commit -m "Initial commit - Kheia Unlock Your Future"
+git commit -m "Initial commit - KHEYA – Unlock Your Future"
 git branch -M main
 git remote add origin https://github.com/boctavian2014-ux/KHeIa-UNLOK-your-FUTURE.git
 git push -u origin main

@@ -402,7 +402,7 @@ export function buildProgressCertificateShareText(
 ): string {
   const pct = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
   const chapter = chapterTitle ? ` la ${chapterTitle}` : '';
-  return `Am obținut ${correctCount}/${totalQuestions} (${pct}%)${chapter} pe KhEIa! 📚 Pregătire Evaluare Națională 2026 și BAC. Încearcă și tu!`;
+  return `Am obținut ${correctCount}/${totalQuestions} (${pct}%)${chapter} pe KHEYA! 📚 Pregătire Evaluare Națională 2026 și BAC. Încearcă și tu!`;
 }
 
 /**
@@ -415,7 +415,7 @@ export function buildTestResultShareText(
 ): string {
   const pct = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
   const subject = subjectName ? ` la ${subjectName}` : '';
-  return `Am obținut ${correctCount}/${totalCount} (${pct}%)${subject} pe KhEIa! 📚 Pregătire Evaluare Națională 2026 și BAC. Încearcă și tu!`;
+  return `Am obținut ${correctCount}/${totalCount} (${pct}%)${subject} pe KHEYA! 📚 Pregătire Evaluare Națională 2026 și BAC. Încearcă și tu!`;
 }
 
 /**

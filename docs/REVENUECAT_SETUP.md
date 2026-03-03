@@ -1,6 +1,6 @@
 # Configurare RevenueCat – pas cu pas
 
-Acest ghid explică ce trebuie să faci **tu** (în dashboard-uri și în proiect) ca plățile pentru abonamente KhEIa Premium să funcționeze.
+Acest ghid explică ce trebuie să faci **tu** (în dashboard-uri și în proiect) ca plățile pentru abonamente KHEYA Premium să funcționeze.
 
 ---
 
@@ -76,7 +76,7 @@ RevenueCat e un serviciu care gestionează abonamentele (in-app purchases) pentr
 ## Pas 1: Cont și proiect RevenueCat
 
 1. Creează cont pe [revenuecat.com](https://www.revenuecat.com) (dacă nu ai deja).
-2. **Dashboard → Projects → Create new project** (ex: „KhEIa”).
+2. **Dashboard → Projects → Create new project** (ex: „KHEYA”).
 3. Notează **Project API Key** (îl vei folosi în app).
 
 ---
@@ -92,14 +92,14 @@ RevenueCat e un serviciu care gestionează abonamentele (in-app purchases) pentr
    - Creează (sau grupezi) produse pentru:
      - **Lunar** (ex: `kheia_premium_monthly`)
      - **Anual** (ex: `kheia_premium_yearly`)
-     - **Kheia Premium** (lifetime, ex: `kheia_full_edumat` – poate fi consumable sau non-renewing, după cum vrei).
+     - **KHEYA Premium** (lifetime, ex: `kheia_full_edumat` – poate fi consumable sau non-renewing, după cum vrei).
 5. În RevenueCat, la app-ul iOS, asociază aceste **Product IDs** cu **Entitlements** (ex: entitlement `premium`).
 
 ---
 
 ## Pas 3: Conectare Google Play (Android)
 
-> **Android nativ (Kotlin/Gradle):** dacă lucrezi într-un proiect Android nativ sau în folderul `android/` după `expo prebuild`, vezi ghidul detaliat [RevenueCat Android nativ (Kotlin)](./REVENUECAT_ANDROID_NATIVE.md) – Gradle, API key, entitlement KheIA Pro, Paywall, Customer Center, cod complet.
+> **Android nativ (Kotlin/Gradle):** dacă lucrezi într-un proiect Android nativ sau în folderul `android/` după `expo prebuild`, vezi ghidul detaliat [RevenueCat Android nativ (Kotlin)](./REVENUECAT_ANDROID_NATIVE.md) – Gradle, API key, entitlement KHEYA Pro, Paywall, Customer Center, cod complet.
 
 1. În RevenueCat: **Project → Apps → Add app** → alege **Google Play**.
 2. Legătura se face prin **Service credentials** (JSON) din Google Play Console:
@@ -136,7 +136,7 @@ RevenueCat e un serviciu care gestionează abonamentele (in-app purchases) pentr
 2. **Create subscription** pentru fiecare produs. Folosește **exact** aceste ID-uri (sau altele, dar trebuie să le folosești și în RevenueCat și în `purchases.service.ts`):
    - **Monthly:** Product ID = `monthly` (sau `kheia_premium_monthly`).
    - **Yearly:** Product ID = `yearly` (sau `kheia_premium_yearly`).
-   - **Lifetime / Kheia Premium:** Product ID = `lifetime` (sau `kheia_full_edumat`).  
+   - **Lifetime / KHEYA Premium:** Product ID = `lifetime` (sau `kheia_full_edumat`).  
    Pentru „lifetime” poți folosi **One-time product** (Monetize → One-time products) dacă nu e abonament recurent.
 3. La fiecare abonament: setează prețul, perioada (1 lună / 1 an), trial gratuit (opțional).
 
@@ -240,7 +240,7 @@ Când în dashboard apare secțiunea **„Create your first paywall”**, ai dou
 4. **Offering:** asociază paywall-ul cu offering-ul tău (ex: `default`). Astfel, când app-ul apelează `presentPaywall()` sau `presentPaywallIfNeeded()`, RevenueCat trimite acest layout și prețurile din offering.
 5. **Save** / **Publish**. Paywall-ul devine „current” pentru acel offering și va apărea în app la următorul apel.
 
-**În app-ul tău (KheIA):** deja folosești `presentPaywall()` și `presentPaywallIfNeeded()` din `purchases.service.ts`. După ce paywall-ul e creat și publicat în dashboard, aceste apeluri vor afișa paywall-ul configurat (în development build).
+**În app-ul tău (KHEYA):** deja folosești `presentPaywall()` și `presentPaywallIfNeeded()` din `purchases.service.ts`. După ce paywall-ul e creat și publicat în dashboard, aceste apeluri vor afișa paywall-ul configurat (în development build).
 
 ### Varianta B: Paywall propriu (custom UI)
 
@@ -253,7 +253,7 @@ Poți ignora paywall-ul din dashboard și să afișezi tu ecranul de abonament (
 ## Unde e setat paywall-ul / ecranul de abonament în app
 
 - **Paywall UI RevenueCat** (`presentPaywall()` / `presentPaywallIfNeeded()`) din `src/services/purchases.service.ts` **nu e apelat nicăieri** în aplicație. Funcțiile există și pot fi folosite dacă vrei să afișezi paywall-ul nativ RevenueCat.
-- **Ecranul de abonament folosit acum** este cel **custom**: `app/subscription.tsx` (ruta `/subscription`). Acesta afișează planurile (Lunar, Anual, Kheia Premium) și folosește RevenueCat prin `purchasePackage()` din `purchases.service.ts`.
+- **Ecranul de abonament folosit acum** este cel **custom**: `app/subscription.tsx` (ruta `/subscription`). Acesta afișează planurile (Lunar, Anual, KHEYA Premium) și folosește RevenueCat prin `purchasePackage()` din `purchases.service.ts`.
 
 **Unde se deschide ecranul de abonament („paywall”):**
 
@@ -308,7 +308,7 @@ După ce ai pus cheile în `.env` (și în EAS dacă folosești EAS Build), ecra
 
 Când în RevenueCat vezi **„Make your first purchase”**, trebuie să faci o cumpărare de test din app.
 
-### Cum declanșezi cumpărarea în app (KheIA)
+### Cum declanșezi cumpărarea în app (KHEYA)
 
 1. **Rulează app-ul** într-un **development build** (nu în Expo Go):
    ```bash
@@ -316,9 +316,9 @@ Când în RevenueCat vezi **„Make your first purchase”**, trebuie să faci o
    ```
    sau instalează un build EAS pe device.
 
-2. **Deschide ecranul de abonament** (KhEIa Premium) – de obicei din meniu sau din prompt-ul „Upgrade”.
+2. **Deschide ecranul de abonament** (KHEYA Premium) – de obicei din meniu sau din prompt-ul „Upgrade”.
 
-3. **Apasă pe un plan** (Lunar, Anual sau Kheia Premium). Butonul apelează `handlePurchase(planId)` → `purchasePackage(packageId)` din `purchases.service.ts`, deci cumpărătura e declanșată direct din ecranul tău.
+3. **Apasă pe un plan** (Lunar, Anual sau KHEYA Premium). Butonul apelează `handlePurchase(planId)` → `purchasePackage(packageId)` din `purchases.service.ts`, deci cumpărătura e declanșată direct din ecranul tău.
 
 4. **Finalizează fluxul** în fereastra Google Play Billing (sandbox):
    - **Android:** dacă app-ul e pe **Internal testing** sau **Closed testing**, contul tău (sau conturile din **License testers** în Play Console) pot cumpăra fără card real; tranzacția e anulată automat după câteva minute.
@@ -364,7 +364,7 @@ Când în RevenueCat vezi **„Create a real app configuration”** / **Your app
      - una pentru **production** (live).
      Copiază **Public API key** pentru **Production** (Google și/sau Apple).
 
-  3. **În aplicația ta (KheIA):** În build-urile de **producție** (cele care vor fi în Play Store / App Store) trebuie să folosești cheia de **producție**, nu cea de test.
+  3. **În aplicația ta (KHEYA):** În build-urile de **producție** (cele care vor fi în Play Store / App Store) trebuie să folosești cheia de **producție**, nu cea de test.
      - În **EAS Build** pentru producție: adaugi în **EAS Secrets** (sau în `eas.json` sub env al profilului de producție) variabilele:
        - `EXPO_PUBLIC_REVENUECAT_API_KEY_GOOGLE=<cheia_ta_production_google>`
        - `EXPO_PUBLIC_REVENUECAT_API_KEY_APPLE=<cheia_ta_production_apple>` (când ai și iOS)
@@ -378,14 +378,14 @@ Când în RevenueCat vezi **„Create a real app configuration”** / **Your app
 
 ## Checklist complet – Apple App Store + Google Play
 
-Toate punctele de mai jos sunt necesare pentru a avea abonamentele KhEIa Premium live pe ambele store-uri. Bifează pe măsură ce le finalizezi.
+Toate punctele de mai jos sunt necesare pentru a avea abonamentele KHEYA Premium live pe ambele store-uri. Bifează pe măsură ce le finalizezi.
 
 ### Conturi și acces
 
 | # | Task | Unde | Status |
 |---|------|------|--------|
 | 1 | Cont **RevenueCat** | [revenuecat.com](https://www.revenuecat.com) | ☐ |
-| 2 | Proiect RevenueCat creat (ex: KhEIa) | RevenueCat → Projects | ☐ |
+| 2 | Proiect RevenueCat creat (ex: KHEYA) | RevenueCat → Projects | ☐ |
 | 3 | Cont **Apple Developer** (99 USD/an) | [developer.apple.com](https://developer.apple.com) | ☐ |
 | 4 | Cont **Google Play Console** (taxă unică ~25 USD) | [play.google.com/console](https://play.google.com/console) | ☐ |
 
@@ -400,7 +400,7 @@ Toate punctele de mai jos sunt necesare pentru a avea abonamentele KhEIa Premium
 | 7 | **Shared Secret** generat | Users and Access → Shared Secret (sau App → In-App Purchase → Manage) | Copiezi valoarea pentru RevenueCat | ☐ |
 | 8 | **In-App Purchase** – abonament lunar | App → In-App Purchases → + → Auto-Renewable Subscription | Product ID ex: `monthly` sau `kheia_premium_monthly` | ☐ |
 | 9 | **In-App Purchase** – abonament anual | Idem | Product ID ex: `yearly` sau `kheia_premium_yearly` | ☐ |
-| 10 | **In-App Purchase** – lifetime / Kheia Premium | Idem sau Non-Renewing Subscription / Consumable | Product ID ex: `lifetime` sau `kheia_full_edumat` | ☐ |
+| 10 | **In-App Purchase** – lifetime / KHEYA Premium | Idem sau Non-Renewing Subscription / Consumable | Product ID ex: `lifetime` sau `kheia_full_edumat` | ☐ |
 | 11 | **App** iOS adăugat în RevenueCat | RevenueCat → Project → Apps → Add app → Apple | Bundle ID + Shared Secret introdus | ☐ |
 | 12 | **Agreements, Tax, Banking** semnate | App Store Connect → Agreements, Tax | Necesar pentru a publica | ☐ |
 

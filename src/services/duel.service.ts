@@ -56,7 +56,7 @@ export function buildDuelInviteLink(inviteCode: string): string {
  * Builds share message for duel invitation.
  */
 export function buildDuelShareMessage(inviteCode: string, inviteLink: string): string {
-  return `Provocare duel pe KhEIa! Introdu codul ${inviteCode} sau deschide: ${inviteLink}`;
+  return `Provocare duel pe KHEYA! Introdu codul ${inviteCode} sau deschide: ${inviteLink}`;
 }
 
 /**

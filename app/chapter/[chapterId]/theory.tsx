@@ -86,7 +86,7 @@ export default function ChapterTheoryScreen() {
         </Pressable>
         <GlassCard dark intensity={14} style={styles.paywallCard}>
           <Text style={styles.paywallEmoji}>🔒</Text>
-          <Text style={styles.paywallTitle}>Acest capitol necesită KhEIa Premium</Text>
+          <Text style={styles.paywallTitle}>Acest capitol necesită KHEYA Premium</Text>
           <Text style={styles.paywallMessage}>
             Deblochează toate capitolele și teste cu un abonament Premium.
           </Text>

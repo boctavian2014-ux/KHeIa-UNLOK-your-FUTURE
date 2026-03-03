@@ -1,6 +1,6 @@
 # POLITICA DE CONFIDENȚIALITATE (GDPR)
 
-**Aplicația: Kheia – Unlock Your Future**  
+**Aplicația: KHEYA – Unlock Your Future**  
 *Document orientativ, nerevizat de un avocat. Recomandăm verificarea de către un jurist sau consultant GDPR înainte de utilizare.*
 
 ---
@@ -16,7 +16,7 @@
 
 ## 1. Cine suntem
 
-**DEV AI LTD EOOD** („noi”, „furnizorul”) este operatorul de date cu caracter personal în legătură cu aplicația Kheia – Unlock Your Future. Sediu: 1 Bogdan Voyvoda str./blvd., 7002 Ruse, Bulgaria. Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
+**DEV AI LTD EOOD** („noi”, „furnizorul”) este operatorul de date cu caracter personal în legătură cu aplicația KHEYA – Unlock Your Future. Sediu: 1 Bogdan Voyvoda str./blvd., 7002 Ruse, Bulgaria. Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
 
 ---
 

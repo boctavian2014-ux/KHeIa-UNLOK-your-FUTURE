@@ -9,7 +9,7 @@
 ### 1. Deschide Supabase
 
 1. Intră pe [supabase.com](https://supabase.com) și loghează-te.
-2. Deschide **proiectul** tău (cel folosit de app KhEIa).
+2. Deschide **proiectul** tău (cel folosit de app KHEYA).
 
 ### 2. Mergi la Authentication → Users
 
@@ -26,7 +26,7 @@
 1. **Email:** tastează adresa pentru reviewers, de ex.  
    `google.play.review@kheia.ro`
 2. **Password:** tastează parola pe care o vei da reviewerilor și o vei pune în Play Console, de ex.  
-   `ReviewKheia2026!`  
+   `ReviewKheya2026!`  
    (minim 6 caractere; păstreaz-o notată în siguranță.)
 3. Opțional: la **„User metadata”** poți lăsa gol sau puteți adăuga `display_name`: `Google Play Reviewer`.
 4. Apasă **„Create user”** (sau **„Add user”**).

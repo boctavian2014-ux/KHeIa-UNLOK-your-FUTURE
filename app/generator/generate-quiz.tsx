@@ -105,7 +105,7 @@ export default function GenerateQuizScreen() {
             style={[styles.chip, sourceType === 'GENERATED' && styles.chipActive]}
           >
             <Text style={[styles.chipText, sourceType === 'GENERATED' && styles.chipTextActive]}>
-              Test KhEIa
+              Test KHEYA
             </Text>
           </Pressable>
           <Pressable

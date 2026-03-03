@@ -1,6 +1,6 @@
-# KhEIa - Pagină de prezentare
+# KHEYA - Pagină de prezentare
 
-Pagina web de prezentare pentru aplicația KhEIa.
+Pagina web de prezentare pentru aplicația KHEYA.
 
 ## Deploy
 

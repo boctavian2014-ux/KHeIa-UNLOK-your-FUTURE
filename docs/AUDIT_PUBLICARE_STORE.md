@@ -69,7 +69,7 @@ Listă de verificări ca la o revizie de tip „Google / Apple” înainte de ap
 | 6.1 | **Icon aplicație** | ⬜ | `app.json` folosește `./assets/BECKGROUND.png` pentru icon și splash. Verifică că imaginea e potrivită ca icon (ex. 1024x1024 pentru iOS, adaptive icon Android) și că nu e doar un fundal. |
 | 6.2 | **Splash screen** | ⬜ | Același asset; asigură-te că arată bine pe toate dimensiunile. |
 | 6.3 | **Versiune și build** | ⬜ | `version`: "0.1.0". Pentru fiecare release: incrementează versiunea și setează `android.versionCode` / `ios.buildNumber` (în app.json sau app.config.js). |
-| 6.4 | **Titlu store** | ⬜ | Titlu scurt (ex. „KhEIa – EN & BAC”) și descriere lungă/scurtă în română (și opțional engleză). |
+| 6.4 | **Titlu store** | ⬜ | Titlu scurt (ex. „KHEYA – EN & BAC”) și descriere lungă/scurtă în română (și opțional engleză). |
 | 6.5 | **Screenshot-uri** | ⬜ | 2–8 screenshot-uri pe telefon (și tabletă dacă e cazul). Ecrane cheie: Home, Capitol/Teorie, Quiz, Abonament, Profil. |
 | 6.6 | **Feature graphic (Play Store)** | ⬜ | 1024 x 500 px. |
 | 6.7 | **Clasificare vârstă / Content rating** | ⬜ | Completează în Play Console și App Store Connect (de obicei pentru educație: toate vârstele sau 3+). |
