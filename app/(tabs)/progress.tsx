@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import dayjs from 'dayjs';
 import { colors, spacing, typography } from '@/theme';
+import { GlassCard } from '@/components/ui/GlassCard';
 import { useGamification } from '@/hooks/useGamification';
 import {
   generateDailyMissions,
@@ -124,24 +125,26 @@ export default function ProgressScreen() {
         Revino zilnic pentru XP și streak.
       </Text>
 
-      <View style={styles.header}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initial}</Text>
+      <GlassCard dark intensity={18} style={styles.glassCard}>
+        <View style={styles.header}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{initial}</Text>
+          </View>
+          <View style={styles.headerRight}>
+            <Text style={styles.level}>Nivel {level}</Text>
+            <XPBar progress={xpProgress} />
+            <Text style={styles.smallText}>
+              Ai acumulat {totalXP} XP până acum.
+            </Text>
+          </View>
         </View>
-        <View style={styles.headerRight}>
-          <Text style={styles.level}>Nivel {level}</Text>
-          <XPBar progress={xpProgress} />
-          <Text style={styles.smallText}>
-            Ai acumulat {totalXP} XP până acum.
-          </Text>
-        </View>
-      </View>
+      </GlassCard>
 
-      <View style={styles.coinsRow}>
+      <GlassCard dark intensity={18} style={styles.glassCard}>
         <CoinsDisplay coins={coins} />
-      </View>
+      </GlassCard>
 
-      <View style={styles.section}>
+      <GlassCard dark intensity={18} style={styles.glassCard}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>Streak-ul tău</Text>
           <Text style={styles.streakLabel}>{streak} zile la rând</Text>
@@ -150,16 +153,16 @@ export default function ProgressScreen() {
           <StreakCounter streak={streak} />
         </View>
         <Text style={styles.sectionText}>{dailyGoal}</Text>
-      </View>
+      </GlassCard>
 
-      <View style={styles.section}>
+      <GlassCard dark intensity={18} style={styles.glassCard}>
         <Text style={styles.sectionTitle}>Astăzi ai făcut</Text>
         <Text style={styles.sectionText}>
           {todaySummary.coinsToday} monede câștigate, {todaySummary.quizzesToday} quiz-uri și {todaySummary.testsToday} teste.
         </Text>
-      </View>
+      </GlassCard>
 
-      <View style={styles.section}>
+      <GlassCard dark intensity={18} style={styles.glassCard}>
         <Text style={styles.sectionTitle}>Misiuni zilnice</Text>
         {missions.length === 0 ? (
           <Text style={styles.emptyText}>
@@ -178,12 +181,12 @@ export default function ProgressScreen() {
             </Pressable>
           ))
         )}
-      </View>
+      </GlassCard>
 
-      <View style={styles.section}>
+      <GlassCard dark intensity={18} style={styles.glassCard}>
         <Text style={styles.sectionTitle}>Ultimele activități</Text>
         <RecentActivity transactions={transactions} />
-      </View>
+      </GlassCard>
 
       <View style={styles.bottom} />
     </ScrollView>
@@ -203,6 +206,12 @@ const styles = StyleSheet.create({
   content: {
     paddingBottom: spacing.contentBottom,
   },
+  glassCard: {
+    marginTop: spacing.lg,
+    padding: spacing.lg,
+    borderRadius: 16,
+    width: '100%',
+  },
   title: {
     fontSize: typography.size.xl,
     fontWeight: '700',
@@ -216,7 +225,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: spacing.xl,
   },
   avatar: {
     width: 48,
