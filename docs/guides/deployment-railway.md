@@ -4,7 +4,7 @@
 
 | Componentă        | Locație           | Descriere                         |
 |------------------|-------------------|-----------------------------------|
-| **Cod sursă**    | GitHub            | Tot proiectul (edumat-romania)     |
+| **Cod sursă**    | GitHub            | Tot proiectul (KHeIa-UNLOK-your-FUTURE)     |
 | **Node backend**  | Railway           | API-ul pentru AI (OpenAI)         |
 | **Supabase**     | Supabase Cloud    | DB, Edge Functions (deja configurat) |
 | **App mobil**    | Expo / EAS Build  | Pentru App Store / Play Store      |
@@ -16,7 +16,7 @@
 ### 1.1 Inițializează Git (dacă nu e deja)
 
 ```powershell
-cd c:\Users\octav\edumat-romania
+cd c:\Users\octav\KHeIa-UNLOK-your-FUTURE
 git init
 ```
 
@@ -29,7 +29,7 @@ git init
 
 ```powershell
 git add .
-git commit -m "Initial commit - KHeIa EduMat"
+git commit -m "Initial commit - Kheia Unlock Your Future"
 git branch -M main
 git remote add origin https://github.com/boctavian2014-ux/KHeIa-UNLOK-your-FUTURE.git
 git push -u origin main
@@ -72,7 +72,7 @@ Railway va detecta automat un repo. Trebuie să îi spunem să ruleze doar `node
 ### 2.4 Obține URL-ul
 
 1. **Settings** → **Networking** → **Generate Domain**
-2. Vei primi un URL de tip: `https://edumat-node-backend-xxxx.up.railway.app`
+2. Vei primi un URL de tip: `https://kheia-node-backend-xxxx.up.railway.app`
 3. Copiază acest URL.
 
 ---
@@ -84,7 +84,7 @@ Railway va detecta automat un repo. Trebuie să îi spunem să ruleze doar `node
 1. Supabase Dashboard → **Project Settings** → **Edge Functions**
 2. Adaugă variabila de mediu:
    - **Name**: `NODE_BACKEND_URL`
-   - **Value**: `https://edumat-node-backend-xxxx.up.railway.app` (URL-ul de la Railway)
+   - **Value**: `https://kheia-node-backend-xxxx.up.railway.app` (URL-ul de la Railway)
 
 ### 3.2 Redeployează Edge Functions (dacă e nevoie)
 
@@ -102,7 +102,7 @@ supabase functions deploy generate-chapter-summary
 Dacă aplicația Expo apelează direct backend-ul (ex. chat), setează în `.env`:
 
 ```
-EXPO_PUBLIC_NODE_BACKEND_URL=https://edumat-node-backend-xxxx.up.railway.app
+EXPO_PUBLIC_NODE_BACKEND_URL=https://kheia-node-backend-xxxx.up.railway.app
 ```
 
 În arhitectura actuală, app-ul apelează prin **Supabase Edge Functions**, care la rândul lor apelează backend-ul. Deci `NODE_BACKEND_URL` în Supabase este suficient.

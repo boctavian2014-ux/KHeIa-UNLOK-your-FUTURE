@@ -14,7 +14,7 @@ Listă de verificări ca la o revizie de tip „Google / Apple” înainte de ap
 | 1.4 | **App Privacy (App Store)** | ⬜ | În App Store Connect completează label-urile de confidențialitate (date colectate, tracking etc.). |
 | 1.5 | **Ștergere cont (GDPR)** | ✅ | În Profil → Setări există „Șterge cont (GDPR)” cu confirmare dublă. Edge Function `delete-account` șterge toate datele utilizatorului; deploy: `supabase functions deploy delete-account`. Opțional: setează `SUPABASE_ANON_KEY` în secrets pentru verificare JWT. |
 | 1.6 | **Export date (portabilitate GDPR)** | ⬜ | Opțional dar recomandat: opțiune „Descarcă datele mele” (export JSON/PDF cu progres, profil). |
-| 1.7 | **Contact pentru date** | ✅ | `contact@edumat.ro` este menționat în legal – păstrează acest email valid. |
+| 1.7 | **Contact pentru date** | ✅ | contact@kheya.ro, contact@devaieood.com menționate în legal – păstrează aceste emailuri valide. |
 
 ---
 

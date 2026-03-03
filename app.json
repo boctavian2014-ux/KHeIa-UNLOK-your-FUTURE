@@ -4,7 +4,7 @@
     "slug": "kheia",
     "scheme": "kheia",
     "version": "0.2.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "platforms": [
       "ios",
       "android",
@@ -26,6 +26,7 @@
     "android": {
       "versionCode": 2,
       "package": "com.kheia.edumat",
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/kheya_icon_1024x1024.png",
         "backgroundColor": "#1e293b"

@@ -10,7 +10,7 @@ import { updateSubscriptionAfterPurchase } from '@/services/subscription.service
 const PLAN_LABELS: Record<string, string> = {
   monthly: 'Lunar',
   yearly: 'Anual',
-  full_edumat: 'Full Edumat',
+  full_edumat: 'Kheia Premium',
 };
 
 export default function SubscriptionSuccessScreen() {

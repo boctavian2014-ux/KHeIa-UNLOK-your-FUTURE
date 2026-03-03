@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, typography } from '@/theme';
 import { useSkin } from '@/contexts/SkinContext';
 import { SKINS, type SkinName } from '@/theme/skins';
@@ -34,9 +35,9 @@ const PROFILE_TABS: TabItem[] = [
 ];
 
 const LEGAL_TABS: TabItem[] = [
+  { id: 'confidentialitate', label: 'Politica de Confidențialitate' },
+  { id: 'termini', label: 'Termeni și Condiții' },
   { id: 'gdpr', label: 'GDPR' },
-  { id: 'confidentialitate', label: 'Confidențialitate' },
-  { id: 'termini', label: 'Termeni' },
 ];
 
 const LEGAL_CONTENT: Record<string, string> = {
@@ -59,9 +60,10 @@ export default function ProfileScreen() {
   } = useProgress();
 
   const [activeTab, setActiveTab] = useState('evolutie');
-  const [legalTab, setLegalTab] = useState('gdpr');
+  const [legalTab, setLegalTab] = useState('confidentialitate');
   const [leaderboard, setLeaderboard] = useState<SchoolLeaderboard[]>([]);
   const [userSchool, setUserSchool] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!userId) return;
@@ -344,7 +346,7 @@ export default function ProfileScreen() {
                   onPress: async () => {
                     const { error } = await deleteAccount();
                     if (error) {
-                      Alert.alert('Eroare', error.message ?? 'Ștergerea contului a eșuat. Încearcă din nou sau contactează contact@edumat.ro.');
+                      Alert.alert('Eroare', error.message ?? 'Ștergerea contului a eșuat. Încearcă din nou sau contactează contact@kheya.ro.');
                     } else {
                       router.replace('/(tabs)/home');
                     }
@@ -441,7 +443,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerArea}>
+      <View style={[styles.headerArea, { paddingTop: insets.top + spacing.md }]}>
         <Text style={styles.title}>Profil</Text>
         <Text style={styles.subtitle}>Evoluție, statistici și setări.</Text>
       </View>
@@ -473,7 +475,6 @@ const styles = StyleSheet.create({
   },
   headerArea: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
   },
   title: {
     fontSize: typography.size.xl,

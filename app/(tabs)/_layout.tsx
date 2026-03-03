@@ -1,11 +1,13 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TabBarIcon } from '@/components/TabBarIcon';
 import { spacing } from '@/theme';
 
 export default function TabsLayout() {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -31,7 +33,7 @@ export default function TabsLayout() {
           position: 'absolute',
           left: spacing.screenPadding,
           right: spacing.screenPadding,
-          bottom: spacing.relaxed,
+          bottom: insets.bottom + spacing.relaxed,
           borderRadius: 999,
           backgroundColor: 'transparent',
           borderWidth: 0,
@@ -40,7 +42,7 @@ export default function TabsLayout() {
           shadowOpacity: 0,
           shadowRadius: 0,
           elevation: 0,
-          paddingBottom: spacing.compact,
+          paddingBottom: Math.max(insets.bottom, spacing.compact),
           paddingTop: spacing.compact,
           height: 64,
         },
@@ -54,7 +56,7 @@ export default function TabsLayout() {
           fontSize: 12,
           fontWeight: '600',
         },
-        tabBarActiveBackgroundColor: 'transparent',
+        tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.14)',
         tabBarIconStyle: {
           marginBottom: -spacing.tight,
         },

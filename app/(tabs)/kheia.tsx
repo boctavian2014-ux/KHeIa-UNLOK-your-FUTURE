@@ -11,13 +11,13 @@ import {
   ActivityIndicator,
   Animated,
   Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getChatApiUrl } from '@/lib/nodeBackendUrl';
 import { typography, spacing } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
-
-const CHAT_API = process.env.EXPO_PUBLIC_NODE_BACKEND_URL
-  ? `${process.env.EXPO_PUBLIC_NODE_BACKEND_URL}/api/generate/chat`
-  : null;
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -112,6 +112,7 @@ export default function KheiaScreen() {
     setLoading(true);
 
     try {
+      const CHAT_API = getChatApiUrl();
       if (CHAT_API) {
         const history = [...messages, userMsg].map((m) => ({
           role: m.role,
@@ -149,6 +150,9 @@ export default function KheiaScreen() {
   };
 
   const showFullScreenPrompt = messages.length === 0 && !loading;
+  const insets = useSafeAreaInsets();
+
+  const dismissKeyboard = () => Keyboard.dismiss();
 
   return (
     <KeyboardAvoidingView
@@ -156,10 +160,23 @@ export default function KheiaScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={100}
     >
-      <View style={styles.header}>
-        <Text style={styles.title}>KhEIa</Text>
-        <Text style={styles.subtitle}>Chatbot EN & Bacalaureat</Text>
-      </View>
+      <TouchableWithoutFeedback onPress={dismissKeyboard} accessible={false}>
+        <View style={styles.touchableContent}>
+          <View style={[styles.header, styles.headerRow, { paddingTop: insets.top + spacing.md }]}>
+            <View style={styles.headerTextWrap}>
+              <Text style={styles.title}>KhEIa</Text>
+              <Text style={styles.subtitle}>Chatbot EN & Bacalaureat</Text>
+            </View>
+            {showFullScreenPrompt && (
+              <Pressable
+                onPress={dismissKeyboard}
+                style={({ pressed }) => [styles.dismissBtn, pressed && styles.dismissBtnPressed]}
+                accessibilityLabel="Închide tastatura"
+              >
+                <Text style={styles.dismissBtnText}>Închide</Text>
+              </Pressable>
+            )}
+          </View>
 
       {!showFullScreenPrompt ? (
         <ScrollView
@@ -167,6 +184,7 @@ export default function KheiaScreen() {
           style={styles.messages}
           contentContainerStyle={styles.messagesContent}
           showsVerticalScrollIndicator={false}
+          keyboardDismissMode="on-drag"
           onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
         >
           {messages.map((msg, i) => (
@@ -256,16 +274,38 @@ export default function KheiaScreen() {
           </Pressable>
         </View>
       )}
+        </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'transparent' },
+  touchableContent: { flex: 1 },
   header: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
     paddingBottom: spacing.sm,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTextWrap: { flex: 1 },
+  dismissBtn: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.25)',
+  },
+  dismissBtnPressed: { opacity: 0.8 },
+  dismissBtnText: {
+    fontSize: typography.size.sm,
+    fontWeight: '600',
+    color: '#ffffff',
   },
   title: {
     fontSize: typography.size.xl,

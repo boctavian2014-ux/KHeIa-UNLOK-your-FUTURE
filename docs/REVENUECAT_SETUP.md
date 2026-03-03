@@ -92,7 +92,7 @@ RevenueCat e un serviciu care gestionează abonamentele (in-app purchases) pentr
    - Creează (sau grupezi) produse pentru:
      - **Lunar** (ex: `kheia_premium_monthly`)
      - **Anual** (ex: `kheia_premium_yearly`)
-     - **Full Edumat** (ex: `kheia_full_edumat` – poate fi consumable sau non-renewing, după cum vrei).
+     - **Kheia Premium** (lifetime, ex: `kheia_full_edumat` – poate fi consumable sau non-renewing, după cum vrei).
 5. În RevenueCat, la app-ul iOS, asociază aceste **Product IDs** cu **Entitlements** (ex: entitlement `premium`).
 
 ---
@@ -136,7 +136,7 @@ RevenueCat e un serviciu care gestionează abonamentele (in-app purchases) pentr
 2. **Create subscription** pentru fiecare produs. Folosește **exact** aceste ID-uri (sau altele, dar trebuie să le folosești și în RevenueCat și în `purchases.service.ts`):
    - **Monthly:** Product ID = `monthly` (sau `kheia_premium_monthly`).
    - **Yearly:** Product ID = `yearly` (sau `kheia_premium_yearly`).
-   - **Lifetime / Full Edumat:** Product ID = `lifetime` (sau `kheia_full_edumat`).  
+   - **Lifetime / Kheia Premium:** Product ID = `lifetime` (sau `kheia_full_edumat`).  
    Pentru „lifetime” poți folosi **One-time product** (Monetize → One-time products) dacă nu e abonament recurent.
 3. La fiecare abonament: setează prețul, perioada (1 lună / 1 an), trial gratuit (opțional).
 
@@ -253,7 +253,7 @@ Poți ignora paywall-ul din dashboard și să afișezi tu ecranul de abonament (
 ## Unde e setat paywall-ul / ecranul de abonament în app
 
 - **Paywall UI RevenueCat** (`presentPaywall()` / `presentPaywallIfNeeded()`) din `src/services/purchases.service.ts` **nu e apelat nicăieri** în aplicație. Funcțiile există și pot fi folosite dacă vrei să afișezi paywall-ul nativ RevenueCat.
-- **Ecranul de abonament folosit acum** este cel **custom**: `app/subscription.tsx` (ruta `/subscription`). Acesta afișează planurile (Lunar, Anual, Full Edumat) și folosește RevenueCat prin `purchasePackage()` din `purchases.service.ts`.
+- **Ecranul de abonament folosit acum** este cel **custom**: `app/subscription.tsx` (ruta `/subscription`). Acesta afișează planurile (Lunar, Anual, Kheia Premium) și folosește RevenueCat prin `purchasePackage()` din `purchases.service.ts`.
 
 **Unde se deschide ecranul de abonament („paywall”):**
 
@@ -318,7 +318,7 @@ Când în RevenueCat vezi **„Make your first purchase”**, trebuie să faci o
 
 2. **Deschide ecranul de abonament** (KhEIa Premium) – de obicei din meniu sau din prompt-ul „Upgrade”.
 
-3. **Apasă pe un plan** (Lunar, Anual sau Full Edumat). Butonul apelează `handlePurchase(planId)` → `purchasePackage(packageId)` din `purchases.service.ts`, deci cumpărătura e declanșată direct din ecranul tău.
+3. **Apasă pe un plan** (Lunar, Anual sau Kheia Premium). Butonul apelează `handlePurchase(planId)` → `purchasePackage(packageId)` din `purchases.service.ts`, deci cumpărătura e declanșată direct din ecranul tău.
 
 4. **Finalizează fluxul** în fereastra Google Play Billing (sandbox):
    - **Android:** dacă app-ul e pe **Internal testing** sau **Closed testing**, contul tău (sau conturile din **License testers** în Play Console) pot cumpăra fără card real; tranzacția e anulată automat după câteva minute.
@@ -400,7 +400,7 @@ Toate punctele de mai jos sunt necesare pentru a avea abonamentele KhEIa Premium
 | 7 | **Shared Secret** generat | Users and Access → Shared Secret (sau App → In-App Purchase → Manage) | Copiezi valoarea pentru RevenueCat | ☐ |
 | 8 | **In-App Purchase** – abonament lunar | App → In-App Purchases → + → Auto-Renewable Subscription | Product ID ex: `monthly` sau `kheia_premium_monthly` | ☐ |
 | 9 | **In-App Purchase** – abonament anual | Idem | Product ID ex: `yearly` sau `kheia_premium_yearly` | ☐ |
-| 10 | **In-App Purchase** – lifetime / full edumat | Idem sau Non-Renewing Subscription / Consumable | Product ID ex: `lifetime` sau `kheia_full_edumat` | ☐ |
+| 10 | **In-App Purchase** – lifetime / Kheia Premium | Idem sau Non-Renewing Subscription / Consumable | Product ID ex: `lifetime` sau `kheia_full_edumat` | ☐ |
 | 11 | **App** iOS adăugat în RevenueCat | RevenueCat → Project → Apps → Add app → Apple | Bundle ID + Shared Secret introdus | ☐ |
 | 12 | **Agreements, Tax, Banking** semnate | App Store Connect → Agreements, Tax | Necesar pentru a publica | ☐ |
 

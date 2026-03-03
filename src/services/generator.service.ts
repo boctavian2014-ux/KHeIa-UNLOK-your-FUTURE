@@ -1,9 +1,8 @@
+import { getNodeBackendUrl } from '@/lib/nodeBackendUrl';
 import { supabase } from './supabase';
 
-const BACKEND_URL = (process.env.EXPO_PUBLIC_NODE_BACKEND_URL ?? '').trim();
-
 async function fetchBackend<T>(path: string, body: object): Promise<{ data: T | null; error: Error | null }> {
-  const url = BACKEND_URL.startsWith('http') ? BACKEND_URL : BACKEND_URL ? `https://${BACKEND_URL}` : '';
+  const url = getNodeBackendUrl();
   if (!url) return { data: null, error: new Error('Backend nu este configurat.') };
 
   try {

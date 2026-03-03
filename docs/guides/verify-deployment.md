@@ -86,7 +86,7 @@ Răspuns așteptat:
 ## Deploy Edge Functions manual
 
 ```powershell
-cd c:\Users\octav\edumat-romania
+cd c:\Users\octav\KHeIa-UNLOK-your-FUTURE
 supabase login
 supabase link --project-ref YOUR_PROJECT_REF
 supabase functions deploy generate-chapter-content

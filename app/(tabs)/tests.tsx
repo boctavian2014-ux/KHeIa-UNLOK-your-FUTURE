@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { colors, spacing, typography } from '@/theme';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -15,6 +16,7 @@ const YEARS = [2026, 2025, 2024, 2023, 2022];
 
 export default function TestsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { subjects, chapters: chaptersData, loading } = useCatalogContext();
   const [generatedChapters, setGeneratedChapters] = useState<typeof chaptersData>([]);
   const [mode, setMode] = useState<'GENERATED' | 'OFFICIAL'>('GENERATED');
@@ -75,7 +77,7 @@ export default function TestsScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Text style={styles.title}>Teste</Text>

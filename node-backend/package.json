@@ -1,5 +1,5 @@
 {
-  "name": "edumat-node-backend",
+  "name": "kheia-node-backend",
   "private": true,
   "version": "0.1.0",
   "main": "dist/app.js",

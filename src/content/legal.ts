@@ -1,14 +1,17 @@
 /**
- * Texte legale pentru aplicația EduMat – conform GDPR și legislației UE.
+ * Texte legale pentru aplicația Kheia – Unlock Your Future (DEV AI LTD EOOD).
+ * Conform GDPR și legislației UE. Conturile sunt create de părinte/tutore legal.
  */
 
 export const GDPR_TEXT = `Drepturile tale conform Regulamentului (UE) 2016/679 (GDPR)
+
+Operator: DEV AI LTD EOOD. Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
 
 1. Dreptul de acces
 Ai dreptul să obții de la noi confirmarea că procesăm datele tale personale și, în caz afirmativ, acces la aceste date și la informații conexe, inclusiv scopul procesării, categoriile de date și destinatarii acestora.
 
 2. Dreptul la rectificare
-Ai dreptul să obții rectificarea imediată a datelor personale inexacte sau incomplete. Poți actualiza informațiile din contul tău din secțiunea Setări.
+Ai dreptul să obții rectificarea imediată a datelor personale inexacte sau incomplete. Poți actualiza informațiile din contul tău din secțiunea Setări/Profil.
 
 3. Dreptul la ștergere („dreptul de a fi uitat”)
 Ai dreptul să obții ștergerea datelor tale personale, cu excepția cazurilor în care prelucrarea este necesară pentru exercitarea sau apărarea în justiție a unor cereri sau pentru îndeplinirea unei obligații legale.
@@ -26,37 +29,39 @@ Ai dreptul să te opui procesării datelor tale personale în anumite circumstan
 Ai dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP), sediul în București, Bd. G-ral. Gheorghe Magheru 28-30, sector 1.
 
 Baza legală a prelucrării
-Prelucrăm datele tale pe baza consimțământului tău, pentru executarea contractului (furnizarea serviciilor) sau pentru interes legitim (îmbunătățirea aplicației, securitate).
+Prelucrăm datele pe baza consimțământului (al părintelui/tutorelui pentru minori sub 16 ani), pentru executarea contractului (furnizarea serviciilor) sau pentru interes legitim (îmbunătățirea aplicației, securitate).
 
 Durata stocării
 Datele sunt păstrate atât timp cât este necesar pentru furnizarea serviciilor sau pentru îndeplinirea obligațiilor legale. După cererea de ștergere, eliminăm datele în termen de 30 zile.
 
 Contact
-Pentru exercitarea drepturilor sau pentru întrebări legate de protecția datelor: contact@edumat.ro`;
+Pentru exercitarea drepturilor sau pentru întrebări legate de protecția datelor: contact@kheya.ro, contact@devaieood.com | +40 725 177 971`;
 
-export const PRIVACY_POLICY_TEXT = `Politica de confidențialitate
+export const PRIVACY_POLICY_TEXT = `Politica de confidențialitate – Kheia – Unlock Your Future
+
+Operator: DEV AI LTD EOOD. Sediu: 1 Bogdan Voyvoda str./blvd., 7002 Ruse, Bulgaria.
+Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
 
 Ultima actualizare: 2025
 
 1. Introducere
-EduMat („aplicația”) respectă confidențialitatea utilizatorilor și se angajează să protejeze datele personale în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și legislația în vigoare.
+Kheia – Unlock Your Future („aplicația”) este oferită de DEV AI LTD EOOD și respectă confidențialitatea utilizatorilor. Ne angajăm să protejăm datele personale în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și legislația în vigoare. Conturile pot fi create doar de părinte sau tutore legal; pentru minori sub 16 ani, consimțământul este acordat de părinte/tutore.
 
 2. Ce date colectăm
-• Date de cont: email, nume (dacă le furnizezi la înregistrare)
-• Date de utilizare: progres pe capitole, scoruri la quiz-uri și teste, nivel, XP, monede, streak
+• Date de cont: email (părinte/tutore), nume, parolă (stocată securizat)
+• Date elev: nume elev (dacă este furnizat)
+• Date de utilizare: progres pe capitole, scoruri la quiz-uri și teste, statistici
 • Date tehnice: adresă IP (pentru securitate și anti-abuz), tip device, versiunea aplicației
-• Date opționale: poți alege să ne trimiți feedback sau sugestii
+• Nu colectăm date inutile; nu afișăm reclame terțe. Monetizarea este prin abonamente Kheia Premium.
 
 3. Cum folosim datele
-• Furnizarea și funcționarea aplicației (autentificare, sincronizare progres, recomandări)
+• Furnizarea și funcționarea aplicației (autentificare, sincronizare progres)
 • Îmbunătățirea produsului (analiză agregată, fără identificare individuală)
 • Comunicații legate de cont (notificări importante, recuperare parolă)
 • Respectarea obligațiilor legale și apărarea drepturilor noastre
 
 4. Partajarea datelor
-Nu vindem datele tale. Le putem partaja numai cu:
-• Furnizori de servicii (hosting, autentificare) care procesează datele în numele nostru, sub contract
-• Autorități, dacă legea o cere
+Nu vindem datele tale. Le putem partaja numai cu furnizori împuterniciți (hosting, autentificare, procesare plăți) care procesează datele în numele nostru, sub contract, și cu autoritățile dacă legea o cere. Datele sunt găzduite pe servere din UE.
 
 5. Securitate
 Aplicăm măsuri tehnice și organizatorice adecvate: criptare, autentificare sigură, acces restricționat la date.
@@ -65,52 +70,49 @@ Aplicăm măsuri tehnice și organizatorice adecvate: criptare, autentificare si
 Aplicația mobilă poate folosi tehnologii locale (ex. AsyncStorage) pentru stocarea preferințelor și a progresului. Nu folosim cookie-uri de urmărire în scop de publicitate.
 
 7. Drepturile tale
-Îți asigurăm drepturile GDPR: acces, rectificare, ștergere, restricționare, portabilitate, opoziție, plângere. Vezi secțiunea GDPR pentru detalii.
+Îți asigurăm drepturile GDPR: acces, rectificare, ștergere, restricționare, portabilitate, opoziție, plângere la ANSPDCP. Părinții pot oricând cere ștergerea datelor copilului.
 
 8. Modificări
 Putem actualiza această politică. Te vom informa despre modificări semnificative prin notificare în aplicație sau prin email.
 
 9. Contact
-Pentru întrebări legate de confidențialitate: contact@edumat.ro`;
+Pentru întrebări legate de confidențialitate: contact@kheya.ro, contact@devaieood.com | +40 725 177 971`;
 
-export const TERMS_TEXT = `Termeni și condiții de utilizare
+export const TERMS_TEXT = `Termeni și condiții de utilizare – Kheia – Unlock Your Future
+
+Furnizor: DEV AI LTD EOOD. Contact: contact@kheya.ro, contact@devaieood.com | +40 725 177 971.
 
 Ultima actualizare: 2025
 
 1. Acceptarea termenilor
-Prin accesarea și utilizarea aplicației EduMat, accepți acești termeni și condiții. Dacă nu ești de acord, te rugăm să nu folosești aplicația.
+Prin accesarea și utilizarea aplicației Kheia – Unlock Your Future, accepți acești termeni și condiții. Acceptarea se face de către părinte sau tutore legal în numele minorului. Dacă nu ești de acord, te rugăm să nu folosești aplicația.
 
 2. Descrierea serviciului
-EduMat este o aplicație educațională care oferă materiale de studiu, quiz-uri și teste pentru pregătirea la Evaluarea Națională și Bacalaureat. Conținutul este furnizat „ca atare” și poate fi actualizat sau modificat.
+Kheia este o aplicație educațională pentru pregătirea la Evaluarea Națională și Bacalaureat. Oferă lecții, quiz-uri și teste. Conținutul este furnizat „ca atare”; nu garantăm promovarea la examene sau anumite rezultate. Monetizarea este prin abonamente (29 RON/lună, 249 RON/an), fără reclame terțe.
 
 3. Cont utilizator
-• Este obligatoriu să ai un cont pentru a utiliza funcționalități complete (progres, sincronizare)
-• Ești responsabil pentru păstrarea confidențialității datelor de acces
-• Notifică-ne imediat în cazul în care suspectezi un acces neautorizat
+• Conturile sunt create doar de părinte sau tutore legal.
+• Ești responsabil pentru păstrarea confidențialității datelor de acces și pentru modul în care minorul folosește aplicația.
+• Notifică-ne imediat dacă suspectezi un acces neautorizat.
 
 4. Utilizare acceptabilă
-Te angajezi să:
-• Folosești aplicația doar în scop legal și educațional
-• Nu distribuiești, copiezi sau modifici conținutul fără acord
-• Nu încerci să accesezi sau să afectezi sistemele noastre sau ale altor utilizatori
-• Nu folosești boturi, scripturi sau automatizări pentru a extrage date sau a suprasolicita serviciile
+Te angajezi să: folosești aplicația doar în scop legal și educațional; să nu distribui, copiezi sau modifici conținutul fără acord; să nu încerci să accesezi sau să afectezi sistemele noastre sau ale altor utilizatori; să nu folosești boturi sau automatizări pentru a extrage date sau a suprasolicita serviciile.
 
 5. Drepturi de proprietate intelectuală
-Tot conținutul (texte, imagini, structuri) aparține EduMat sau licențiatorilor săi. Nu este permis să folosești conținutul în afara aplicației fără autorizare scrisă.
+Tot conținutul (texte, imagini, structuri) aparține furnizorului (DEV AI LTD EOOD) sau licențiatorilor săi. Nu este permis să folosești conținutul în afara aplicației fără autorizare scrisă.
 
 6. Limitarea răspunderii
-• Aplicația este furnizată „as is”. Nu garantăm disponibilitatea continuă sau neîntreruptă
-• Nu suntem răspunzători pentru pierderi indirecte, consecințiale sau daune care decurg din utilizarea aplicației
-• Nu suntem răspunzători pentru rezultatele la examene sau pentru utilizarea corectă a materialelor
+• Aplicația este furnizată „as is”. Nu garantăm disponibilitatea continuă sau rezultate la examene.
+• Nu suntem răspunzători pentru pierderi indirecte, consecințiale sau daune care decurg din utilizarea aplicației sau din folosirea necorespunzătoare a acesteia.
 
 7. Modificări ale serviciului
 Putem modifica, suspenda sau întrerupe orice parte a serviciului. Vom încerca să informăm utilizatorii despre modificări semnificative.
 
 8. Reziliere
-Poți închide contul oricând din Setări. Ne rezervăm dreptul de a suspenda sau închide conturi care încalcă acești termeni.
+Poți închide contul oricând din Setări/Profil. Ne rezervăm dreptul de a suspenda sau închide conturi care încalcă acești termeni.
 
 9. Legea aplicabilă
 Acești termeni sunt guvernați de legislația română. Orice litigiu va fi soluționat de instanțele competente din România.
 
 10. Contact
-Pentru întrebări legate de termeni: contact@edumat.ro`;
+Pentru întrebări legate de termeni: contact@kheya.ro, contact@devaieood.com | +40 725 177 971`;

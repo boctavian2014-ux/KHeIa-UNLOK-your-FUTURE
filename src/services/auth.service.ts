@@ -1,8 +1,16 @@
 import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
 import { supabase } from './supabase';
 
-/** Redirect URL for OAuth (must be allowed in Supabase Dashboard → Auth → URL Configuration). */
-const GOOGLE_OAUTH_REDIRECT = 'kheia://auth/callback';
+/**
+ * Redirect URL pentru OAuth. Folosim Linking.createURL ca:
+ * - În Expo Go: exp://IP:8081/--/auth/callback (revine în app, nu la localhost)
+ * - În build: kheia://auth/callback
+ * Adaugă în Supabase → Authentication → URL Configuration → Redirect URLs.
+ */
+function getOAuthRedirectUrl(): string {
+  return Linking.createURL('auth/callback');
+}
 
 /**
  * Signs in with email and password.
@@ -30,11 +38,12 @@ export const resetPassword = async (email: string) => {
  * Caller should use WebBrowser.openAuthSessionAsync with this URL and the redirect,
  * then pass the result URL to setSessionFromOAuthRedirectUrl.
  */
-export const getGoogleOAuthUrl = async () => {
+export const getGoogleOAuthUrl = async (redirectTo?: string) => {
+  const redirect = redirectTo ?? getOAuthRedirectUrl();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: GOOGLE_OAUTH_REDIRECT,
+      redirectTo: redirect,
       skipBrowserRedirect: true,
     },
   });
@@ -60,13 +69,15 @@ export const setSessionFromOAuthRedirectUrl = async (url: string) => {
 /**
  * Signs in (or registers) with Google via OAuth in browser.
  * Opens the system browser, then sets the session from the redirect URL.
+ * Redirect URL este generat din Linking.createURL ca să funcționeze și în Expo Go (nu localhost).
  */
 export const signInWithGoogle = async () => {
-  const { url, error: urlError } = await getGoogleOAuthUrl();
+  const redirectTo = getOAuthRedirectUrl();
+  const { url, error: urlError } = await getGoogleOAuthUrl(redirectTo);
   if (urlError || !url) {
     return { error: urlError ?? new Error('No OAuth URL returned') };
   }
-  const result = await WebBrowser.openAuthSessionAsync(url, GOOGLE_OAUTH_REDIRECT);
+  const result = await WebBrowser.openAuthSessionAsync(url, redirectTo);
   if (result.type !== 'success' || !result.url) {
     return { error: new Error(result.type === 'cancel' ? 'Anulare' : 'Autentificare eșuată') };
   }
@@ -79,7 +90,7 @@ export const signInWithGoogle = async () => {
  * Signs in with a test user for development.
  */
 export const signInTestUser = async () => {
-  const email = 'test-user@edumat.local';
+  const email = 'test-user@kheya.local';
   const password = 'test-user-password';
   return supabase.auth.signInWithPassword({ email, password });
 };

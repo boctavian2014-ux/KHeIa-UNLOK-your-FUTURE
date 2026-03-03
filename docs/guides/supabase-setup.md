@@ -1,4 +1,4 @@
-# Configurare Supabase – Edumat Romania
+# Configurare Supabase – Kheia – Unlock Your Future
 
 ## Precondiții
 

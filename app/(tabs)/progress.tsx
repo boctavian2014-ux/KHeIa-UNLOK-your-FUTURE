@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import dayjs from 'dayjs';
 import { colors, spacing, typography } from '@/theme';
@@ -24,6 +25,7 @@ import { RecentActivity } from '@/components/gamification/RecentActivity';
 
 export default function ProgressScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const {
     coins,
     level,
@@ -114,7 +116,7 @@ export default function ProgressScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
       showsVerticalScrollIndicator={false}
     >
       <Text style={styles.title}>Progres</Text>

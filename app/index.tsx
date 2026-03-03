@@ -2,24 +2,43 @@ import { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { Redirect } from 'expo-router';
 import { getOnboardingDone } from '@/lib/onboardingStorage';
+import { getLegalConsentAccepted, setLegalConsentAccepted } from '@/lib/legalConsentStorage';
+import { LegalConsentOverlay } from '@/components/legal/LegalConsentOverlay';
 import { colors, typography } from '@/theme';
 
 export default function Index() {
   const [ready, setReady] = useState(false);
   const [onboardingDone, setOnboardingDone] = useState<boolean | null>(null);
+  const [legalAccepted, setLegalAccepted] = useState<boolean | null>(null);
 
   useEffect(() => {
-    getOnboardingDone().then((done) => {
+    (async () => {
+      const [done, legal] = await Promise.all([getOnboardingDone(), getLegalConsentAccepted()]);
       setOnboardingDone(done);
+      setLegalAccepted(legal);
       setReady(true);
-    });
+    })();
   }, []);
+
+  const handleLegalAccept = async () => {
+    await setLegalConsentAccepted();
+    setLegalAccepted(true);
+  };
 
   if (!ready) {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.loadingTitle}>KheIA Unlok your future</Text>
         <ActivityIndicator size="small" color={colors.dark.primary} style={styles.spinner} />
+      </View>
+    );
+  }
+
+  if (legalAccepted === false) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingTitle}>KheIA Unlok your future</Text>
+        <LegalConsentOverlay onAccept={handleLegalAccept} />
       </View>
     );
   }
