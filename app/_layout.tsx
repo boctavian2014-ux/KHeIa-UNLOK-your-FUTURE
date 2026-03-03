@@ -23,6 +23,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="subjects" options={{ headerShown: false }} />
         <Stack.Screen name="subject/[subjectId]" />
         <Stack.Screen name="subject/[subjectId]/generate-chapter" />
         <Stack.Screen name="subject/generate-chapters" />

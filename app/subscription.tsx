@@ -93,17 +93,30 @@ export default function SubscriptionScreen() {
       } else {
         await new Promise((r) => setTimeout(r, 1500));
         const { data: { user } } = await supabase.auth.getUser();
-        if (user?.id) {
-          const now = new Date();
-          const expirationDate =
-            planId === 'yearly'
-              ? new Date(now.getFullYear() + 1, now.getMonth(), now.getDate()).toISOString()
-              : new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()).toISOString();
-          await updateSubscriptionAfterPurchase(user.id, planId, expirationDate);
+        if (!user?.id) {
+          Alert.alert(
+            'Cont necesar',
+            'Trebuie să fii autentificat pentru a salva abonamentul. Autentifică-te și încearcă din nou.',
+            [{ text: 'OK' }]
+          );
+          setPurchasing(null);
+          return;
         }
+        const now = new Date();
+        const expirationDate =
+          planId === 'yearly'
+            ? new Date(now.getFullYear() + 1, now.getMonth(), now.getDate()).toISOString()
+            : (() => {
+                const y = now.getFullYear();
+                const m = now.getMonth() + 1;
+                const lastDayNext = new Date(y, m + 1, 0).getDate();
+                const day = Math.min(now.getDate(), lastDayNext);
+                return new Date(y, m, day).toISOString();
+              })();
+        await updateSubscriptionAfterPurchase(user.id, planId, expirationDate);
         router.replace({
           pathname: '/subscription-success',
-          params: { plan: planId },
+          params: { plan: planId, expiration: expirationDate },
         });
       }
     } catch (err) {

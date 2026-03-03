@@ -26,7 +26,7 @@ export function LegalConsentOverlay({ onAccept }: LegalConsentOverlayProps) {
   }, [slideY]);
 
   return (
-    <View style={[styles.backdrop, { paddingTop: insets.top + spacing.md }]} pointerEvents="box-none">
+    <View style={[styles.backdrop, { paddingTop: insets.top + spacing.md }]} pointerEvents="auto">
       <Animated.View
         style={[styles.slideWrapper, { transform: [{ translateY: slideY }] }]}
       >

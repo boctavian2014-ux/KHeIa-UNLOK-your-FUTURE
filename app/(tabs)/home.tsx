@@ -42,43 +42,11 @@ export default function HomeScreen() {
   );
 
 
-  const formatTags = (subject: { level: string; exam_tags: string[] }) => {
-    const tags = subject.exam_tags ?? [];
-    const exam = tags.includes('BAC') ? 'BAC' : 'EN';
-    const profiles = tags.filter((tag) => tag === 'real' || tag === 'uman');
-    const profile = profiles.length > 0 ? profiles.join('/') : undefined;
-    return [exam, profile, subject.level].filter(Boolean).join(' · ');
-  };
-
-  const getSubjectIcon = (name: string) => {
-    const lower = name.toLowerCase();
-    if (lower.includes('rom')) return '📚';
-    if (lower.includes('mat')) return '🧮';
-    if (lower.includes('istor')) return '🏺';
-    if (lower.includes('fiz')) return '⚡';
-    if (lower.includes('chim')) return '🧪';
-    if (lower.includes('biol') || lower.includes('anatom')) return '🧬';
-    if (lower.includes('informatic')) return '💻';
-    if (lower.includes('geograf')) return '🗺️';
-    if (lower.includes('logic')) return '🧩';
-    if (lower.includes('psiholog')) return '🧠';
-    if (lower.includes('econom')) return '💰';
-    if (lower.includes('sociolog')) return '👥';
-    if (lower.includes('filosof')) return '💭';
-    return '📘';
-  };
-
-  const examSections = [
-    { key: 'EN', title: 'Evaluare Națională' },
-    { key: 'BAC', title: 'Bacalaureat' },
-  ];
-
   const getSubjectsByExam = (exam: 'EN' | 'BAC') =>
     subjects.filter((subject) => (subject.exam_tags ?? []).includes(exam));
 
   const enCount = getSubjectsByExam('EN').length;
   const bacCount = getSubjectsByExam('BAC').length;
-  const maxCount = Math.max(enCount, bacCount, 1);
 
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -133,31 +101,26 @@ export default function HomeScreen() {
 
               <View style={styles.chartCard}>
                 <Text style={styles.chartTitle}>Materii disponibile</Text>
-                <View style={styles.chartRow}>
-                  <Text style={styles.chartLabel}>Evaluare Națională</Text>
-                  <View style={styles.chartBarBg}>
-                    <View
-                      style={[
-                        styles.chartBarFill,
-                        { width: `${(enCount / maxCount) * 100}%` },
-                      ]}
-                    />
-                  </View>
-                  <Text style={styles.chartValue}>{enCount}</Text>
-                </View>
-                <View style={[styles.chartRow, { marginBottom: 0 }]}>
-                  <Text style={styles.chartLabel}>Bacalaureat</Text>
-                  <View style={styles.chartBarBg}>
-                    <View
-                      style={[
-                        styles.chartBarFill,
-                        styles.chartBarFillAlt,
-                        { width: `${(bacCount / maxCount) * 100}%` },
-                      ]}
-                    />
-                  </View>
-                  <Text style={styles.chartValue}>{bacCount}</Text>
-                </View>
+                <Pressable
+                  style={({ pressed }) => [styles.examEntry, pressed && styles.examEntryPressed]}
+                  onPress={() => router.push({ pathname: '/subjects', params: { exam: 'EN' } })}
+                  accessibilityRole="button"
+                  accessibilityLabel="Evaluare Națională"
+                >
+                  <Text style={styles.examEntryLabel}>Evaluare Națională</Text>
+                  <Text style={styles.examEntryCount}>{enCount} materii</Text>
+                  <Text style={styles.examEntryArrow}>→</Text>
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [styles.examEntry, styles.examEntryLast, pressed && styles.examEntryPressed]}
+                  onPress={() => router.push({ pathname: '/subjects', params: { exam: 'BAC' } })}
+                  accessibilityRole="button"
+                  accessibilityLabel="Bacalaureat"
+                >
+                  <Text style={styles.examEntryLabel}>Bacalaureat</Text>
+                  <Text style={styles.examEntryCount}>{bacCount} materii</Text>
+                  <Text style={styles.examEntryArrow}>→</Text>
+                </Pressable>
               </View>
 
               <View style={styles.chartCard}>
@@ -192,35 +155,6 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            {examSections.map((exam) => {
-              const examSubjects = getSubjectsByExam(exam.key as 'EN' | 'BAC');
-              if (examSubjects.length === 0) return null;
-              return (
-                <View key={exam.key} style={styles.examSection}>
-                  <Text style={styles.examHeading}>{exam.title}</Text>
-                  <View style={styles.subjectGrid}>
-                    {examSubjects.map((subject) => (
-                      <Pressable
-                        key={subject.id}
-                        onPress={() => router.push(`/subject/${subject.id}`)}
-                        style={({ pressed }) => [styles.subjectCardWrap, pressed && styles.subjectCardPressed]}
-                      >
-                        <GlassCard dark intensity={18} style={styles.subjectCard}>
-                          <View style={styles.subjectHeader}>
-                            <Text style={styles.subjectIcon}>{getSubjectIcon(subject.name)}</Text>
-                            <View style={styles.subjectText}>
-                              <Text style={styles.cardTitle} numberOfLines={1}>{subject.name}</Text>
-                              <Text style={styles.cardMeta} numberOfLines={1}>{formatTags(subject)}</Text>
-                            </View>
-                            <Text style={styles.subjectArrow}>→</Text>
-                          </View>
-                        </GlassCard>
-                      </Pressable>
-                    ))}
-                  </View>
-                </View>
-              );
-            })}
           </>
         ) : gamLoading ? (
           <View style={[styles.progressContent, styles.centered, { minHeight: 200 }]}>
@@ -392,21 +326,41 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(148, 163, 184, 0.2)',
   },
+  examEntry: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    borderRadius: 12,
+    marginTop: spacing.xs,
+  },
+  examEntryLast: {
+    marginBottom: 0,
+  },
+  examEntryPressed: {
+    opacity: 0.85,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  examEntryLabel: {
+    flex: 1,
+    fontSize: typography.size.md,
+    fontWeight: '600',
+    color: colors.dark.text,
+  },
+  examEntryCount: {
+    fontSize: typography.size.sm,
+    color: colors.dark.muted,
+    marginRight: spacing.sm,
+  },
+  examEntryArrow: {
+    fontSize: typography.size.lg,
+    color: colors.dark.muted,
+  },
   chartTitle: {
     fontSize: typography.size.md,
     fontWeight: '700',
     color: colors.dark.text,
     marginBottom: spacing.md,
-  },
-  chartRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  chartLabel: {
-    width: 120,
-    fontSize: typography.size.sm,
-    color: colors.dark.muted,
   },
   chartBarBg: {
     flex: 1,
@@ -419,16 +373,6 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: colors.dark.primary,
     borderRadius: 5,
-  },
-  chartBarFillAlt: {
-    backgroundColor: colors.dark.secondary,
-  },
-  chartValue: {
-    width: 28,
-    fontSize: typography.size.sm,
-    fontWeight: '700',
-    color: colors.dark.text,
-    textAlign: 'right',
   },
   statsRow: {
     flexDirection: 'row',
@@ -461,72 +405,5 @@ const styles = StyleSheet.create({
     fontSize: typography.size.xs,
     color: colors.dark.muted,
     marginTop: spacing.xs,
-  },
-  title: {
-    fontSize: typography.size.xl,
-    fontWeight: '700',
-    color: colors.dark.text,
-  },
-  subtitle: {
-    marginTop: spacing.sm,
-    fontSize: typography.size.md,
-    color: colors.dark.muted,
-  },
-  body: {
-    marginTop: spacing.md,
-    fontSize: typography.size.md,
-    color: colors.dark.text,
-  },
-  examSection: {
-    marginTop: spacing.xl,
-  },
-  examHeading: {
-    fontSize: typography.size.lg,
-    fontWeight: '700',
-    color: colors.dark.text,
-    marginBottom: spacing.md,
-  },
-  subjectGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  subjectCardWrap: {
-    width: '48%',
-    flexGrow: 0,
-  },
-  subjectCardPressed: {
-    opacity: 0.9,
-  },
-  subjectCard: {
-    backgroundColor: 'rgba(2, 6, 23, 0.65)',
-    borderColor: 'rgba(148, 163, 184, 0.25)',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-  },
-  subjectHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  subjectIcon: {
-    fontSize: 12,
-    marginRight: spacing.sm,
-  },
-  subjectText: {
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: typography.size.md,
-    fontWeight: '700',
-    color: colors.dark.text,
-  },
-  cardMeta: {
-    marginTop: spacing.xs,
-    fontSize: typography.size.sm,
-    color: colors.dark.muted,
-  },
-  subjectArrow: {
-    fontSize: typography.size.lg,
-    color: colors.dark.muted,
   },
 });

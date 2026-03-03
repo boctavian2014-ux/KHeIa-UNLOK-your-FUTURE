@@ -123,9 +123,21 @@ export default function KheiaScreen() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages: history }),
         });
-        const data = (await res.json()) as { content?: string };
-        const content = data.content ?? 'Nu am putut primi răspuns.';
-        setMessages((prev) => [...prev, { role: 'assistant', content }]);
+        if (!res.ok) {
+          let errMsg = `Eroare server (${res.status}). Încearcă din nou.`;
+          try {
+            const errBody = (await res.json()) as { message?: string; error?: string };
+            const msg = errBody?.message ?? errBody?.error;
+            if (typeof msg === 'string' && msg.trim()) errMsg = msg;
+          } catch {
+            // response was not JSON, keep default errMsg
+          }
+          setMessages((prev) => [...prev, { role: 'assistant', content: errMsg }]);
+        } else {
+          const data = (await res.json()) as { content?: string };
+          const content = data.content ?? 'Nu am putut primi răspuns.';
+          setMessages((prev) => [...prev, { role: 'assistant', content }]);
+        }
       } else {
         setMessages((prev) => [
           ...prev,
