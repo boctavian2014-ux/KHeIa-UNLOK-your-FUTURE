@@ -4,7 +4,7 @@
 
 | Componentă        | Locație           | Descriere                         |
 |------------------|-------------------|-----------------------------------|
-| **Cod sursă**    | GitHub            | Tot proiectul (KHeIa-UNLOK-your-FUTURE)     |
+| **Cod sursă**    | GitHub            | Tot proiectul (KHEYA – Unlock Your Future) |
 | **Node backend**  | Railway           | API-ul pentru AI (OpenAI)         |
 | **Supabase**     | Supabase Cloud    | DB, Edge Functions (deja configurat) |
 | **App mobil**    | Expo / EAS Build  | Pentru App Store / Play Store      |
@@ -72,8 +72,16 @@ Railway va detecta automat un repo. Trebuie să îi spunem să ruleze doar `node
 ### 2.4 Obține URL-ul
 
 1. **Settings** → **Networking** → **Generate Domain**
-2. Vei primi un URL de tip: `https://kheia-node-backend-xxxx.up.railway.app`
+2. Vei primi un URL de tip: `https://kheia-node-backend-xxxx.up.railway.app` sau `https://kheia-unlok-your-future-production.up.railway.app`
 3. Copiază acest URL.
+
+### 2.5 După git push – Railway redeploy
+
+Dacă proiectul Railway este **conectat la GitHub** (Deploy from GitHub repo):
+
+- La fiecare **push pe branch-ul monitorizat** (de obicei `main`), Railway face **redeploy automat** al `node-backend`.
+- Nu e nevoie să faci nimic manual: după `git push origin main`, intră pe [railway.app](https://railway.app) → proiectul tău → **Deployments** și verifică că ultimul deploy e „Success”.
+- Dacă vrei redeploy manual: **Deployments** → **Redeploy** pe ultima versiune.
 
 ---
 
